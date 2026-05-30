@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/28423558/README.md)
+
 # Russian Language Basics
 
 An interactive, single-file Russian language learning web app. No installation, no server, no account — open `index.html` in any browser and start learning.
