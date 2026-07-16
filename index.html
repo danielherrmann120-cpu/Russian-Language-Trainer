@@ -567,11 +567,122 @@
   .ex-q-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
   .ex-q-row .ex-question { margin-bottom: 0; }
 
+  /* ── Grammar section ── */
+  .grammar-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+
+  .grammar-block { margin-bottom:36px; }
+  .grammar-block h3 { font-size:1.1rem; color:var(--gold); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .grammar-block h3 span { font-size:0.8rem; color:var(--muted); font-weight:400; }
+  .grammar-block p { font-size:0.9rem; color:var(--muted); line-height:1.65; margin-bottom:12px; }
+  .grammar-block .hl { color:var(--text); font-weight:600; }
+  .grammar-block .ru { color:var(--gold); }
+  .grammar-block .en { color:var(--accent2); }
+
+  .pronoun-table { width:100%; border-collapse:collapse; margin-bottom:16px; }
+  .pronoun-table th { background:var(--surface2); color:var(--muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.5px; padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  .pronoun-table td { padding:10px 12px; border-bottom:1px solid var(--border); font-size:0.92rem; }
+  .pronoun-table tr:last-child td { border-bottom:none; }
+  .pronoun-table tr:hover td { background:var(--surface2); }
+  .pronoun-table .td-ru { color:var(--gold); font-size:1.05rem; font-weight:600; }
+  .pronoun-table .td-translit { color:var(--accent2); font-style:italic; font-size:0.85rem; }
+  .pronoun-table .td-en { color:var(--text); }
+  .pronoun-table .td-example { color:var(--muted); font-size:0.82rem; }
+
+  .conj-table { width:100%; border-collapse:collapse; margin-bottom:16px; }
+  .conj-table th { background:var(--surface2); color:var(--muted); font-size:0.78rem; text-transform:uppercase; padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  .conj-table td { padding:9px 12px; border-bottom:1px solid var(--border); font-size:0.9rem; }
+  .conj-table tr:last-child td { border-bottom:none; }
+  .conj-table tr:hover td { background:var(--surface2); }
+  .conj-table .td-ru { color:var(--gold); font-weight:600; }
+  .conj-table .td-en { color:var(--text); }
+
+  .gender-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+  .gender-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; text-align:center; }
+  .gender-card .gc-title { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; font-weight:600; }
+  .gender-card.masc .gc-title { color:#6baed6; }
+  .gender-card.fem  .gc-title { color:#fc8d59; }
+  .gender-card.neut .gc-title { color:#74c476; }
+  .gender-card .gc-rule { font-size:0.8rem; color:var(--muted); margin-bottom:10px; }
+  .gender-card .gc-examples { font-size:0.85rem; color:var(--gold); line-height:1.7; }
+
+  .sentence-examples { display:flex; flex-direction:column; gap:10px; }
+  .sentence-ex { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px; }
+  .sentence-ex .se-ru { font-size:1.1rem; color:var(--gold); font-weight:600; flex:1; }
+  .sentence-ex .se-en { font-size:0.85rem; color:var(--muted); }
+  .sentence-ex .se-note { font-size:0.78rem; color:var(--accent2); margin-top:2px; }
+
+  .negation-box { background:var(--card); border:2px solid var(--accent); border-radius:12px; padding:18px 20px; margin-bottom:16px; }
+  .negation-box .nb-rule { font-size:1rem; color:var(--text); margin-bottom:10px; }
+  .negation-box .nb-rule .ru { color:var(--gold); font-size:1.1rem; font-weight:700; }
+  .negation-box .nb-ex { font-size:0.88rem; color:var(--muted); line-height:1.8; }
+
+  /* ── News Headlines ── */
+  .news-grid { display:flex; flex-direction:column; gap:18px; }
+  .headline-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:14px; overflow:hidden; transition:border-color 0.2s;
+  }
+  .headline-card:hover { border-color:var(--accent2); }
+  .hc-header {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:9px 16px; background:var(--surface2); border-bottom:1px solid var(--border);
+  }
+  .hc-cat { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent2); }
+  .hc-year { font-size:0.72rem; color:var(--muted); background:var(--border); padding:2px 8px; border-radius:10px; }
+  .hc-body { padding:18px 20px 22px; }
+  .hc-headline-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:14px; }
+  .hc-headline { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--gold); font-weight:700; line-height:1.5; flex:1; }
+  .hc-keywords { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+  .hc-kw {
+    background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+    padding:5px 10px; font-size:0.8rem; display:inline-flex; align-items:center; gap:4px;
+  }
+  .kw-ru { color:var(--gold); font-weight:600; }
+  .kw-sep { color:var(--muted); }
+  .kw-en { color:var(--text); }
+  .hc-quiz-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent2); font-weight:700; margin-bottom:10px; padding-top:14px; border-top:1px solid var(--border); }
+  .hc-mc { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .hc-mc-btn {
+    background:var(--surface2); border:1px solid var(--border); color:var(--text);
+    padding:10px 12px; border-radius:9px; cursor:pointer; font-size:0.83rem;
+    text-align:left; transition:all 0.15s; line-height:1.4;
+  }
+  .hc-mc-btn:hover:not(:disabled) { border-color:var(--accent2); background:#1f2a38; }
+  .hc-mc-btn.hc-correct { border-color:var(--green)!important; background:rgba(46,204,113,0.12); color:var(--green); }
+  .hc-mc-btn.hc-wrong   { border-color:var(--red)!important;   background:rgba(231,76,60,0.12);  color:var(--red); }
+  .hc-mc-btn:disabled { cursor:default; }
+  .hc-context {
+    margin-top:14px; font-size:0.83rem; color:var(--muted); line-height:1.65;
+    padding:12px 14px; background:var(--surface2); border-radius:8px;
+    border-left:3px solid var(--accent2); display:none;
+  }
+  .hc-context.show { display:block; }
+  .hc-translation { font-size:0.92rem; color:var(--accent2); font-style:italic; font-weight:600; margin-bottom:8px; }
+
+  /* ── News Map ── */
+  .map-container { margin-bottom:20px; border-radius:12px; overflow:hidden; border:1px solid var(--border); }
+  .map-svg { display:block; width:100%; height:auto; cursor:default; }
+  .map-pin-group { cursor:pointer; }
+  .map-pin-group:hover .pin-circle { filter:brightness(1.4); }
+  .map-pin-group.active-pin .pin-circle { stroke:#fff!important; stroke-width:3!important; }
+  .map-pin-count { font-size:9px; font-weight:700; fill:#fff; text-anchor:middle; dominant-baseline:central; pointer-events:none; font-family:'Segoe UI',system-ui,sans-serif; }
+  .map-pin-label { font-size:8.5px; fill:rgba(255,255,255,0.8); text-anchor:middle; pointer-events:none; font-family:'Segoe UI',system-ui,sans-serif; }
+  .map-legend { display:flex; flex-wrap:wrap; gap:6px; padding:9px 14px; background:var(--surface2); border-top:1px solid var(--border); }
+  .map-legend-item { display:inline-flex; align-items:center; gap:5px; font-size:0.78rem; color:var(--muted); cursor:pointer; padding:3px 8px; border-radius:12px; border:1px solid transparent; transition:all 0.15s; white-space:nowrap; }
+  .map-legend-item:hover { border-color:var(--border); color:var(--text); }
+  .map-legend-item.active { border-color:var(--accent2); color:var(--text); background:rgba(69,123,157,0.15); }
+  .map-legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .map-filter-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(69,123,157,0.15); border:1px solid var(--accent2); color:var(--accent2); padding:4px 12px; border-radius:16px; font-size:0.8rem; margin-bottom:14px; cursor:pointer; }
+  .map-filter-badge:hover { background:rgba(69,123,157,0.28); }
+  @keyframes pin-pulse { 0%,100%{opacity:0.35;r:20} 50%{opacity:0.08;r:26} }
+  .pin-pulse { animation:pin-pulse 2.6s ease-in-out infinite; }
+
   /* responsive */
   @media (max-width: 500px) {
     .flashcard { height: 200px; }
     .flashcard-front .fc-main { font-size: 1.6rem; }
     .mc-options, .fill-options { grid-template-columns: 1fr; }
+    .hc-mc { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -588,7 +699,9 @@
   <button onclick="showSection('words')">Vocabulary</button>
   <button onclick="showSection('quiz')">Flashcards</button>
   <button onclick="showSection('tips')">Tips</button>
+  <button onclick="showSection('grammar')">Grammar</button>
   <button onclick="showSection('lessons')">Lessons</button>
+  <button onclick="showSection('news')">News</button>
 </nav>
 
 <main>
@@ -633,7 +746,14 @@
         <option value="phrases">Phrases</option>
         <option value="numbers">Numbers</option>
         <option value="greetings">Greetings</option>
+        <option value="adjectives">Adjectives</option>
+        <option value="places">Places</option>
+        <option value="pronouns">Pronouns</option>
+        <option value="weather">Weather</option>
+        <option value="transport">Transport</option>
         <option value="all_words">All Vocabulary</option>
+        <option value="security">National Security</option>
+        <option value="news_vocab">News Vocabulary</option>
       </select>
       <button onclick="startQuiz()">Start / Restart</button>
       <button class="secondary" onclick="shuffleDeck()">Shuffle</button>
@@ -707,6 +827,80 @@
         </ul>
       </div>
     </div>
+  </section>
+
+  <!-- ════════════ GRAMMAR ════════════ -->
+  <section id="grammar" class="section">
+    <h2 class="section-title"><span>Грамматика</span> — Grammar Guide</h2>
+    <p class="section-subtitle">Essential Russian grammar for beginners. Click 🔊 on any Russian word to hear it.</p>
+    <div class="grammar-tabs" id="grammarTabs"></div>
+    <div id="grammarContent"></div>
+  </section>
+
+  <!-- ════════════ NEWS ════════════ -->
+  <section id="news" class="section">
+    <h2 class="section-title"><span>Новости</span> — Russian in the News</h2>
+    <p class="section-subtitle">Click a location marker to filter headlines by place. Each pin shows how many stories come from that region.</p>
+
+    <!-- Interactive map -->
+    <div class="map-container">
+      <svg viewBox="0 0 950 500" class="map-svg" id="newsSvgMap" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ocean -->
+        <rect width="950" height="500" fill="#0c1928"/>
+        <!-- Western Europe -->
+        <polygon points="0,178 10,150 45,112 95,99 165,97 202,112 238,118 270,142 283,178 296,235 288,260 268,288 246,312 218,334 178,354 138,376 88,410 48,440 14,456 0,460" fill="#1b2a1b" stroke="#26362a" stroke-width="1"/>
+        <!-- Scandinavia -->
+        <polygon points="165,97 205,80 240,60 282,52 318,78 322,108 306,133 270,145 238,136 205,116" fill="#1e2e1e" stroke="#28382a" stroke-width="1"/>
+        <!-- Baltic states -->
+        <polygon points="296,190 320,182 342,192 340,224 305,228 290,214" fill="#1c2c1c" stroke="#263628" stroke-width="1"/>
+        <!-- Russia (large northern polygon) -->
+        <polygon points="296,190 320,182 336,172 388,153 432,143 515,128 605,116 700,106 800,98 872,88 950,86 950,212 924,254 870,256 795,262 722,260 658,256 592,262 546,278 512,264 477,298 456,298 436,285 416,260 392,250 372,244 352,238 335,230 314,218 300,204" fill="#1d2c1d" stroke="#263526" stroke-width="1"/>
+        <!-- Ukraine -->
+        <polygon points="268,288 296,264 318,250 374,244 418,250 456,250 477,298 456,298 430,310 400,318 364,322 328,318 308,308 292,295" fill="#1c2438" stroke="#2a3252" stroke-width="1.5"/>
+        <!-- Belarus -->
+        <polygon points="296,235 316,224 342,213 378,208 390,225 392,248 374,255 342,258 305,255 291,244" fill="#1a2235" stroke="#26304a" stroke-width="1.5"/>
+        <!-- Moldova (small) -->
+        <polygon points="308,298 330,290 340,295 337,315 322,320 307,310" fill="#1c2535" stroke="#262f45" stroke-width="1"/>
+        <!-- Romania/Bulgaria -->
+        <polygon points="248,290 270,285 292,295 308,308 306,332 284,342 252,338 235,320 240,304" fill="#1c2a1c" stroke="#263626" stroke-width="1"/>
+        <!-- Turkey/Anatolia -->
+        <polygon points="248,340 282,330 343,323 413,318 477,326 512,338 517,356 502,375 480,387 432,390 380,387 328,382 287,378 258,366 248,354" fill="#201e1c" stroke="#302826" stroke-width="1"/>
+        <!-- Kazakhstan -->
+        <polygon points="542,260 592,250 666,248 762,248 852,255 924,254 942,300 904,354 862,384 792,396 712,400 642,392 582,376 550,348 535,318 525,288" fill="#22201a" stroke="#30291e" stroke-width="1.5"/>
+        <!-- Caucasus region (Georgia/Armenia/Azerbaijan) -->
+        <polygon points="477,336 512,328 545,335 568,354 562,382 540,390 516,384 492,372 472,354" fill="#231e1a" stroke="#322820" stroke-width="1"/>
+        <!-- Azerbaijan (slightly differentiated) -->
+        <polygon points="512,348 545,342 562,354 560,376 540,384 515,380 505,366" fill="#28241e" stroke="#38302a" stroke-width="1.5"/>
+        <!-- Iran (top strip) -->
+        <polygon points="512,384 562,382 660,375 726,385 752,400 752,450 684,464 602,465 530,452 505,420 498,392" fill="#1e1c18" stroke="#2a2820" stroke-width="1"/>
+        <!-- Central Asia south -->
+        <polygon points="582,376 642,392 712,400 792,400 832,416 812,464 744,482 662,492 582,476 536,456 524,420 540,396" fill="#201e1a" stroke="#2a281e" stroke-width="1"/>
+        <!-- Caspian Sea (water hole) -->
+        <ellipse cx="548" cy="320" rx="15" ry="48" fill="#0c1928"/>
+        <!-- Black Sea -->
+        <ellipse cx="382" cy="315" rx="70" ry="18" fill="#0c1928"/>
+        <!-- Sea of Azov -->
+        <ellipse cx="446" cy="303" rx="24" ry="12" fill="#0c1928"/>
+        <!-- Baltic Sea -->
+        <ellipse cx="238" cy="166" rx="28" ry="46" fill="#0c1928" opacity="0.65"/>
+        <!-- Mediterranean hint -->
+        <path d="M 92,374 L 228,356 L 246,364 L 230,392 L 156,412 L 78,422 Z" fill="#0c1928" opacity="0.72"/>
+        <!-- Aegean Sea -->
+        <ellipse cx="261" cy="372" rx="17" ry="24" fill="#0c1928" opacity="0.8"/>
+        <!-- Faint region labels -->
+        <text x="435" y="175" font-size="11" fill="rgba(255,255,255,0.16)" font-weight="bold" text-anchor="middle" font-family="'Segoe UI',sans-serif">RUSSIA</text>
+        <text x="770" y="194" font-size="9" fill="rgba(255,255,255,0.12)" font-weight="bold" text-anchor="middle" font-family="'Segoe UI',sans-serif">RUSSIA</text>
+        <text x="392" y="283" font-size="8" fill="rgba(255,255,255,0.16)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Ukraine</text>
+        <text x="715" y="335" font-size="9" fill="rgba(255,255,255,0.14)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Kazakhstan</text>
+        <text x="136" y="280" font-size="9" fill="rgba(255,255,255,0.14)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Europe</text>
+        <!-- Marker pins injected by JS -->
+        <g id="mapPins"></g>
+      </svg>
+      <div class="map-legend" id="mapLegend"></div>
+    </div>
+
+    <div class="category-tabs" id="newsCatTabs"></div>
+    <div class="news-grid" id="newsGrid"></div>
   </section>
 
   <!-- ════════════ LESSONS ════════════ -->
@@ -846,6 +1040,50 @@ const PHRASES = {
     { r:"Мне плохо",           t:"Mne plokho",          e:"I feel sick" },
     { r:"Осторожно!",          t:"Ostorozhno!",         e:"Watch out! / Careful!" },
   ],
+  "At a Restaurant": [
+    { r:"Столик на двоих",      t:"Stolik na dvoikh",    e:"A table for two" },
+    { r:"Меню, пожалуйста",     t:"Menyu, pozhaluysta",  e:"The menu, please" },
+    { r:"Что вы рекомендуете?", t:"Chto vy rekomenduete?",e:"What do you recommend?" },
+    { r:"Я буду...",            t:"Ya budu...",           e:"I will have..." },
+    { r:"Это очень вкусно!",    t:"Eto ochen' vkusno!",  e:"This is very tasty!" },
+    { r:"Счёт, пожалуйста",     t:"Schyot, pozhaluysta", e:"The bill, please" },
+    { r:"Без мяса",             t:"Bez myasa",           e:"Without meat" },
+    { r:"Аллергия на...",       t:"Allergiya na...",     e:"Allergy to..." },
+  ],
+  "Shopping": [
+    { r:"Сколько это стоит?",   t:"Skol'ko eto stoit?",  e:"How much does this cost?" },
+    { r:"Это слишком дорого",   t:"Eto slishkom dorogo", e:"This is too expensive" },
+    { r:"Есть скидка?",         t:"Est' skidka?",         e:"Is there a discount?" },
+    { r:"Я возьму это",         t:"Ya vozmu eto",         e:"I will take this" },
+    { r:"У вас есть...?",       t:"U vas est'...?",       e:"Do you have...?" },
+    { r:"Где касса?",           t:"Gde kassa?",           e:"Where is the cashier?" },
+    { r:"Можно примерить?",     t:"Mozhno primerit'?",   e:"Can I try it on?" },
+    { r:"Большой / маленький",  t:"Bol'shoy / malen'kiy",e:"Big / Small (size)" },
+  ],
+  "Travel": [
+    { r:"Где аэропорт?",        t:"Gde aeroport?",        e:"Where is the airport?" },
+    { r:"Один билет до...",     t:"Odin bilet do...",     e:"One ticket to..." },
+    { r:"Когда отправляется?",  t:"Kogda otpravlyaetsya?",e:"When does it depart?" },
+    { r:"Я потерялся",          t:"Ya poteryalsya",       e:"I'm lost (male)" },
+    { r:"Я потерялась",         t:"Ya poteryalas'",       e:"I'm lost (female)" },
+    { r:"Где гостиница?",       t:"Gde gostinitsa?",      e:"Where is the hotel?" },
+    { r:"Забронировать номер",  t:"Zabronirvat' nomer",   e:"To book a room" },
+    { r:"У меня нет интернета", t:"U menya net interneta",e:"I have no internet" },
+  ],
+  "Security & Diplomacy": [
+    { r:"Стоп! Документы!",            t:"Stop! Dokumenty!",             e:"Stop! Documents!", n:"Checkpoint phrase used by security forces" },
+    { r:"Предъявите паспорт",          t:"Pred'yavite pasport",          e:"Show your passport" },
+    { r:"Цель вашего визита?",         t:"Tsel' vashego vizita?",        e:"What is the purpose of your visit?" },
+    { r:"Я дипломат",                  t:"Ya diplomat",                  e:"I am a diplomat" },
+    { r:"Зона ограниченного доступа",  t:"Zona ogranichennogo dostupa",  e:"Restricted area / No unauthorized entry" },
+    { r:"Государственная тайна",       t:"Gosudarstvennaya tayna",       e:"State secret / Classified information" },
+    { r:"Переговоры идут",             t:"Peregovory idut",              e:"Negotiations are underway" },
+    { r:"Соглашение подписано",        t:"Soglasheniye podpisano",       e:"The agreement has been signed" },
+    { r:"Вызовите охрану",             t:"Vyzovite okhranu",             e:"Call the guards / Call security" },
+    { r:"Подтвердите личность",        t:"Podtverdite lichnost'",        e:"Confirm your identity" },
+    { r:"Я не слежу за вами",          t:"Ya ne slezhu za vami",         e:"I am not following you", n:"Useful phrase to know the meaning of" },
+    { r:"На границе",                  t:"Na granitse",                  e:"At the border / At the checkpoint" },
+  ],
 };
 
 const WORDS = {
@@ -938,7 +1176,358 @@ const WORDS = {
     { r:"Любить",    t:"Lyubit'",   e:"To love / like" },
     { r:"Работать",  t:"Rabotat'",  e:"To work" },
   ],
+  "Pronouns": [
+    { r:"Я",         t:"Ya",        e:"I" },
+    { r:"Ты",        t:"Ty",        e:"You (informal)" },
+    { r:"Он",        t:"On",        e:"He" },
+    { r:"Она",       t:"Ona",       e:"She" },
+    { r:"Оно",       t:"Ono",       e:"It" },
+    { r:"Мы",        t:"My",        e:"We" },
+    { r:"Вы",        t:"Vy",        e:"You (formal/plural)" },
+    { r:"Они",       t:"Oni",       e:"They" },
+    { r:"Мой / Моя", t:"Moy / Moya",e:"My (masc. / fem.)" },
+    { r:"Твой / Твоя",t:"Tvoy / Tvoya",e:"Your (masc. / fem.)" },
+    { r:"Его",       t:"Yevo",      e:"His / Its" },
+    { r:"Её",        t:"Yeyo",      e:"Her / Its" },
+    { r:"Наш / Наша",t:"Nash / Nasha",e:"Our (masc. / fem.)" },
+    { r:"Этот / Эта",t:"Etot / Eta",e:"This (masc. / fem.)" },
+  ],
+  "Adjectives": [
+    { r:"Большой",   t:"Bol'shoy",  e:"Big / Large" },
+    { r:"Маленький", t:"Malen'kiy", e:"Small / Little" },
+    { r:"Хороший",   t:"Khoroshiy", e:"Good" },
+    { r:"Плохой",    t:"Plokhoy",   e:"Bad" },
+    { r:"Новый",     t:"Novy",      e:"New" },
+    { r:"Старый",    t:"Stary",     e:"Old" },
+    { r:"Горячий",   t:"Goryachy",  e:"Hot" },
+    { r:"Холодный",  t:"Kholodny",  e:"Cold" },
+    { r:"Красивый",  t:"Krasivy",   e:"Beautiful" },
+    { r:"Интересный",t:"Interesny", e:"Interesting" },
+    { r:"Быстрый",   t:"Bystry",    e:"Fast" },
+    { r:"Медленный", t:"Medlenny",  e:"Slow" },
+    { r:"Дорогой",   t:"Dorogoy",   e:"Expensive / Dear" },
+    { r:"Дешёвый",   t:"Deshevy",   e:"Cheap" },
+  ],
+  "Places": [
+    { r:"Дом",       t:"Dom",       e:"Home / House" },
+    { r:"Магазин",   t:"Magazin",   e:"Shop / Store" },
+    { r:"Ресторан",  t:"Restoran",  e:"Restaurant" },
+    { r:"Школа",     t:"Shkola",    e:"School" },
+    { r:"Больница",  t:"Bol'nitsa", e:"Hospital" },
+    { r:"Аэропорт",  t:"Aeroport",  e:"Airport" },
+    { r:"Банк",      t:"Bank",      e:"Bank" },
+    { r:"Гостиница", t:"Gostinitsa",e:"Hotel" },
+    { r:"Парк",      t:"Park",      e:"Park" },
+    { r:"Улица",     t:"Ulitsa",    e:"Street" },
+    { r:"Город",     t:"Gorod",     e:"City / Town" },
+    { r:"Рынок",     t:"Rynok",     e:"Market" },
+    { r:"Аптека",    t:"Apteka",    e:"Pharmacy" },
+    { r:"Вокзал",    t:"Vokzal",    e:"Train station" },
+  ],
+  "Body & Health": [
+    { r:"Голова",    t:"Golova",    e:"Head" },
+    { r:"Рука",      t:"Ruka",      e:"Hand / Arm" },
+    { r:"Нога",      t:"Noga",      e:"Leg / Foot" },
+    { r:"Глаз",      t:"Glaz",      e:"Eye" },
+    { r:"Нос",       t:"Nos",       e:"Nose" },
+    { r:"Рот",       t:"Rot",       e:"Mouth" },
+    { r:"Спина",     t:"Spina",     e:"Back" },
+    { r:"Сердце",    t:"Serdtse",   e:"Heart" },
+    { r:"Врач",      t:"Vrach",     e:"Doctor" },
+    { r:"Больно",    t:"Bol'no",    e:"It hurts / Painful" },
+    { r:"Лекарство", t:"Lekarstvo", e:"Medicine" },
+    { r:"Температура",t:"Temperatura",e:"Temperature / Fever" },
+  ],
+  "Weather": [
+    { r:"Погода",    t:"Pogoda",    e:"Weather" },
+    { r:"Солнечно",  t:"Solnechno", e:"Sunny" },
+    { r:"Дождь",     t:"Dozhd'",    e:"Rain" },
+    { r:"Снег",      t:"Sneg",      e:"Snow" },
+    { r:"Ветер",     t:"Veter",     e:"Wind" },
+    { r:"Облачно",   t:"Oblachno",  e:"Cloudy" },
+    { r:"Гроза",     t:"Groza",     e:"Thunderstorm" },
+    { r:"Тепло",     t:"Teplo",     e:"Warm" },
+    { r:"Жарко",     t:"Zharko",    e:"Hot (weather)" },
+    { r:"Холодно",   t:"Kholodno",  e:"Cold (weather)" },
+    { r:"Туман",     t:"Tuman",     e:"Fog" },
+    { r:"Мороз",     t:"Moroz",     e:"Frost" },
+  ],
+  "Transport": [
+    { r:"Автобус",   t:"Avtobus",   e:"Bus" },
+    { r:"Метро",     t:"Metro",     e:"Metro / Subway" },
+    { r:"Такси",     t:"Taksi",     e:"Taxi" },
+    { r:"Поезд",     t:"Poyezd",    e:"Train" },
+    { r:"Самолёт",   t:"Samolyot",  e:"Airplane" },
+    { r:"Машина",    t:"Mashina",   e:"Car" },
+    { r:"Велосипед", t:"Velosiped", e:"Bicycle" },
+    { r:"Корабль",   t:"Korabl'",   e:"Ship / Boat" },
+    { r:"Остановка", t:"Ostanovka", e:"Bus stop" },
+    { r:"Билет",     t:"Bilet",     e:"Ticket" },
+    { r:"Паспорт",   t:"Pasport",   e:"Passport" },
+    { r:"Багаж",     t:"Bagazh",    e:"Luggage" },
+  ],
+  "National Security": [
+    { r:"Армия",          t:"Armiya",          e:"Army" },
+    { r:"Флот",           t:"Flot",            e:"Navy / Fleet" },
+    { r:"Офицер",         t:"Ofitser",         e:"Officer" },
+    { r:"Солдат",         t:"Soldat",          e:"Soldier" },
+    { r:"Генерал",        t:"General",         e:"General" },
+    { r:"Граница",        t:"Granitsa",        e:"Border / Frontier" },
+    { r:"Безопасность",   t:"Bezopasnost'",    e:"Security / Safety" },
+    { r:"Разведка",       t:"Razvedka",        e:"Intelligence / Reconnaissance" },
+    { r:"Агент",          t:"Agent",           e:"Agent" },
+    { r:"Секретно",       t:"Sekretno",        e:"Classified / Top Secret" },
+    { r:"Посольство",     t:"Posolstvo",       e:"Embassy" },
+    { r:"Переговоры",     t:"Peregovory",      e:"Negotiations" },
+    { r:"Договор",        t:"Dogovor",         e:"Treaty / Agreement" },
+    { r:"Угроза",         t:"Ugroza",          e:"Threat" },
+    { r:"Оружие",         t:"Oruzhiye",        e:"Weapon / Arms" },
+    { r:"Правительство",  t:"Pravitelstvo",    e:"Government" },
+    { r:"Разведчик",      t:"Razvedchik",      e:"Intelligence Officer" },
+    { r:"Шпион",          t:"Shpion",          e:"Spy" },
+  ],
 };
+
+// ═══════════════════════════════════════════
+// NEWS HEADLINES DATA
+// ═══════════════════════════════════════════
+const NEWS_HEADLINES = [
+  // ── UKRAINE ──
+  {
+    id:"nh1", cat:"Ukraine", flag:"🇺🇦", year:"2024",
+    headline:"Россия нанесла удары по энергетической инфраструктуре Украины",
+    translation:"Russia struck Ukraine's energy infrastructure",
+    keywords:[
+      {ru:"удары",        t:"udary",          e:"strikes / blows"},
+      {ru:"нанесла",      t:"nanesla",        e:"dealt / struck (she/it)"},
+      {ru:"энергетический",t:"energeticheskiy",e:"energy / power (adj.)"},
+      {ru:"инфраструктура",t:"infrastruktura", e:"infrastructure"},
+    ],
+    mc:{
+      question:"What does this headline report?",
+      answers:["Russia struck Ukraine's energy infrastructure","Ukraine struck Russian power plants","Russia and Ukraine signed an energy deal","Russia imposed sanctions on Ukraine's energy sector"],
+      correct:0,
+    },
+    context:"Russia repeatedly targeted Ukraine's power grid, heating networks, and water systems from 2022 onward — especially in winter. The word удары (strikes) is one of the most frequent terms in Russian military reporting.",
+  },
+  {
+    id:"nh2", cat:"Ukraine", flag:"🇺🇦", year:"2023",
+    headline:"Украинские войска начали контрнаступление на юге страны",
+    translation:"Ukrainian forces launched a counteroffensive in the south of the country",
+    keywords:[
+      {ru:"войска",             t:"voyska",             e:"forces / troops"},
+      {ru:"контрнаступление",   t:"kontrnastupleniye",  e:"counteroffensive"},
+      {ru:"юг",                 t:"yug",                e:"south"},
+      {ru:"начали",             t:"nachali",            e:"began / launched"},
+    ],
+    mc:{
+      question:"What does this headline say?",
+      answers:["Ukrainian forces began a southern counteroffensive","Russia launched a new offensive in the south","Ukraine surrendered southern territory","Negotiations began in southern Ukraine"],
+      correct:0,
+    },
+    context:"Ukraine's 2023 counteroffensive aimed to recapture Russian-held territory in the south and east. Контрнаступление became one of the most widely used military terms in coverage of the conflict. Юг (south) and восток (east) are essential compass directions in war reporting.",
+  },
+  {
+    id:"nh3", cat:"Ukraine", flag:"🇺🇦", year:"2024",
+    headline:"США объявили о новом пакете военной помощи Киеву",
+    translation:"The United States announced a new military aid package for Kyiv",
+    keywords:[
+      {ru:"США",            t:"SSHA",           e:"USA (Соединённые Штаты Америки)"},
+      {ru:"объявили",       t:"ob'yavili",      e:"announced (they)"},
+      {ru:"пакет",          t:"paket",          e:"package"},
+      {ru:"военная помощь", t:"voyennaya pomoshch'", e:"military aid"},
+    ],
+    mc:{
+      question:"What is this headline about?",
+      answers:["The US announced a military aid package for Kyiv","Kyiv announced new military operations against the US","The US imposed sanctions on Kyiv","Ukraine rejected a US peace proposal"],
+      correct:0,
+    },
+    context:"The US has provided over $60 billion in military aid (военная помощь) to Ukraine since 2022. Пакет помощи (aid package) became a recurring phrase in diplomatic coverage. Note: Russia is written Россия, Ukraine is Украина, the US is США.",
+  },
+  {
+    id:"nh4", cat:"Ukraine", flag:"🇺🇦", year:"2025",
+    headline:"Переговоры о прекращении огня зашли в тупик",
+    translation:"Ceasefire negotiations have reached a deadlock",
+    keywords:[
+      {ru:"переговоры",       t:"peregovory",           e:"negotiations / talks"},
+      {ru:"прекращение огня", t:"prekrashcheniye ognya",e:"ceasefire (lit. cessation of fire)"},
+      {ru:"тупик",            t:"tupik",                e:"deadlock / dead end"},
+      {ru:"зашли",            t:"zashli",               e:"have gone / reached"},
+    ],
+    mc:{
+      question:"What does this headline report?",
+      answers:["Ceasefire talks have stalled","A ceasefire agreement was signed","Peace negotiations succeeded","Both sides agreed to new terms"],
+      correct:0,
+    },
+    context:"Прекращение огня (ceasefire, literally 'cessation of fire') and тупик (deadlock) are essential vocabulary for following diplomatic reporting. Тупик also means 'dead end' on a street — a useful word to recognise in both contexts.",
+  },
+  // ── RUSSIA ──
+  {
+    id:"nh5", cat:"Russia", flag:"🇷🇺", year:"2022",
+    headline:"Путин объявил о частичной мобилизации в России",
+    translation:"Putin announced partial mobilization in Russia",
+    keywords:[
+      {ru:"объявил",    t:"ob'yavil",      e:"announced (he)"},
+      {ru:"частичная",  t:"chastichnaya",  e:"partial"},
+      {ru:"мобилизация",t:"mobilizatsiya", e:"mobilization"},
+    ],
+    mc:{
+      question:"What did Putin announce?",
+      answers:["Partial mobilization of Russian citizens","A full ceasefire with Ukraine","New sanctions against Western nations","Peace negotiations with NATO"],
+      correct:0,
+    },
+    context:"In September 2022 Putin announced частичная мобилизация — partial mobilization — calling up roughly 300,000 reservists. The announcement triggered a mass departure of Russians from the country. Мобилизация became one of the most searched words on Russian internet that week.",
+  },
+  {
+    id:"nh6", cat:"Russia", flag:"🇷🇺", year:"2023",
+    headline:"Западные санкции ударили по российской экономике",
+    translation:"Western sanctions hit the Russian economy",
+    keywords:[
+      {ru:"санкции",   t:"sanktsii",   e:"sanctions"},
+      {ru:"западные",  t:"zapadnyye",  e:"western"},
+      {ru:"ударили",   t:"udarili",    e:"hit / struck (they)"},
+      {ru:"экономика", t:"ekonomika",  e:"economy"},
+    ],
+    mc:{
+      question:"What does this headline say about sanctions?",
+      answers:["Western sanctions damaged Russia's economy","Russia imposed sanctions on the West","Russia's economy grew despite sanctions","The West lifted sanctions on Russia"],
+      correct:0,
+    },
+    context:"Following the 2022 invasion, Western nations imposed sweeping санкции (sanctions) targeting Russia's financial sector, energy exports, and military technology. Russia disputed their scale of impact — the debate over sanctions effectiveness remains a major geopolitical story.",
+  },
+  {
+    id:"nh7", cat:"Russia", flag:"🇷🇺", year:"2023",
+    headline:"Группа Вагнера начала вооружённый мятеж против военного командования",
+    translation:"The Wagner Group launched an armed mutiny against the military command",
+    keywords:[
+      {ru:"группа Вагнера",t:"gruppa Vagnera",   e:"Wagner Group"},
+      {ru:"вооружённый",   t:"vooruzhyonny",     e:"armed"},
+      {ru:"мятеж",         t:"myatezh",          e:"mutiny / rebellion"},
+      {ru:"командование",  t:"komandovaniye",    e:"command / military leadership"},
+    ],
+    mc:{
+      question:"What does this headline describe?",
+      answers:["Wagner Group staged an armed mutiny","Wagner Group was disbanded by Putin","Russia hired Wagner for a new mission","Wagner signed a peace deal with Ukraine"],
+      correct:0,
+    },
+    context:"In June 2023 Yevgeny Prigozhin's Wagner Group launched a brief armed march on Moscow in a dramatic мятеж (mutiny) against the Russian military's top command. The rebellion collapsed within 24 hours after a deal was reportedly brokered by Belarus. Prigozhin died in a plane crash two months later.",
+  },
+  // ── DIPLOMACY ──
+  {
+    id:"nh8", cat:"Diplomacy", flag:"🌐", year:"2024",
+    headline:"Россия заблокировала резолюцию Совета Безопасности ООН",
+    translation:"Russia blocked a UN Security Council resolution",
+    keywords:[
+      {ru:"заблокировала",       t:"zablokirovala",        e:"blocked / vetoed (she/it)"},
+      {ru:"резолюция",           t:"rezolyutsiya",         e:"resolution"},
+      {ru:"Совет Безопасности",  t:"Sovet Bezopasnosti",   e:"Security Council"},
+      {ru:"ООН",                 t:"OON",                  e:"UN (Организация Объединённых Наций)"},
+    ],
+    mc:{
+      question:"What happened with the UN resolution?",
+      answers:["Russia vetoed a UN Security Council resolution","Russia supported a UN peace resolution","The UN sanctioned Russia","Russia withdrew from the UN"],
+      correct:0,
+    },
+    context:"As a permanent member of the UN Security Council (Совет Безопасности ООН), Russia holds veto power and has used it repeatedly to block resolutions condemning its actions in Ukraine. ООН = Организация Объединённых Наций (Organization of United Nations).",
+  },
+  {
+    id:"nh9", cat:"Diplomacy", flag:"🌐", year:"2024",
+    headline:"НАТО расширяется: Финляндия и Швеция вступили в альянс",
+    translation:"NATO is expanding: Finland and Sweden have joined the alliance",
+    keywords:[
+      {ru:"НАТО",        t:"NATO",         e:"NATO"},
+      {ru:"расширяется", t:"rasshiryaetsya",e:"is expanding"},
+      {ru:"вступили",    t:"vstupili",     e:"have joined / entered"},
+      {ru:"альянс",      t:"al'yans",      e:"alliance"},
+    ],
+    mc:{
+      question:"What does this headline report?",
+      answers:["Finland and Sweden joined NATO","Finland and Sweden left NATO","Russia joined a new military alliance","NATO was dissolved"],
+      correct:0,
+    },
+    context:"Finland joined NATO in April 2023 and Sweden in March 2024 — a major strategic shift driven directly by Russia's invasion of Ukraine. Russia had long opposed расширение НАТО (NATO expansion), viewing it as a red line. The accession doubled NATO's border with Russia.",
+  },
+  {
+    id:"nh10", cat:"Diplomacy", flag:"🌐", year:"2023",
+    headline:"G7 согласовала новый пакет санкций против России",
+    translation:"The G7 agreed on a new sanctions package against Russia",
+    keywords:[
+      {ru:"согласовала",  t:"soglasovala",   e:"agreed on / coordinated (she/it)"},
+      {ru:"пакет санкций",t:"paket sanktsiy", e:"sanctions package"},
+      {ru:"против",       t:"protiv",         e:"against"},
+    ],
+    mc:{
+      question:"What did the G7 do?",
+      answers:["Agreed on new sanctions against Russia","Lifted existing sanctions on Russia","Invited Russia back to the G8","Signed a peace deal with Russia"],
+      correct:0,
+    },
+    context:"The G7 (Group of Seven) has coordinated multiple rounds of пакеты санкций (sanctions packages) against Russia since 2022, targeting energy revenues, financial systems, and arms exports. The preposition против (against) is essential vocabulary in diplomatic and military headlines.",
+  },
+  // ── REGIONAL ──
+  {
+    id:"nh11", cat:"Regional", flag:"🇰🇿", year:"2022",
+    headline:"В Казахстане введено чрезвычайное положение после массовых протестов",
+    translation:"A state of emergency was declared in Kazakhstan following mass protests",
+    keywords:[
+      {ru:"чрезвычайное положение",t:"chrezvychaynoye polozheniye",e:"state of emergency"},
+      {ru:"введено",               t:"vvedeno",                    e:"declared / introduced"},
+      {ru:"протесты",              t:"protesty",                   e:"protests"},
+      {ru:"массовые",              t:"massovyye",                  e:"mass / large-scale"},
+    ],
+    mc:{
+      question:"What happened in Kazakhstan?",
+      answers:["A state of emergency was declared after mass protests","Kazakhstan joined a new military alliance","Kazakhstan signed a defense deal with Russia","Elections were held in Kazakhstan"],
+      correct:0,
+    },
+    context:"In January 2022 Kazakhstan experienced its worst unrest in decades. Массовые протесты (mass protests) over fuel price increases escalated into nationwide violence. President Tokayev declared чрезвычайное положение and requested Russian-led CSTO troops — which arrived within days.",
+  },
+  {
+    id:"nh12", cat:"Regional", flag:"🇦🇿", year:"2023",
+    headline:"Азербайджан провёл военную операцию в Нагорном Карабахе",
+    translation:"Azerbaijan conducted a military operation in Nagorno-Karabakh",
+    keywords:[
+      {ru:"провёл",           t:"provyol",              e:"conducted / carried out (he)"},
+      {ru:"военная операция", t:"voyennaya operatsiya", e:"military operation"},
+      {ru:"Нагорный Карабах", t:"Nagorny Karabakh",     e:"Nagorno-Karabakh"},
+    ],
+    mc:{
+      question:"What does this headline report?",
+      answers:["Azerbaijan conducted a military operation in Karabakh","Russia intervened militarily in Nagorno-Karabakh","Armenia launched an offensive in Karabakh","A peace treaty was signed for Karabakh"],
+      correct:0,
+    },
+    context:"In September 2023 Azerbaijan launched a swift военная операция in Nagorno-Karabakh, ending the decades-long territorial dispute. The operation lasted under 24 hours. More than 100,000 ethnic Armenians fled the region afterward — one of the largest displacements in recent Caucasus history.",
+  },
+  {
+    id:"nh13", cat:"Regional", flag:"🇧🇾", year:"2021",
+    headline:"Лукашенко использует мигрантов как инструмент давления на ЕС",
+    translation:"Lukashenko is using migrants as a tool of pressure on the EU",
+    keywords:[
+      {ru:"использует",t:"ispol'zuyet",e:"uses / is using"},
+      {ru:"мигранты",  t:"migranty",   e:"migrants"},
+      {ru:"давление",  t:"davleniye",  e:"pressure"},
+      {ru:"инструмент",t:"instrument", e:"tool / instrument"},
+    ],
+    mc:{
+      question:"What does this headline claim about Lukashenko?",
+      answers:["He is using migrants to pressure the EU","He is accepting EU refugees into Belarus","He is negotiating a border deal with the EU","He is expelling migrants to Russia"],
+      correct:0,
+    },
+    context:"In 2021 Belarusian president Alexander Lukashenko allegedly orchestrated the movement of migrants from the Middle East through Belarus to EU borders with Poland and Lithuania — a tactic described as гибридная война (hybrid warfare). Давление (pressure) is a key term in geopolitical analysis.",
+  },
+];
+
+// Map location groups — each pin on the SVG links to a set of headline IDs
+// SVG coords: viewBox 0 0 950 500 | region 5°W–90°E, 28°N–75°N
+const NEWS_LOCATIONS = [
+  { id:'ukraine',    name:'Ukraine',       flag:'🇺🇦', x:375, y:272, color:'#4a90d9', headlineIds:['nh1','nh2','nh3','nh4'] },
+  { id:'russia',     name:'Russia',        flag:'🇷🇺', x:448, y:196, color:'#e06c60', headlineIds:['nh5','nh6','nh7'] },
+  { id:'belarus',    name:'Belarus',       flag:'🇧🇾', x:342, y:230, color:'#5cb85c', headlineIds:['nh13'] },
+  { id:'kazakhstan', name:'Kazakhstan',    flag:'🇰🇿', x:740, y:310, color:'#f0ad4e', headlineIds:['nh11'] },
+  { id:'azerbaijan', name:'Azerbaijan',    flag:'🇦🇿', x:533, y:362, color:'#5bc0de', headlineIds:['nh12'] },
+  { id:'intl',       name:'International', flag:'🌐',  x:122, y:250, color:'#9b59b6', headlineIds:['nh8','nh9','nh10'] },
+];
+
+let _activeMapLoc = null;
 
 // ═══════════════════════════════════════════
 // NAV
@@ -948,7 +1537,7 @@ function showSection(id) {
   document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const btns = document.querySelectorAll('#nav button');
-  const sections = ['alphabet','phrases','words','quiz','tips','lessons'];
+  const sections = ['alphabet','phrases','words','quiz','tips','grammar','lessons','news'];
   btns[sections.indexOf(id)].classList.add('active');
 }
 
@@ -1045,9 +1634,14 @@ function renderWords(cat) {
   (WORDS[cat] || []).forEach(({ r, t, e }) => {
     const card = document.createElement('div');
     card.className = 'phrase-card';
-    card.innerHTML = `<div class="russian">${r}</div>
-      <div class="translit">${t}</div>
-      <div class="english">${e}</div>`;
+    card.innerHTML =
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">' +
+        '<div class="russian">' + r + '</div>' +
+        '<button class="speak-btn" title="Listen" style="flex-shrink:0;margin-top:2px">🔊</button>' +
+      '</div>' +
+      '<div class="translit">' + t + '</div>' +
+      '<div class="english">' + e + '</div>';
+    card.querySelector('.speak-btn').addEventListener('click', function() { speak(r, this); });
     grid.appendChild(card);
   });
 }
@@ -1074,8 +1668,28 @@ function buildDeck(type) {
   } else if (type === 'greetings') {
     PHRASES['Greetings'].concat(PHRASES['Farewells']).forEach(p =>
       cards.push({ front: p.r, back: p.e, hint: p.t }));
+  } else if (type === 'adjectives') {
+    WORDS['Adjectives'].forEach(w => cards.push({ front: w.r, back: w.e, hint: w.t }));
+  } else if (type === 'places') {
+    WORDS['Places'].forEach(w => cards.push({ front: w.r, back: w.e, hint: w.t }));
+  } else if (type === 'pronouns') {
+    WORDS['Pronouns'].forEach(w => cards.push({ front: w.r, back: w.e, hint: w.t }));
+  } else if (type === 'weather') {
+    WORDS['Weather'].forEach(w => cards.push({ front: w.r, back: w.e, hint: w.t }));
+  } else if (type === 'transport') {
+    WORDS['Transport'].forEach(w => cards.push({ front: w.r, back: w.e, hint: w.t }));
   } else if (type === 'all_words') {
     Object.values(WORDS).flat().forEach(w => cards.push({ front: w.r, back: w.e, hint: w.t }));
+  } else if (type === 'security') {
+    WORDS['National Security'].forEach(w => cards.push({ front: w.r, back: w.e, hint: w.t }));
+  } else if (type === 'news_vocab') {
+    const seen = new Set();
+    NEWS_HEADLINES.forEach(h => h.keywords.forEach(k => {
+      if (!seen.has(k.ru)) {
+        seen.add(k.ru);
+        cards.push({ front: k.ru, back: k.e, hint: k.t });
+      }
+    }));
   }
   return cards;
 }
@@ -1384,6 +1998,125 @@ const LESSON_DEFS = [
       {type:'listen',russian:'Почему?',options:['Why?','When?','Where?','What?'],correct:0},
       {type:'tap',english:'Where is the bread?',correctTokens:['Где','хлеб?'],allTokens:['Где','хлеб?','Что','Когда','вода?','кофе?']},
       {type:'match',pairs:[{r:'Что?',e:'What?'},{r:'Кто?',e:'Who?'},{r:'Где?',e:'Where?'},{r:'Когда?',e:'When?'},{r:'Почему?',e:'Why?'},{r:'Как?',e:'How?'}]},
+    ]
+  },
+  {
+    id:'l9', title:'Pronouns', russian:'Местоимения', icon:'🙋',
+    desc:'I, you, he, she, we — build every sentence from these',
+    xp:30,
+    exercises:[
+      {type:'learn',r:'Я',t:'Ya',e:'I'},
+      {type:'learn',r:'Ты',t:'Ty',e:'You (informal)'},
+      {type:'learn',r:'Он / Она',t:'On / Ona',e:'He / She'},
+      {type:'learn',r:'Мы',t:'My',e:'We'},
+      {type:'learn',r:'Вы',t:'Vy',e:'You (formal or plural)'},
+      {type:'learn',r:'Они',t:'Oni',e:'They'},
+      {type:'mc',question:'Я',questionSub:'ya',answers:['I','You','He','We'],correct:0},
+      {type:'mc',question:'Мы',questionSub:'my',answers:['We','They','You','I'],correct:0},
+      {type:'mc',question:'Они',questionSub:'oni',answers:['They','We','You','He'],correct:0},
+      {type:'mc',label:'Russian for:',question:'You (informal)',answers:['Ты','Вы','Он','Она'],correct:0},
+      {type:'mc',label:'Russian for:',question:'She',answers:['Она','Он','Они','Мы'],correct:0},
+      {type:'listen',russian:'Мы',options:['We','They','I','You'],correct:0},
+      {type:'fill',sentence:'_______ студент.',translation:'_____ am a student.',note:'студент = student',answers:['Я','Ты','Он','Мы'],correct:0},
+      {type:'fill',sentence:'_______ говорите по-русски?',translation:'Do _____ speak Russian?',note:'говорите = (you) speak',answers:['Вы','Мы','Они','Я'],correct:0},
+      {type:'tap',english:'I speak Russian',correctTokens:['Я','говорю','по-русски'],allTokens:['Я','говорю','по-русски','Мы','Они','Ты'],note:'говорю = I speak'},
+      {type:'match',pairs:[{r:'Я',e:'I'},{r:'Ты',e:'You (informal)'},{r:'Он',e:'He'},{r:'Она',e:'She'},{r:'Мы',e:'We'},{r:'Они',e:'They'}]},
+    ]
+  },
+  {
+    id:'l10', title:'Adjectives', russian:'Прилагательные', icon:'🎨',
+    desc:'Describe the world — big, small, good, bad, new, old',
+    xp:30,
+    exercises:[
+      {type:'learn',r:'Большой',t:"Bol'shoy",e:'Big / Large'},
+      {type:'learn',r:'Маленький',t:"Malen'kiy",e:'Small / Little'},
+      {type:'learn',r:'Хороший',t:'Khoroshiy',e:'Good'},
+      {type:'learn',r:'Плохой',t:'Plokhoy',e:'Bad'},
+      {type:'learn',r:'Новый',t:'Novy',e:'New'},
+      {type:'learn',r:'Старый',t:'Stary',e:'Old'},
+      {type:'learn',r:'Горячий',t:'Goryachy',e:'Hot'},
+      {type:'learn',r:'Холодный',t:'Kholodny',e:'Cold'},
+      {type:'mc',question:'Большой',questionSub:"bol'shoy",answers:['Big','Small','Good','New'],correct:0},
+      {type:'mc',question:'Плохой',questionSub:'plokhoy',answers:['Bad','Good','Old','Cold'],correct:0},
+      {type:'mc',question:'Холодный',questionSub:'kholodny',answers:['Cold','Hot','Small','Old'],correct:0},
+      {type:'mc',label:'Russian for:',question:'New',answers:['Новый','Старый','Хороший','Быстрый'],correct:0},
+      {type:'listen',russian:'Хороший',options:['Good','Bad','New','Big'],correct:0},
+      {type:'fill',sentence:'Это _______ ресторан!',translation:'This is a _____ restaurant!',answers:['хороший','плохой','старый','маленький'],correct:0},
+      {type:'fill',sentence:'Кофе _______.',translation:'The coffee is _____.',answers:['горячий','холодный','новый','большой'],correct:0},
+      {type:'tap',english:'Big new house',correctTokens:['Большой','новый','дом'],allTokens:['Большой','новый','дом','маленький','старый','город'],note:'дом = house'},
+      {type:'match',pairs:[{r:'Большой',e:'Big'},{r:'Маленький',e:'Small'},{r:'Хороший',e:'Good'},{r:'Плохой',e:'Bad'},{r:'Новый',e:'New'},{r:'Старый',e:'Old'}]},
+    ]
+  },
+  {
+    id:'l11', title:'Getting Around', russian:'В городе', icon:'🏙️',
+    desc:'Navigate cities — shops, restaurants, transport and directions',
+    xp:35,
+    exercises:[
+      {type:'learn',r:'Магазин',t:'Magazin',e:'Shop / Store'},
+      {type:'learn',r:'Ресторан',t:'Restoran',e:'Restaurant'},
+      {type:'learn',r:'Больница',t:"Bol'nitsa",e:'Hospital'},
+      {type:'learn',r:'Аэропорт',t:'Aeroport',e:'Airport'},
+      {type:'learn',r:'Вокзал',t:'Vokzal',e:'Train station'},
+      {type:'learn',r:'Автобус',t:'Avtobus',e:'Bus'},
+      {type:'learn',r:'Билет',t:'Bilet',e:'Ticket'},
+      {type:'mc',question:'Магазин',questionSub:'magazin',answers:['Shop','Hospital','Hotel','School'],correct:0},
+      {type:'mc',question:'Вокзал',questionSub:'vokzal',answers:['Train station','Airport','Market','Park'],correct:0},
+      {type:'mc',question:'Билет',questionSub:'bilet',answers:['Ticket','Passport','Luggage','Bus'],correct:0},
+      {type:'mc',label:'Russian for:',question:'Airport',answers:['Аэропорт','Вокзал','Гостиница','Аптека'],correct:0},
+      {type:'listen',russian:'Автобус',options:['Bus','Train','Taxi','Airplane'],correct:0},
+      {type:'fill',sentence:'Где ближайший _______?',translation:'Where is the nearest _____?',note:'ближайший = nearest',answers:['магазин','билет','автобус','вокзал'],correct:0},
+      {type:'fill',sentence:'Один _______ до Москвы.',translation:'One _____ to Moscow.',note:'до Москвы = to Moscow',answers:['билет','паспорт','автобус','ресторан'],correct:0},
+      {type:'tap',english:'Where is the train station?',correctTokens:['Где','вокзал?'],allTokens:['Где','вокзал?','Что','аэропорт?','магазин?','Когда'],},
+      {type:'match',pairs:[{r:'Магазин',e:'Shop'},{r:'Больница',e:'Hospital'},{r:'Аэропорт',e:'Airport'},{r:'Вокзал',e:'Train station'},{r:'Автобус',e:'Bus'},{r:'Билет',e:'Ticket'}]},
+    ]
+  },
+  {
+    id:'l12', title:'Everyday Sentences', russian:'Повседневные фразы', icon:'💬',
+    desc:'Put it all together — real sentences for real situations',
+    xp:40,
+    exercises:[
+      {type:'learn',r:'Я не знаю',t:'Ya ne znayu',e:'I don\'t know',note:'не = not (negation)'},
+      {type:'learn',r:'Я понимаю',t:'Ya ponimayu',e:'I understand'},
+      {type:'learn',r:'Мне нравится',t:'Mne nravitsya',e:'I like it'},
+      {type:'learn',r:'Я хочу...',t:'Ya khochu...',e:'I want...'},
+      {type:'learn',r:'Можно...?',t:'Mozhno...?',e:'May I / Is it possible...?'},
+      {type:'learn',r:'Я не говорю по-русски',t:'Ya ne govoryu po-russki',e:'I don\'t speak Russian'},
+      {type:'mc',question:'Я не знаю',questionSub:'ya ne znayu',answers:["I don't know","I understand","I want","I like it"],correct:0},
+      {type:'mc',question:'Мне нравится',questionSub:'mne nravitsya',answers:['I like it','I want it','I need it','I have it'],correct:0},
+      {type:'mc',question:'Можно...?',questionSub:'mozhno...?',answers:['May I...?','Where is...?','What is...?','How much...?'],correct:0},
+      {type:'mc',label:'Russian for:',question:'I understand',answers:['Я понимаю','Я хочу','Я знаю','Мне нравится'],correct:0},
+      {type:'listen',russian:'Я понимаю',options:["I understand","I don't know","I want","I like it"],correct:0},
+      {type:'fill',sentence:'Я _______ по-русски.',translation:'I _____ Russian.',note:'по-русски = in Russian',answers:['говорю','понимаю','хочу','знаю'],correct:0},
+      {type:'fill',sentence:'_______ взять кофе?',translation:'_____ I get a coffee?',answers:['Можно','Где','Что','Когда'],correct:0},
+      {type:'tap',english:'I don\'t understand',correctTokens:['Я','не','понимаю'],allTokens:['Я','не','понимаю','знаю','хочу','Мы'],note:'не = not'},
+      {type:'match',pairs:[{r:'Я не знаю',e:"I don't know"},{r:'Я понимаю',e:'I understand'},{r:'Мне нравится',e:'I like it'},{r:'Я хочу',e:'I want'},{r:'Можно?',e:'May I?'},{r:'Не за что',e:"Don't mention it"}]},
+    ]
+  },
+  {
+    id:'l13', title:'National Security', russian:'Национальная безопасность', icon:'🛡️',
+    desc:'Military ranks, intelligence terminology, and diplomatic vocabulary',
+    xp:45,
+    exercises:[
+      {type:'learn',r:'Армия',t:'Armiya',e:'Army'},
+      {type:'learn',r:'Офицер',t:'Ofitser',e:'Officer'},
+      {type:'learn',r:'Граница',t:'Granitsa',e:'Border / Frontier'},
+      {type:'learn',r:'Безопасность',t:"Bezopasnost'",e:'Security / Safety'},
+      {type:'learn',r:'Разведка',t:'Razvedka',e:'Intelligence / Reconnaissance'},
+      {type:'learn',r:'Агент',t:'Agent',e:'Agent'},
+      {type:'learn',r:'Посольство',t:'Posolstvo',e:'Embassy'},
+      {type:'learn',r:'Договор',t:'Dogovor',e:'Treaty / Agreement'},
+      {type:'mc',question:'Армия',questionSub:'armiya',answers:['Army','Navy','Embassy','Officer'],correct:0},
+      {type:'mc',question:'Граница',questionSub:'granitsa',answers:['Border','Treaty','Secret','Soldier'],correct:0},
+      {type:'mc',question:'Разведка',questionSub:'razvedka',answers:['Intelligence','Security','Government','Army'],correct:0},
+      {type:'mc',question:'Посольство',questionSub:'posolstvo',answers:['Embassy','Border','Weapon','Threat'],correct:0},
+      {type:'mc',label:'Russian for:',question:'Security / Safety',answers:['Безопасность','Угроза','Оружие','Граница'],correct:0},
+      {type:'mc',label:'Russian for:',question:'Treaty / Agreement',answers:['Договор','Агент','Армия','Офицер'],correct:0},
+      {type:'listen',russian:'Безопасность',options:['Security','Intelligence','Embassy','Treaty'],correct:0},
+      {type:'listen',russian:'Граница',options:['Border','Army','Agent','Officer'],correct:0},
+      {type:'fill',sentence:'Это секретный _______.',translation:'This is a secret _____.',note:'секретный = secret (adj.)',answers:['агент','договор','солдат','офицер'],correct:0},
+      {type:'fill',sentence:'_______ закрыта для посторонних.',translation:'The _____ is closed to outsiders.',note:'закрыта = closed, посторонних = outsiders',answers:['Граница','Армия','Разведка','Угроза'],correct:0},
+      {type:'tap',english:'The intelligence officer at the embassy',correctTokens:['Разведчик','в','посольстве'],allTokens:['Разведчик','в','посольстве','агент','армия','офицер'],note:'в посольстве = at the embassy'},
+      {type:'match',pairs:[{r:'Армия',e:'Army'},{r:'Офицер',e:'Officer'},{r:'Граница',e:'Border'},{r:'Разведка',e:'Intelligence'},{r:'Агент',e:'Agent'},{r:'Посольство',e:'Embassy'}]},
     ]
   },
 ];
@@ -1860,12 +2593,469 @@ function getNextLessonId(id) {
 }
 
 // ═══════════════════════════════════════════
+// GRAMMAR
+// ═══════════════════════════════════════════
+const GRAMMAR_TOPICS = [
+  {
+    id:'pronouns', label:'Pronouns',
+    render: renderGrammarPronouns,
+  },
+  {
+    id:'verbs', label:'Verb Basics',
+    render: renderGrammarVerbs,
+  },
+  {
+    id:'gender', label:'Noun Gender',
+    render: renderGrammarGender,
+  },
+  {
+    id:'sentences', label:'Sentences',
+    render: renderGrammarSentences,
+  },
+  {
+    id:'negation', label:'Negation',
+    render: renderGrammarNegation,
+  },
+];
+
+function buildGrammar() {
+  const tabs = document.getElementById('grammarTabs');
+  GRAMMAR_TOPICS.forEach((topic, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = topic.label;
+    btn.addEventListener('click', () => {
+      tabs.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      topic.render(document.getElementById('grammarContent'));
+    });
+    tabs.appendChild(btn);
+  });
+  GRAMMAR_TOPICS[0].render(document.getElementById('grammarContent'));
+}
+
+function speakCell(text, btn) { speak(text, btn); }
+
+function makeTableRow(ru, translit, en, example) {
+  return '<tr>' +
+    '<td class="td-ru">' + ru +
+      ' <button class="speak-btn" onclick="speakCell(\'' + ru.replace(/'/g,"\\'") + '\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td>' +
+    '<td class="td-translit">' + translit + '</td>' +
+    '<td class="td-en">' + en + '</td>' +
+    (example ? '<td class="td-example">' + example + '</td>' : '') +
+  '</tr>';
+}
+
+function renderGrammarPronouns(area) {
+  area.innerHTML =
+    '<div class="grammar-block">' +
+      '<h3>Subject Pronouns <span>— who is doing the action</span></h3>' +
+      '<p>Russian has <span class="hl">7 pronouns</span>. Unlike English, Russian has two words for "you": ' +
+      '<span class="ru">ты</span> (informal, one person you know) and <span class="ru">вы</span> (formal, or multiple people).</p>' +
+      '<table class="pronoun-table">' +
+        '<thead><tr><th>Russian</th><th>Pronunciation</th><th>English</th><th>Example</th></tr></thead>' +
+        '<tbody>' +
+          makeTableRow('Я','ya','I','Я студент — I am a student') +
+          makeTableRow('Ты','ty','You (informal)','Ты говоришь — You speak') +
+          makeTableRow('Он','on','He','Он работает — He works') +
+          makeTableRow('Она','ona','She','Она дома — She is home') +
+          makeTableRow('Оно','ono','It','Оно большое — It is big') +
+          makeTableRow('Мы','my','We','Мы едим — We eat') +
+          makeTableRow('Вы','vy','You (formal/plural)','Вы говорите — You speak') +
+          makeTableRow('Они','oni','They','Они там — They are there') +
+        '</tbody>' +
+      '</table>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>Possessive Pronouns <span>— my, your, his, her...</span></h3>' +
+      '<p>Possessives change ending based on the <span class="hl">gender</span> of the noun they describe, not the owner.</p>' +
+      '<table class="pronoun-table">' +
+        '<thead><tr><th>Russian</th><th>Pronunciation</th><th>English</th><th>Example</th></tr></thead>' +
+        '<tbody>' +
+          makeTableRow('Мой / Моя / Моё','moy/moya/moyo','My (m/f/n)','Мой дом — My house') +
+          makeTableRow('Твой / Твоя','tvoy/tvoya','Your (informal)','Твоя мама — Your mom') +
+          makeTableRow('Его','yevo','His / Its','Его брат — His brother') +
+          makeTableRow('Её','yeyo','Her / Its','Её книга — Her book') +
+          makeTableRow('Наш / Наша','nash/nasha','Our (m/f)','Наш город — Our city') +
+          makeTableRow('Ваш / Ваша','vash/vasha','Your (formal)','Ваш паспорт — Your passport') +
+        '</tbody>' +
+      '</table>' +
+    '</div>';
+}
+
+function renderGrammarVerbs(area) {
+  area.innerHTML =
+    '<div class="grammar-block">' +
+      '<h3>Verb Conjugation <span>— verbs change by person</span></h3>' +
+      '<p>Russian verbs conjugate (change form) for each pronoun. There is <span class="hl">no infinitive used in sentences</span> — you always use the conjugated form. ' +
+      'Also, there is <span class="hl">no verb "to be" in present tense</span> — "Я студент" means "I (am) a student".</p>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>говорить <span>(govorit\') — To speak</span></h3>' +
+      '<table class="conj-table">' +
+        '<thead><tr><th>Pronoun</th><th>Russian</th><th>Pronunciation</th><th>English</th></tr></thead>' +
+        '<tbody>' +
+          '<tr><td>Я</td><td class="td-ru">говорю <button class="speak-btn" onclick="speakCell(\'говорю\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govoryu</td><td class="td-en">I speak</td></tr>' +
+          '<tr><td>Ты</td><td class="td-ru">говоришь <button class="speak-btn" onclick="speakCell(\'говоришь\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorish\'</td><td class="td-en">You speak</td></tr>' +
+          '<tr><td>Он/Она</td><td class="td-ru">говорит <button class="speak-btn" onclick="speakCell(\'говорит\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorit\'</td><td class="td-en">He/She speaks</td></tr>' +
+          '<tr><td>Мы</td><td class="td-ru">говорим <button class="speak-btn" onclick="speakCell(\'говорим\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorim</td><td class="td-en">We speak</td></tr>' +
+          '<tr><td>Вы</td><td class="td-ru">говорите <button class="speak-btn" onclick="speakCell(\'говорите\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorite</td><td class="td-en">You speak (formal)</td></tr>' +
+          '<tr><td>Они</td><td class="td-ru">говорят <button class="speak-btn" onclick="speakCell(\'говорят\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govoryat</td><td class="td-en">They speak</td></tr>' +
+        '</tbody>' +
+      '</table>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>хотеть <span>(khotet\') — To want</span></h3>' +
+      '<table class="conj-table">' +
+        '<thead><tr><th>Pronoun</th><th>Russian</th><th>Pronunciation</th><th>English</th></tr></thead>' +
+        '<tbody>' +
+          '<tr><td>Я</td><td class="td-ru">хочу <button class="speak-btn" onclick="speakCell(\'хочу\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khochu</td><td class="td-en">I want</td></tr>' +
+          '<tr><td>Ты</td><td class="td-ru">хочешь <button class="speak-btn" onclick="speakCell(\'хочешь\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khochesh\'</td><td class="td-en">You want</td></tr>' +
+          '<tr><td>Он/Она</td><td class="td-ru">хочет <button class="speak-btn" onclick="speakCell(\'хочет\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khochet</td><td class="td-en">He/She wants</td></tr>' +
+          '<tr><td>Мы</td><td class="td-ru">хотим <button class="speak-btn" onclick="speakCell(\'хотим\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khotim</td><td class="td-en">We want</td></tr>' +
+          '<tr><td>Вы</td><td class="td-ru">хотите <button class="speak-btn" onclick="speakCell(\'хотите\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khotite</td><td class="td-en">You want (formal)</td></tr>' +
+          '<tr><td>Они</td><td class="td-ru">хотят <button class="speak-btn" onclick="speakCell(\'хотят\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khotyat</td><td class="td-en">They want</td></tr>' +
+        '</tbody>' +
+      '</table>' +
+    '</div>';
+}
+
+function renderGrammarGender(area) {
+  area.innerHTML =
+    '<div class="grammar-block">' +
+      '<h3>Noun Gender <span>— every noun is masculine, feminine, or neuter</span></h3>' +
+      '<p>Russian nouns have <span class="hl">grammatical gender</span>. The good news: you can usually tell from the ending. ' +
+      'Gender matters because <span class="hl">adjectives must match</span> the noun they describe.</p>' +
+      '<div class="gender-grid">' +
+        '<div class="gender-card masc">' +
+          '<div class="gc-title">Masculine</div>' +
+          '<div class="gc-rule">Ends in a consonant or <span style="color:var(--gold)">-й</span></div>' +
+          '<div class="gc-examples">брат (brother)<br>город (city)<br>чай (tea)<br>стол (table)</div>' +
+        '</div>' +
+        '<div class="gender-card fem">' +
+          '<div class="gc-title">Feminine</div>' +
+          '<div class="gc-rule">Ends in <span style="color:var(--gold)">-а / -я / -ь</span></div>' +
+          '<div class="gc-examples">мама (mom)<br>школа (school)<br>дочь (daughter)<br>Россия (Russia)</div>' +
+        '</div>' +
+        '<div class="gender-card neut">' +
+          '<div class="gc-title">Neuter</div>' +
+          '<div class="gc-rule">Ends in <span style="color:var(--gold)">-о / -е / -мя</span></div>' +
+          '<div class="gc-examples">молоко (milk)<br>море (sea)<br>имя (name)<br>яйцо (egg)</div>' +
+        '</div>' +
+      '</div>' +
+      '<p style="margin-top:8px">Adjectives change their ending to match: <span class="ru">хороший</span> брат (good brother, masc.) → <span class="ru">хорошая</span> мама (good mom, fem.) → <span class="ru">хорошее</span> молоко (good milk, neut.)</p>' +
+    '</div>';
+}
+
+function renderGrammarSentences(area) {
+  const examples = [
+    {ru:'Я студент.',              en:'I am a student.',         note:'No verb "to be" in present tense'},
+    {ru:'Она врач.',               en:'She is a doctor.',        note:'врач = doctor'},
+    {ru:'Это мой дом.',            en:'This is my house.',       note:'это = this is'},
+    {ru:'Я говорю по-русски.',     en:'I speak Russian.',        note:'по-русски = in Russian'},
+    {ru:'Ты понимаешь меня?',      en:'Do you understand me?',  note:'меня = me'},
+    {ru:'Где ближайшая аптека?',   en:'Where is the nearest pharmacy?', note:'ближайшая = nearest (fem.)'},
+    {ru:'Я хочу кофе.',            en:'I want coffee.',          note:'хочу = I want'},
+    {ru:'Сколько это стоит?',      en:'How much does this cost?',note:'стоит = costs'},
+    {ru:'Мне нравится Москва.',    en:'I like Moscow.',          note:'мне нравится = I like (lit: to me is pleasing)'},
+    {ru:'Можно воды, пожалуйста?', en:'Water, please? (May I have water?)', note:'можно = may I / is it possible'},
+  ];
+  area.innerHTML =
+    '<div class="grammar-block">' +
+      '<h3>Basic Sentence Patterns <span>— real Russian sentences you can use now</span></h3>' +
+      '<p>Russian word order is <span class="hl">flexible</span> — unlike English, you can often rearrange words to shift emphasis. ' +
+      'The most natural order is Subject → Verb → Object, but it is not required.</p>' +
+      '<div class="sentence-examples">' +
+        examples.map(ex =>
+          '<div class="sentence-ex">' +
+            '<div style="flex:1">' +
+              '<div class="se-ru">' + ex.ru +
+                ' <button class="speak-btn" onclick="speakCell(\'' + ex.ru.replace(/'/g,"\\'") + '\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button>' +
+              '</div>' +
+              '<div class="se-en">' + ex.en + '</div>' +
+              '<div class="se-note">' + ex.note + '</div>' +
+            '</div>' +
+          '</div>'
+        ).join('') +
+      '</div>' +
+    '</div>';
+}
+
+function renderGrammarNegation(area) {
+  area.innerHTML =
+    '<div class="grammar-block">' +
+      '<h3>Negation <span>— saying "not" and "no"</span></h3>' +
+      '<p>Negation in Russian is simple: put <span class="ru" style="font-size:1.2rem;font-weight:700">не</span> directly before the verb or word you are negating.</p>' +
+      '<div class="negation-box">' +
+        '<div class="nb-rule">Rule: <span class="ru">не</span> + verb/adjective = negative</div>' +
+        '<div class="nb-ex">' +
+          'Я <span style="color:var(--green)">знаю</span> → Я <span style="color:var(--accent)">не</span> <span style="color:var(--green)">знаю</span> &nbsp;(I know → I <b>don\'t</b> know)<br>' +
+          'Я <span style="color:var(--green)">понимаю</span> → Я <span style="color:var(--accent)">не</span> <span style="color:var(--green)">понимаю</span> &nbsp;(I understand → I <b>don\'t</b> understand)<br>' +
+          'Он <span style="color:var(--green)">говорит</span> → Он <span style="color:var(--accent)">не</span> <span style="color:var(--green)">говорит</span> &nbsp;(He speaks → He <b>does not</b> speak)' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>Нет vs Не <span>— two kinds of "no/not"</span></h3>' +
+      '<table class="conj-table">' +
+        '<thead><tr><th>Word</th><th>Use</th><th>Example</th></tr></thead>' +
+        '<tbody>' +
+          '<tr><td class="td-ru">Нет <button class="speak-btn" onclick="speakCell(\'нет\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>Standalone "No" or "There is no..."</td><td class="td-en">Нет молока — There is no milk</td></tr>' +
+          '<tr><td class="td-ru">Не <button class="speak-btn" onclick="speakCell(\'не\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>Negates a verb or adjective</td><td class="td-en">Я не знаю — I don\'t know</td></tr>' +
+          '<tr><td class="td-ru">Никогда <button class="speak-btn" onclick="speakCell(\'никогда\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>Never (double negation is correct!)</td><td class="td-en">Я никогда не пью — I never drink</td></tr>' +
+          '<tr><td class="td-ru">Ничего <button class="speak-btn" onclick="speakCell(\'ничего\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>Nothing / Not at all / Never mind</td><td class="td-en">Ничего страшного — No big deal</td></tr>' +
+        '</tbody>' +
+      '</table>' +
+      '<p><span class="hl">Note on double negation:</span> In Russian, double negatives are <span class="hl">grammatically required</span>, not incorrect. ' +
+      '"Я никогда <span class="ru">не</span> пью" literally means "I never <span class="ru">not</span> drink" — which is perfectly correct Russian.</p>' +
+    '</div>';
+}
+
+// ═══════════════════════════════════════════
+// NEWS
+// ═══════════════════════════════════════════
+function buildNews() {
+  // Category filter tabs
+  const tabs = document.getElementById('newsCatTabs');
+  ['All', 'Ukraine', 'Russia', 'Diplomacy', 'Regional'].forEach((cat, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = cat;
+    btn.addEventListener('click', () => {
+      tabs.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _activeMapLoc = null;
+      _syncMapPins();
+      _syncMapLegend();
+      renderNews(cat === 'All' ? null : cat, null);
+    });
+    tabs.appendChild(btn);
+  });
+
+  // Map markers
+  _buildMapPins();
+  _buildMapLegend();
+
+  renderNews(null, null);
+}
+
+function _buildMapPins() {
+  const pinsG = document.getElementById('mapPins');
+  if (!pinsG) return;
+  const NS = 'http://www.w3.org/2000/svg';
+
+  NEWS_LOCATIONS.forEach(loc => {
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'map-pin-group');
+    g.setAttribute('data-loc', loc.id);
+    g.setAttribute('transform', 'translate(' + loc.x + ',' + loc.y + ')');
+
+    // Animated pulse ring
+    const pulse = document.createElementNS(NS, 'circle');
+    pulse.setAttribute('r', '20');
+    pulse.setAttribute('fill', loc.color);
+    pulse.setAttribute('class', 'pin-pulse');
+
+    // Main circle
+    const circle = document.createElementNS(NS, 'circle');
+    circle.setAttribute('r', '14');
+    circle.setAttribute('fill', loc.color);
+    circle.setAttribute('fill-opacity', '0.88');
+    circle.setAttribute('class', 'pin-circle');
+    circle.setAttribute('stroke', 'rgba(255,255,255,0.35)');
+    circle.setAttribute('stroke-width', '1.5');
+
+    // Count badge
+    const count = document.createElementNS(NS, 'text');
+    count.setAttribute('x', '0');
+    count.setAttribute('y', '1');
+    count.setAttribute('class', 'map-pin-count');
+    count.textContent = loc.headlineIds.length;
+
+    // Label below the pin
+    const label = document.createElementNS(NS, 'text');
+    label.setAttribute('x', '0');
+    label.setAttribute('y', '28');
+    label.setAttribute('class', 'map-pin-label');
+    label.textContent = loc.flag + ' ' + loc.name;
+
+    g.appendChild(pulse);
+    g.appendChild(circle);
+    g.appendChild(count);
+    g.appendChild(label);
+
+    g.addEventListener('click', () => {
+      if (_activeMapLoc === loc.id) {
+        // Deselect → show all
+        _activeMapLoc = null;
+        const tabs = document.getElementById('newsCatTabs');
+        tabs.querySelectorAll('.cat-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+        renderNews(null, null);
+      } else {
+        _activeMapLoc = loc.id;
+        document.querySelectorAll('#newsCatTabs .cat-btn').forEach(b => b.classList.remove('active'));
+        renderNews(null, loc.id);
+      }
+      _syncMapPins();
+      _syncMapLegend();
+    });
+
+    pinsG.appendChild(g);
+  });
+}
+
+function _buildMapLegend() {
+  const legend = document.getElementById('mapLegend');
+  if (!legend) return;
+
+  // "All" item
+  const allItem = document.createElement('span');
+  allItem.className = 'map-legend-item active';
+  allItem.dataset.loc = '';
+  allItem.innerHTML = '<span class="map-legend-dot" style="background:#555"></span> All (' + NEWS_HEADLINES.length + ')';
+  allItem.addEventListener('click', () => {
+    _activeMapLoc = null;
+    const tabs = document.getElementById('newsCatTabs');
+    tabs.querySelectorAll('.cat-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+    renderNews(null, null);
+    _syncMapPins();
+    _syncMapLegend();
+  });
+  legend.appendChild(allItem);
+
+  NEWS_LOCATIONS.forEach(loc => {
+    const item = document.createElement('span');
+    item.className = 'map-legend-item';
+    item.dataset.loc = loc.id;
+    item.innerHTML = '<span class="map-legend-dot" style="background:' + loc.color + '"></span>' +
+      loc.flag + ' ' + loc.name + ' <span style="opacity:0.55">(' + loc.headlineIds.length + ')</span>';
+    item.addEventListener('click', () => {
+      if (_activeMapLoc === loc.id) {
+        _activeMapLoc = null;
+        const tabs = document.getElementById('newsCatTabs');
+        tabs.querySelectorAll('.cat-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+        renderNews(null, null);
+      } else {
+        _activeMapLoc = loc.id;
+        document.querySelectorAll('#newsCatTabs .cat-btn').forEach(b => b.classList.remove('active'));
+        renderNews(null, loc.id);
+      }
+      _syncMapPins();
+      _syncMapLegend();
+    });
+    legend.appendChild(item);
+  });
+}
+
+function _syncMapPins() {
+  document.querySelectorAll('.map-pin-group').forEach(g => {
+    g.classList.toggle('active-pin', g.dataset.loc === _activeMapLoc);
+  });
+}
+
+function _syncMapLegend() {
+  document.querySelectorAll('.map-legend-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.loc === (_activeMapLoc || ''));
+  });
+}
+
+function renderNews(cat, locId) {
+  const grid = document.getElementById('newsGrid');
+  grid.innerHTML = '';
+
+  // Determine which headlines to show
+  let items;
+  if (locId) {
+    const loc = NEWS_LOCATIONS.find(l => l.id === locId);
+    items = loc ? NEWS_HEADLINES.filter(h => loc.headlineIds.includes(h.id)) : NEWS_HEADLINES;
+  } else if (cat) {
+    items = NEWS_HEADLINES.filter(h => h.cat === cat);
+  } else {
+    items = NEWS_HEADLINES;
+  }
+
+  // Active location filter badge
+  if (locId) {
+    const loc = NEWS_LOCATIONS.find(l => l.id === locId);
+    if (loc) {
+      const badge = document.createElement('div');
+      badge.className = 'map-filter-badge';
+      badge.innerHTML = loc.flag + ' <strong>' + loc.name + '</strong>&nbsp;&nbsp;<span style="opacity:0.55;font-size:0.82em">✕ clear filter</span>';
+      badge.addEventListener('click', () => {
+        _activeMapLoc = null;
+        _syncMapPins();
+        _syncMapLegend();
+        const tabs = document.getElementById('newsCatTabs');
+        tabs.querySelectorAll('.cat-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+        renderNews(null, null);
+      });
+      grid.appendChild(badge);
+    }
+  }
+
+  // Headline cards
+  items.forEach(nh => {
+    const card = document.createElement('div');
+    card.className = 'headline-card';
+    card.innerHTML =
+      '<div class="hc-header">' +
+        '<span class="hc-cat">' + nh.flag + '&nbsp;' + nh.cat + '</span>' +
+        '<span class="hc-year">' + nh.year + '</span>' +
+      '</div>' +
+      '<div class="hc-body">' +
+        '<div class="hc-headline-row">' +
+          '<div class="hc-headline">' + nh.headline + '</div>' +
+          '<button class="speak-btn hc-speak" title="Hear headline" style="flex-shrink:0;margin-top:4px">🔊</button>' +
+        '</div>' +
+        '<div class="hc-keywords">' +
+          nh.keywords.map(k =>
+            '<span class="hc-kw">' +
+              '<button class="speak-btn kw-speak" data-ru="' + k.ru + '" style="font-size:0.68rem;padding:1px 4px">🔊</button>' +
+              '&nbsp;<span class="kw-ru">' + k.ru + '</span>' +
+              '<span class="kw-sep">&nbsp;·&nbsp;</span>' +
+              '<span class="kw-en">' + k.e + '</span>' +
+            '</span>'
+          ).join('') +
+        '</div>' +
+        '<div class="hc-quiz-label">What does this headline mean?</div>' +
+        '<div class="hc-mc">' +
+          nh.mc.answers.map((a, idx) =>
+            '<button class="hc-mc-btn" data-idx="' + idx + '">' + a + '</button>'
+          ).join('') +
+        '</div>' +
+        '<div class="hc-context">' +
+          '<div class="hc-translation">' + nh.translation + '</div>' +
+          nh.context +
+        '</div>' +
+      '</div>';
+
+    card.querySelector('.hc-speak').addEventListener('click', function() { speak(nh.headline, this); });
+    card.querySelectorAll('.kw-speak').forEach(btn => {
+      btn.addEventListener('click', function() { speak(this.dataset.ru, this); });
+    });
+    const mcBtns = card.querySelectorAll('.hc-mc-btn');
+    mcBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        mcBtns.forEach(b => b.disabled = true);
+        btn.classList.add(idx === nh.mc.correct ? 'hc-correct' : 'hc-wrong');
+        if (idx !== nh.mc.correct) mcBtns[nh.mc.correct].classList.add('hc-correct');
+        card.querySelector('.hc-context').classList.add('show');
+      });
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
 buildAlphabet();
 buildPhrases();
 buildWords();
+buildGrammar();
 buildLessonMap();
+buildNews();
 </script>
 </body>
 </html>
