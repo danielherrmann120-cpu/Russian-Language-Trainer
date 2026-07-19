@@ -845,55 +845,24 @@
     <!-- Interactive map -->
     <div class="map-container">
       <svg viewBox="0 0 950 500" class="map-svg" id="newsSvgMap" xmlns="http://www.w3.org/2000/svg">
-        <!-- Ocean -->
-        <rect width="950" height="500" fill="#0c1928"/>
-        <!-- Western Europe -->
-        <polygon points="0,178 10,150 45,112 95,99 165,97 202,112 238,118 270,142 283,178 296,235 288,260 268,288 246,312 218,334 178,354 138,376 88,410 48,440 14,456 0,460" fill="#1b2a1b" stroke="#26362a" stroke-width="1"/>
-        <!-- Scandinavia -->
-        <polygon points="165,97 205,80 240,60 282,52 318,78 322,108 306,133 270,145 238,136 205,116" fill="#1e2e1e" stroke="#28382a" stroke-width="1"/>
-        <!-- Baltic states -->
-        <polygon points="296,190 320,182 342,192 340,224 305,228 290,214" fill="#1c2c1c" stroke="#263628" stroke-width="1"/>
-        <!-- Russia (large northern polygon) -->
-        <polygon points="296,190 320,182 336,172 388,153 432,143 515,128 605,116 700,106 800,98 872,88 950,86 950,212 924,254 870,256 795,262 722,260 658,256 592,262 546,278 512,264 477,298 456,298 436,285 416,260 392,250 372,244 352,238 335,230 314,218 300,204" fill="#1d2c1d" stroke="#263526" stroke-width="1"/>
-        <!-- Ukraine -->
-        <polygon points="268,288 296,264 318,250 374,244 418,250 456,250 477,298 456,298 430,310 400,318 364,322 328,318 308,308 292,295" fill="#1c2438" stroke="#2a3252" stroke-width="1.5"/>
-        <!-- Belarus -->
-        <polygon points="296,235 316,224 342,213 378,208 390,225 392,248 374,255 342,258 305,255 291,244" fill="#1a2235" stroke="#26304a" stroke-width="1.5"/>
-        <!-- Moldova (small) -->
-        <polygon points="308,298 330,290 340,295 337,315 322,320 307,310" fill="#1c2535" stroke="#262f45" stroke-width="1"/>
-        <!-- Romania/Bulgaria -->
-        <polygon points="248,290 270,285 292,295 308,308 306,332 284,342 252,338 235,320 240,304" fill="#1c2a1c" stroke="#263626" stroke-width="1"/>
-        <!-- Turkey/Anatolia -->
-        <polygon points="248,340 282,330 343,323 413,318 477,326 512,338 517,356 502,375 480,387 432,390 380,387 328,382 287,378 258,366 248,354" fill="#201e1c" stroke="#302826" stroke-width="1"/>
-        <!-- Kazakhstan -->
-        <polygon points="542,260 592,250 666,248 762,248 852,255 924,254 942,300 904,354 862,384 792,396 712,400 642,392 582,376 550,348 535,318 525,288" fill="#22201a" stroke="#30291e" stroke-width="1.5"/>
-        <!-- Caucasus region (Georgia/Armenia/Azerbaijan) -->
-        <polygon points="477,336 512,328 545,335 568,354 562,382 540,390 516,384 492,372 472,354" fill="#231e1a" stroke="#322820" stroke-width="1"/>
-        <!-- Azerbaijan (slightly differentiated) -->
-        <polygon points="512,348 545,342 562,354 560,376 540,384 515,380 505,366" fill="#28241e" stroke="#38302a" stroke-width="1.5"/>
-        <!-- Iran (top strip) -->
-        <polygon points="512,384 562,382 660,375 726,385 752,400 752,450 684,464 602,465 530,452 505,420 498,392" fill="#1e1c18" stroke="#2a2820" stroke-width="1"/>
-        <!-- Central Asia south -->
-        <polygon points="582,376 642,392 712,400 792,400 832,416 812,464 744,482 662,492 582,476 536,456 524,420 540,396" fill="#201e1a" stroke="#2a281e" stroke-width="1"/>
-        <!-- Caspian Sea (water hole) -->
-        <ellipse cx="548" cy="320" rx="15" ry="48" fill="#0c1928"/>
-        <!-- Black Sea -->
-        <ellipse cx="382" cy="315" rx="70" ry="18" fill="#0c1928"/>
-        <!-- Sea of Azov -->
-        <ellipse cx="446" cy="303" rx="24" ry="12" fill="#0c1928"/>
-        <!-- Baltic Sea -->
-        <ellipse cx="238" cy="166" rx="28" ry="46" fill="#0c1928" opacity="0.65"/>
-        <!-- Mediterranean hint -->
-        <path d="M 92,374 L 228,356 L 246,364 L 230,392 L 156,412 L 78,422 Z" fill="#0c1928" opacity="0.72"/>
-        <!-- Aegean Sea -->
-        <ellipse cx="261" cy="372" rx="17" ry="24" fill="#0c1928" opacity="0.8"/>
-        <!-- Faint region labels -->
-        <text x="435" y="175" font-size="11" fill="rgba(255,255,255,0.16)" font-weight="bold" text-anchor="middle" font-family="'Segoe UI',sans-serif">RUSSIA</text>
-        <text x="770" y="194" font-size="9" fill="rgba(255,255,255,0.12)" font-weight="bold" text-anchor="middle" font-family="'Segoe UI',sans-serif">RUSSIA</text>
-        <text x="392" y="283" font-size="8" fill="rgba(255,255,255,0.16)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Ukraine</text>
-        <text x="715" y="335" font-size="9" fill="rgba(255,255,255,0.14)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Kazakhstan</text>
-        <text x="136" y="280" font-size="9" fill="rgba(255,255,255,0.14)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Europe</text>
-        <!-- Marker pins injected by JS -->
+        <rect width="950" height="500" fill="#0d1b2a"/>
+        <!-- Grid -->
+        <line x1="0" y1="100" x2="950" y2="100" stroke="#1a2e44" stroke-width="1"/>
+        <line x1="0" y1="200" x2="950" y2="200" stroke="#1a2e44" stroke-width="1"/>
+        <line x1="0" y1="300" x2="950" y2="300" stroke="#1a2e44" stroke-width="1"/>
+        <line x1="0" y1="400" x2="950" y2="400" stroke="#1a2e44" stroke-width="1"/>
+        <line x1="190" y1="0" x2="190" y2="500" stroke="#1a2e44" stroke-width="1"/>
+        <line x1="380" y1="0" x2="380" y2="500" stroke="#1a2e44" stroke-width="1"/>
+        <line x1="570" y1="0" x2="570" y2="500" stroke="#1a2e44" stroke-width="1"/>
+        <line x1="760" y1="0" x2="760" y2="500" stroke="#1a2e44" stroke-width="1"/>
+        <rect width="950" height="500" fill="none" stroke="#1e3a5a" stroke-width="2"/>
+        <!-- Labels -->
+        <text x="95" y="270" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">W. EUROPE</text>
+        <text x="450" y="165" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">RUSSIA</text>
+        <text x="750" y="320" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">KAZAKHSTAN</text>
+        <text x="375" y="278" font-size="9" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">UKRAINE</text>
+        <text x="535" y="368" font-size="9" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">CAUC.</text>
+        <text x="340" y="230" font-size="9" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">BELARUS</text>
         <g id="mapPins"></g>
       </svg>
       <div class="map-legend" id="mapLegend"></div>
