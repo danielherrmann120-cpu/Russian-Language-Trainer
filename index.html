@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Russian Language Basics</title>
+<title>Граница</title>
 <style>
   :root {
     --bg: #0f0f1a;
@@ -48,39 +48,73 @@
   header h1 span { color: var(--accent); }
   header p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
 
-  /* ── Nav ── */
-  nav {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 14px 20px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 85px;
-    z-index: 99;
+  /* ── Home link (header) ── */
+  .home-link-btn {
+    position: absolute; top: 14px; left: 20px;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.08); border: 2px solid var(--accent2);
+    border-radius: 24px; padding: 10px 20px; cursor: pointer;
+    font-size: 1rem; font-weight: 700; color: var(--text); transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
   }
-  nav button {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 7px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
+  .home-link-btn span { font-size: 1.3rem; }
+  .home-link-btn:hover { border-color: var(--gold); background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+  @media (max-width: 640px) {
+    .home-link-btn { position: static; margin: 0 auto 10px; width: fit-content; }
   }
-  nav button:hover { border-color: var(--accent2); color: var(--text); }
-  nav button.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-    font-weight: 600;
+
+  /* ── Home dashboard — branching tree ── */
+  .home-tree { display: flex; flex-direction: column; align-items: center; padding-top: 10px; }
+
+  .home-trunk {
+    width: 84px; height: 84px; border-radius: 50%; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--gold), #c9a227); color: #1a1a2e;
+    box-shadow: 0 4px 18px rgba(244,208,63,0.4);
+  }
+  .home-trunk-icon { font-size: 1.8rem; line-height: 1; }
+  .home-trunk-label { font-size: 0.68rem; font-weight: 700; margin-top: 2px; }
+  .home-trunk-connector { width: 2px; height: 30px; background: var(--border); }
+
+  .home-branches { position: relative; display: flex; gap: 48px; justify-content: center; flex-wrap: wrap; padding-top: 2px; }
+  .home-branches::before {
+    content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 2px; background: var(--border);
+  }
+  .home-branch { position: relative; display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 240px; max-width: 320px; }
+  .home-branch::before {
+    content: ''; position: absolute; top: -30px; left: 50%; width: 2px; height: 30px;
+    background: var(--border); transform: translateX(-50%);
+  }
+  .home-branch-title {
+    font-size: 0.85rem; color: var(--gold); text-transform: uppercase;
+    letter-spacing: 1.5px; font-weight: 700; margin: 10px 0 18px;
+  }
+  .home-branch-nodes { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+  .home-tile {
+    width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.2s;
+    position: relative; margin-bottom: 26px;
+  }
+  .home-tile:last-child { margin-bottom: 0; }
+  .home-tile:not(:last-child)::after {
+    content: ''; position: absolute; left: 50%; bottom: -26px; width: 2px; height: 26px;
+    background: var(--border); transform: translateX(-50%);
+  }
+  .home-tile:hover { border-color: var(--accent2); transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,0.35); }
+  .home-tile-icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .home-tile-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+  .home-tile-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+  @media (max-width: 620px) {
+    .home-branches { flex-direction: column; align-items: center; gap: 30px; }
+    .home-branches::before { display: none; }
+    .home-branch::before { display: none; }
+    .home-branch-title { margin-top: 0; }
   }
 
   /* ── Main ── */
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 16px 60px; }
+  main { max-width: 1320px; margin: 0 auto; padding: 28px 16px 60px; }
 
   .section { display: none; }
   .section.active { display: block; }
@@ -351,45 +385,89 @@
   .tip-card li span { color: var(--text); }
   .tip-card li em { color: var(--accent2); font-style: normal; }
 
-  /* ── LESSONS ── */
+  /* ── LESSONS — progression path ── */
   .lesson-map {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 16px;
-    padding: 8px 0 32px;
-  }
-  .lesson-node {
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
     position: relative;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px 0 40px;
+    max-width: 600px;
+    margin: 0 auto;
   }
-  .lesson-node:hover:not(.locked) { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-  .lesson-node.locked { opacity: 0.4; cursor: not-allowed; }
-  .lesson-node.completed { border-color: var(--green); }
-  .lesson-node.available { border-color: var(--accent2); }
-  .lesson-node .ln-icon { font-size: 2.2rem; margin-bottom: 10px; }
-  .lesson-node .ln-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .lesson-node .ln-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
-  .lesson-node .ln-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
-  .lesson-node .ln-meta { display: flex; gap: 10px; align-items: center; font-size: 0.78rem; }
-  .lesson-node .ln-xp { color: var(--gold); }
-  .lesson-node .ln-count { color: var(--muted); }
+  .lesson-map-line-bg, .lesson-map-line-fill {
+    position: absolute; top: 6px; left: 50%; width: 4px;
+    transform: translateX(-50%); border-radius: 2px; z-index: 0;
+  }
+  .lesson-map-line-bg { bottom: 6px; background: var(--border); }
+  .lesson-map-line-fill { height: 0%; background: linear-gradient(var(--green), var(--accent2)); transition: height 0.5s ease; }
+
+  .path-step {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: 18px;
+    width: 100%;
+  }
+  .path-node-wrap { grid-column: 2; }
+  .path-step[data-side="left"]  .path-label { grid-column: 1; justify-self: end; text-align: right; }
+  .path-step[data-side="right"] .path-label { grid-column: 3; justify-self: start; text-align: left; }
+
+  .path-node {
+    width: 80px; height: 80px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; background: var(--card); border: 3px solid var(--border);
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  }
+  .path-step.completed .path-node { border-color: var(--green); background: linear-gradient(135deg, var(--card), rgba(46,204,113,0.18)); }
+  .path-step.available .path-node { border-color: var(--accent2); animation: node-pulse 2.2s ease infinite; }
+  .path-step.locked .path-node { opacity: 0.4; cursor: not-allowed; }
+  .path-step:not(.locked) .path-node:hover { transform: scale(1.08); }
+  @keyframes node-pulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(0,0,0,0.35), 0 0 0 0 rgba(69,123,157,0.45); }
+    50%      { box-shadow: 0 4px 14px rgba(0,0,0,0.35), 0 0 0 9px rgba(69,123,157,0); }
+  }
+
+  .path-label {
+    position: relative;
+    background: var(--card); border: 2px solid var(--border); border-radius: 14px;
+    padding: 14px 18px; max-width: 250px; cursor: pointer; transition: border-color 0.2s;
+  }
+  .path-step.completed .path-label { border-color: var(--green); }
+  .path-step.available .path-label { border-color: var(--accent2); }
+  .path-step.locked .path-label { opacity: 0.45; cursor: not-allowed; }
+  .path-step:not(.locked) .path-label:hover { border-color: var(--gold); }
+
+  .lesson-map .ln-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .lesson-map .ln-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+  .lesson-map .ln-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 10px; line-height: 1.4; }
+  .lesson-map .ln-meta { display: flex; gap: 10px; align-items: center; font-size: 0.78rem; }
+  .path-step[data-side="left"] .ln-meta { justify-content: flex-end; }
+  .lesson-map .ln-xp { color: var(--gold); }
+  .lesson-map .ln-count { color: var(--muted); }
   .ln-badge {
-    position: absolute; top: 12px; right: 12px;
-    font-size: 0.75rem; padding: 3px 10px; border-radius: 12px; font-weight: 600;
+    position: absolute; top: -10px; right: -10px;
+    font-size: 0.72rem; padding: 3px 10px; border-radius: 12px; font-weight: 600;
+    background: var(--surface); white-space: nowrap;
   }
+  .path-step[data-side="left"] .ln-badge { right: auto; left: -10px; }
   .ln-badge.done { background: rgba(46,204,113,0.2); color: var(--green); border: 1px solid var(--green); }
   .ln-badge.new  { background: rgba(69,123,157,0.2); color: var(--accent2); border: 1px solid var(--accent2); }
-  .ln-progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
-  .ln-progress-fill { height: 100%; background: var(--green); border-radius: 2px; }
 
-  .lesson-runner { display: none; }
+  @media (max-width: 560px) {
+    .path-step { grid-template-columns: 1fr; row-gap: 10px; justify-items: center; }
+    .path-node-wrap { grid-column: 1; }
+    .path-step[data-side="left"]  .path-label,
+    .path-step[data-side="right"] .path-label { grid-column: 1; justify-self: center; text-align: center; max-width: 280px; }
+    .ln-badge, .path-step[data-side="left"] .ln-badge { left: auto; right: -6px; top: -8px; }
+    .path-step[data-side="left"] .ln-meta { justify-content: center; }
+  }
+
+  .lesson-runner { display: none; max-width: 700px; margin: 0 auto; }
   .lesson-runner.active { display: block; }
+  .lesson-map-view { max-width: 700px; margin: 0 auto; }
   .lesson-map-view.hidden { display: none; }
 
   .lr-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
@@ -407,6 +485,14 @@
   .lr-hearts { display: flex; gap: 4px; flex-shrink: 0; }
   .lr-heart { font-size: 1.2rem; transition: opacity 0.2s; }
   .lr-heart.lost { opacity: 0.2; filter: grayscale(1); }
+
+  .lr-combo {
+    display: none; align-items: center; gap: 4px; flex-shrink: 0;
+    color: var(--gold); font-weight: 700; font-size: 0.95rem;
+  }
+  .lr-combo .combo-flame { font-size: 1.1rem; }
+  .lr-combo.pop { animation: combo-pop 0.35s ease; }
+  @keyframes combo-pop { 0% { transform: scale(1); } 45% { transform: scale(1.4); } 100% { transform: scale(1); } }
 
   .exercise-area { max-width: 620px; margin: 0 auto; }
   .ex-label {
@@ -510,6 +596,7 @@
   .lc-stat-num { font-size: 2rem; font-weight: 700; }
   .lc-stat-num.gold { color: var(--gold); }
   .lc-stat-num.green { color: var(--green); }
+  .lc-stat-num.red { color: var(--red); }
   .lc-stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
   .lc-btn {
     background: var(--accent); border: none; color: #fff; padding: 12px 28px;
@@ -530,10 +617,110 @@
   .learn-card .lc-note-sm { font-size: 0.8rem; color: var(--muted); }
   .learn-count { text-align: center; color: var(--muted); font-size: 0.8rem; margin-bottom: 16px; }
 
-  .xp-bar-card {
-    display: flex; align-items: center; gap: 14px; margin-bottom: 24px;
+  .xp-bar-card { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 24px; }
+  .stat-chip {
+    display: flex; align-items: center; gap: 12px;
     background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px;
   }
+  .level-chip { flex: 1; min-width: 240px; }
+  .level-badge {
+    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--gold), #c9a227);
+    color: #1a1a2e; font-weight: 800; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 10px rgba(244,208,63,0.4);
+  }
+  .level-info { flex: 1; min-width: 0; }
+  .level-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+  .level-progress-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 3px; }
+  .level-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--accent2)); border-radius: 3px; transition: width 0.4s ease; }
+  .level-xp-label { font-size: 0.72rem; color: var(--muted); }
+  .streak-chip .streak-flame { font-size: 1.7rem; }
+  .streak-chip.inactive .streak-flame { filter: grayscale(1); opacity: 0.35; }
+  .stat-num { font-size: 1.3rem; font-weight: 700; color: var(--gold); }
+  .stat-num.green { color: var(--green); }
+  .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  .level-up-banner {
+    background: linear-gradient(135deg, var(--gold), #c9a227); color: #1a1a2e;
+    border-radius: 12px; padding: 12px 18px; margin-bottom: 18px; font-weight: 700; font-size: 0.95rem;
+    animation: level-up-glow 1.2s ease infinite alternate;
+  }
+  @keyframes level-up-glow {
+    from { box-shadow: 0 0 8px rgba(244,208,63,0.4); }
+    to   { box-shadow: 0 0 22px rgba(244,208,63,0.85); }
+  }
+
+  /* ── Global stat pill (header) ── */
+  .global-stat-pill {
+    position: absolute; top: 14px; right: 20px;
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.08); border: 2px solid var(--border);
+    border-radius: 26px; padding: 8px 20px 8px 8px; cursor: pointer;
+    color: var(--text); transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .global-stat-pill:hover { border-color: var(--gold); background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+  .gsp-level-badge {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--gold), #c9a227); color: #1a1a2e;
+    font-weight: 800; font-size: 1.05rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(244,208,63,0.5);
+  }
+  .gsp-xp-info { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+  .gsp-xp-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .gsp-xp-row span:first-child { font-size: 0.9rem; font-weight: 700; }
+  .gsp-next { color: var(--muted); font-size: 0.68rem; font-weight: 400; white-space: nowrap; }
+  .gsp-xp-track { height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .gsp-xp-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--accent2)); border-radius: 4px; transition: width 0.4s ease; }
+  .gsp-streak { font-size: 1.05rem; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+  .gsp-streak.active { color: var(--gold); }
+  @media (max-width: 640px) {
+    .global-stat-pill { position: static; margin: 0 auto 10px; width: fit-content; }
+  }
+
+  /* ── XP / achievement toasts ── */
+  .xp-toast-wrap {
+    position: fixed; top: 80px; right: 16px; z-index: 300;
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+    pointer-events: none;
+  }
+  .xp-toast {
+    background: var(--card); border: 1px solid var(--gold); color: var(--gold);
+    padding: 9px 18px; border-radius: 10px; font-size: 0.85rem; font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    opacity: 0; transform: translateX(16px); transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  .xp-toast.show { opacity: 1; transform: translateX(0); }
+  .xp-toast.achievement { border-color: var(--green); color: var(--green); }
+  .xp-toast.level { border-color: var(--accent2); color: var(--accent2); }
+
+  /* ── Daily goal ── */
+  .daily-goal-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 20px;
+  }
+  .dg-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; font-size: 0.85rem; }
+  .dg-row strong { color: var(--text); }
+  .dg-track { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .dg-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--green)); border-radius: 4px; transition: width 0.4s ease; }
+  .dg-row .dg-done { color: var(--green); font-weight: 700; }
+
+  /* ── Achievements ── */
+  .achievements-title { font-size: 1rem; color: var(--gold); margin: 28px 0 12px; }
+  .achievements-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px;
+  }
+  .achv-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px; text-align: center; opacity: 0.4; filter: grayscale(1); transition: all 0.25s;
+  }
+  .achv-card.unlocked { opacity: 1; filter: none; border-color: var(--gold); }
+  .achv-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .achv-title { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .achv-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
 
   /* ── Speak button ── */
   .speak-btn {
@@ -569,6 +756,7 @@
 
   /* ── Grammar section ── */
   .grammar-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  #grammarContent { max-width:760px; margin:0 auto; }
 
   .grammar-block { margin-bottom:36px; }
   .grammar-block h3 { font-size:1.1rem; color:var(--gold); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
@@ -616,8 +804,28 @@
   .negation-box .nb-rule .ru { color:var(--gold); font-size:1.1rem; font-weight:700; }
   .negation-box .nb-ex { font-size:0.88rem; color:var(--muted); line-height:1.8; }
 
+  /* ── News category tabs ── */
+  #newsCatTabs { gap:10px; margin-bottom:22px; }
+  #newsCatTabs .cat-btn {
+    display:inline-flex; align-items:center; gap:7px;
+    background:transparent; border:2px solid var(--cat-color, var(--border));
+    color:var(--cat-color, var(--muted)); font-size:0.88rem; font-weight:700;
+    padding:9px 16px; border-radius:12px; transition:all 0.2s;
+  }
+  #newsCatTabs .cat-btn .nc-icon { font-size:1.05rem; }
+  #newsCatTabs .cat-btn .nc-count {
+    background:var(--cat-color, var(--border)); color:#fff; font-size:0.7rem; font-weight:700;
+    padding:1px 7px; border-radius:10px; opacity:0.85;
+  }
+  #newsCatTabs .cat-btn:hover { background:color-mix(in srgb, var(--cat-color, var(--border)) 18%, transparent); }
+  #newsCatTabs .cat-btn.active {
+    background:var(--cat-color, var(--accent2)); border-color:var(--cat-color, var(--accent2));
+    color:#0f0f1a; box-shadow:0 4px 14px color-mix(in srgb, var(--cat-color, var(--accent2)) 45%, transparent);
+  }
+  #newsCatTabs .cat-btn.active .nc-count { background:rgba(0,0,0,0.3); color:#fff; opacity:1; }
+
   /* ── News Headlines ── */
-  .news-grid { display:flex; flex-direction:column; gap:18px; }
+  .news-grid { display:flex; flex-direction:column; gap:18px; max-width:720px; margin:0 auto; }
   .headline-card {
     background:var(--card); border:1px solid var(--border);
     border-radius:14px; overflow:hidden; transition:border-color 0.2s;
@@ -629,9 +837,18 @@
   }
   .hc-cat { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent2); }
   .hc-year { font-size:0.72rem; color:var(--muted); background:var(--border); padding:2px 8px; border-radius:10px; }
-  .hc-body { padding:18px 20px 22px; }
-  .hc-headline-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:14px; }
+  .hc-body { padding:16px 20px 18px; }
+  .hc-headline-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
   .hc-headline { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--gold); font-weight:700; line-height:1.5; flex:1; }
+  .hc-translation-preview { font-size:0.85rem; color:var(--accent2); font-style:italic; margin-bottom:12px; }
+  .hc-toggle-btn {
+    background:none; border:1px solid var(--border); color:var(--accent2);
+    font-size:0.76rem; font-weight:700; padding:6px 14px; border-radius:16px;
+    cursor:pointer; transition:all 0.15s;
+  }
+  .hc-toggle-btn:hover { border-color:var(--accent2); background:var(--surface2); }
+  .hc-expand { margin-top:14px; }
+  .hc-expand[hidden] { display:none; }
   .hc-keywords { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
   .hc-kw {
     background:var(--surface2); border:1px solid var(--border); border-radius:8px;
@@ -657,7 +874,15 @@
     border-left:3px solid var(--accent2); display:none;
   }
   .hc-context.show { display:block; }
-  .hc-translation { font-size:0.92rem; color:var(--accent2); font-style:italic; font-weight:600; margin-bottom:8px; }
+
+  /* ── Daily news ── */
+  .daily-news-banner {
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+    background:rgba(244,208,63,0.08); border:1px solid var(--gold); border-radius:12px;
+    padding:10px 16px; margin-bottom:16px; font-size:0.85rem; font-weight:700; color:var(--gold);
+  }
+  .dn-reviewed { color:var(--green); font-weight:700; font-size:0.82rem; }
+  .dn-hint { color:var(--muted); font-weight:400; font-size:0.78rem; }
 
   /* ── News Map ── */
   .map-container { margin-bottom:20px; border-radius:12px; overflow:hidden; border:1px solid var(--border); }
@@ -681,7 +906,7 @@
   @media (max-width: 500px) {
     .flashcard { height: 200px; }
     .flashcard-front .fc-main { font-size: 1.6rem; }
-    .mc-options, .fill-options { grid-template-columns: 1fr; }
+    .mc-options { grid-template-columns: 1fr; }
     .hc-mc { grid-template-columns: 1fr; }
   }
 </style>
@@ -689,25 +914,95 @@
 <body>
 
 <header>
-  <h1>Русский язык &nbsp;|&nbsp; <span>Russian Basics</span></h1>
+  <div class="home-link-btn" id="homeLinkBtn" onclick="showSection('home')" title="Back to Home"><span>🏡</span> Home</div>
+  <div class="global-stat-pill" id="globalStatPill" onclick="showSection('lessons')" title="View lessons &amp; progress">
+    <div class="gsp-level-badge" id="gspLevelBadge">1</div>
+    <div class="gsp-xp-info">
+      <div class="gsp-xp-row"><span id="gspXp">0 XP</span><span class="gsp-next" id="gspNext"></span></div>
+      <div class="gsp-xp-track"><div class="gsp-xp-fill" id="gspXpFill"></div></div>
+    </div>
+    <span class="gsp-streak" id="gspStreak">🔥 0</span>
+  </div>
+  <h1 onclick="showSection('home')" style="cursor:pointer" title="Go to Home">Граница &nbsp;|&nbsp; <span>Russian Language</span></h1>
   <p>Learn the Cyrillic alphabet, common phrases, and essential vocabulary</p>
 </header>
 
-<nav id="nav">
-  <button class="active" onclick="showSection('alphabet')">Alphabet</button>
-  <button onclick="showSection('phrases')">Phrases</button>
-  <button onclick="showSection('words')">Vocabulary</button>
-  <button onclick="showSection('quiz')">Flashcards</button>
-  <button onclick="showSection('tips')">Tips</button>
-  <button onclick="showSection('grammar')">Grammar</button>
-  <button onclick="showSection('lessons')">Lessons</button>
-  <button onclick="showSection('news')">News</button>
-</nav>
+<div class="xp-toast-wrap" id="xpToastWrap"></div>
 
 <main>
 
+  <div class="no-voice-warn" id="noVoiceWarn" style="display:none"></div>
+
+  <!-- ════════════ HOME ════════════ -->
+  <section id="home" class="section active">
+    <h2 class="section-title">Граница — <span>Choose where to start</span></h2>
+    <p class="section-subtitle">Jump into practice, or branch into a reference section below.</p>
+
+    <div class="home-tree">
+      <div class="home-trunk">
+        <div class="home-trunk-icon">🏡</div>
+        <div class="home-trunk-label">Главная</div>
+      </div>
+      <div class="home-trunk-connector"></div>
+
+      <div class="home-branches">
+        <div class="home-branch">
+          <div class="home-branch-title">🔥 Practice</div>
+          <div class="home-branch-nodes">
+            <div class="home-tile" onclick="showSection('lessons')">
+              <div class="home-tile-icon">🏠</div>
+              <div class="home-tile-title">Lessons</div>
+              <div class="home-tile-desc">Guided lessons with XP, streaks, and hearts</div>
+            </div>
+            <div class="home-tile" onclick="showSection('quiz')">
+              <div class="home-tile-icon">🗂️</div>
+              <div class="home-tile-title">Flashcards</div>
+              <div class="home-tile-desc">Quick-fire recall practice across any word deck</div>
+            </div>
+            <div class="home-tile" onclick="showSection('news')">
+              <div class="home-tile-icon">📰</div>
+              <div class="home-tile-title">News</div>
+              <div class="home-tile-desc">Real Russian headlines with quizzes and a map</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-branch">
+          <div class="home-branch-title">📘 Learn &amp; Reference</div>
+          <div class="home-branch-nodes">
+            <div class="home-tile" onclick="showSection('alphabet')">
+              <div class="home-tile-icon">🔤</div>
+              <div class="home-tile-title">Alphabet</div>
+              <div class="home-tile-desc">All 33 Cyrillic letters with sounds</div>
+            </div>
+            <div class="home-tile" onclick="showSection('phrases')">
+              <div class="home-tile-icon">💬</div>
+              <div class="home-tile-title">Phrases</div>
+              <div class="home-tile-desc">Common everyday expressions</div>
+            </div>
+            <div class="home-tile" onclick="showSection('words')">
+              <div class="home-tile-icon">📚</div>
+              <div class="home-tile-title">Vocabulary</div>
+              <div class="home-tile-desc">Words grouped by topic</div>
+            </div>
+            <div class="home-tile" onclick="showSection('grammar')">
+              <div class="home-tile-icon">📖</div>
+              <div class="home-tile-title">Grammar</div>
+              <div class="home-tile-desc">Pronouns, verb conjugation, gender, and more</div>
+            </div>
+            <div class="home-tile" onclick="showSection('tips')">
+              <div class="home-tile-icon">💡</div>
+              <div class="home-tile-title">Tips</div>
+              <div class="home-tile-desc">Practical advice for beginners</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ════════════ ALPHABET ════════════ -->
-  <section id="alphabet" class="section active">
+  <section id="alphabet" class="section">
     <h2 class="section-title"><span>Алфавит</span> — The Cyrillic Alphabet</h2>
     <p class="section-subtitle">33 letters. Click any card to reveal the sound description.</p>
     <div class="alphabet-grid" id="alphabetGrid"></div>
@@ -742,6 +1037,7 @@
     <p class="section-subtitle">Flip each card, then mark if you knew it. Build up your score!</p>
     <div class="quiz-controls">
       <select id="deckSelect">
+        <option value="review" id="reviewDeckOption">🔁 Review (Due Today)</option>
         <option value="alphabet">Alphabet</option>
         <option value="phrases">Phrases</option>
         <option value="numbers">Numbers</option>
@@ -846,23 +1142,32 @@
     <div class="map-container">
       <svg viewBox="0 0 950 500" class="map-svg" id="newsSvgMap" xmlns="http://www.w3.org/2000/svg">
         <rect width="950" height="500" fill="#0d1b2a"/>
-        <!-- Grid -->
-        <line x1="0" y1="100" x2="950" y2="100" stroke="#1a2e44" stroke-width="1"/>
-        <line x1="0" y1="200" x2="950" y2="200" stroke="#1a2e44" stroke-width="1"/>
-        <line x1="0" y1="300" x2="950" y2="300" stroke="#1a2e44" stroke-width="1"/>
-        <line x1="0" y1="400" x2="950" y2="400" stroke="#1a2e44" stroke-width="1"/>
-        <line x1="190" y1="0" x2="190" y2="500" stroke="#1a2e44" stroke-width="1"/>
-        <line x1="380" y1="0" x2="380" y2="500" stroke="#1a2e44" stroke-width="1"/>
-        <line x1="570" y1="0" x2="570" y2="500" stroke="#1a2e44" stroke-width="1"/>
-        <line x1="760" y1="0" x2="760" y2="500" stroke="#1a2e44" stroke-width="1"/>
+
+        <!-- Rudimentary landmass outline -->
+        <polygon points="0,130 150,65 320,45 480,38 650,65 820,85 940,150 940,270 865,345 755,420 600,460 420,468 250,438 100,398 15,315 0,245"
+          fill="#132A42" stroke="#2c4a6a" stroke-width="2"/>
+
+        <!-- Rudimentary internal borders -->
+        <path d="M260,80 L255,170 L280,270 L300,380" fill="none" stroke="#3a5d82" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <path d="M260,170 L410,158 L430,245 L300,268" fill="none" stroke="#3a5d82" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <path d="M300,268 L430,245 L478,292 L432,372 L300,382 Z" fill="none" stroke="#3a5d82" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <path d="M480,330 L562,318 L582,380 L500,392 Z" fill="none" stroke="#3a5d82" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <path d="M585,255 L655,260 L705,285 L725,345 L685,425" fill="none" stroke="#3a5d82" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+        <!-- Simplified seas -->
+        <ellipse cx="412" cy="345" rx="70" ry="33" fill="#0a1f33" stroke="#234258" stroke-width="1"/>
+        <ellipse cx="612" cy="355" rx="32" ry="62" fill="#0a1f33" stroke="#234258" stroke-width="1"/>
+
         <rect width="950" height="500" fill="none" stroke="#1e3a5a" stroke-width="2"/>
         <!-- Labels -->
-        <text x="95" y="270" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">W. EUROPE</text>
-        <text x="450" y="165" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">RUSSIA</text>
-        <text x="750" y="320" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">KAZAKHSTAN</text>
-        <text x="375" y="278" font-size="9" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">UKRAINE</text>
-        <text x="535" y="368" font-size="9" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">CAUC.</text>
-        <text x="340" y="230" font-size="9" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-family="'Segoe UI',sans-serif">BELARUS</text>
+        <text x="95" y="270" font-size="10" fill="rgba(255,255,255,0.32)" text-anchor="middle" font-family="'Segoe UI',sans-serif">W. EUROPE</text>
+        <text x="450" y="165" font-size="10" fill="rgba(255,255,255,0.32)" text-anchor="middle" font-family="'Segoe UI',sans-serif">RUSSIA</text>
+        <text x="750" y="320" font-size="10" fill="rgba(255,255,255,0.32)" text-anchor="middle" font-family="'Segoe UI',sans-serif">KAZAKHSTAN</text>
+        <text x="375" y="278" font-size="9" fill="rgba(255,255,255,0.32)" text-anchor="middle" font-family="'Segoe UI',sans-serif">UKRAINE</text>
+        <text x="535" y="368" font-size="9" fill="rgba(255,255,255,0.32)" text-anchor="middle" font-family="'Segoe UI',sans-serif">CAUC.</text>
+        <text x="340" y="230" font-size="9" fill="rgba(255,255,255,0.32)" text-anchor="middle" font-family="'Segoe UI',sans-serif">BELARUS</text>
+        <text x="412" y="348" font-size="8" fill="rgba(255,255,255,0.22)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Black Sea</text>
+        <text x="612" y="358" font-size="8" fill="rgba(255,255,255,0.22)" text-anchor="middle" font-family="'Segoe UI',sans-serif">Caspian Sea</text>
         <g id="mapPins"></g>
       </svg>
       <div class="map-legend" id="mapLegend"></div>
@@ -879,23 +1184,39 @@
       <h2 class="section-title"><span>Уроки</span> — Lessons</h2>
       <p class="section-subtitle">Complete each lesson to unlock the next. Progress is saved automatically.</p>
       <div class="xp-bar-card">
-        <span style="font-size:1.6rem">⭐</span>
-        <div style="flex:1">
-          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:2px">Total XP earned</div>
-          <div id="totalXP" style="font-size:1.3rem;font-weight:700;color:var(--gold)">0 XP</div>
+        <div class="stat-chip level-chip">
+          <div class="level-badge" id="levelBadge">1</div>
+          <div class="level-info">
+            <div class="level-title" id="levelTitle">Level 1 — Новичок (Novice)</div>
+            <div class="level-progress-track"><div class="level-progress-fill" id="levelProgressFill"></div></div>
+            <div class="level-xp-label" id="levelXpLabel">0 XP total</div>
+          </div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:2px">Lessons done</div>
-          <div id="completedCount" style="font-size:1.3rem;font-weight:700;color:var(--green)">0 / 8</div>
+        <div class="stat-chip streak-chip inactive" id="streakChip">
+          <span class="streak-flame">🔥</span>
+          <div>
+            <div class="stat-num" id="streakNum">0</div>
+            <div class="stat-label" id="streakFlameLabel">Start a streak</div>
+          </div>
+        </div>
+        <div class="stat-chip">
+          <div>
+            <div class="stat-num green" id="completedCount">0 / 8</div>
+            <div class="stat-label">Lessons done</div>
+          </div>
         </div>
       </div>
+      <div class="daily-goal-card" id="dailyGoalCard"></div>
       <div class="lesson-map" id="lessonMap"></div>
+      <h3 class="achievements-title">Achievements</h3>
+      <div class="achievements-grid" id="achievementsGrid"></div>
     </div>
     <!-- Runner view -->
     <div class="lesson-runner" id="lessonRunner">
       <div class="lr-header">
         <button class="lr-back" onclick="exitLesson()">&#8592; Back</button>
         <div class="lr-progress"><div class="lr-progress-fill" id="lrProgress" style="width:0%"></div></div>
+        <div class="lr-combo" id="lrCombo"><span class="combo-flame">🔥</span><span id="lrComboNum">0</span></div>
         <div class="lr-hearts" id="lrHearts"></div>
       </div>
       <div class="exercise-area" id="exerciseArea"></div>
@@ -1505,9 +1826,9 @@ function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const btns = document.querySelectorAll('#nav button');
-  const sections = ['alphabet','phrases','words','quiz','tips','grammar','lessons','news'];
-  btns[sections.indexOf(id)].classList.add('active');
+  const btn = document.querySelector('#nav button[data-section="' + id + '"]');
+  if (btn) btn.classList.add('active');
+  if (id === 'quiz') updateReviewOptionLabel();
 }
 
 // ═══════════════════════════════════════════
@@ -1525,7 +1846,8 @@ function buildAlphabet() {
       <button class="speak-btn" style="margin-top:6px" title="Hear pronunciation">🔊</button>`;
     card.addEventListener('click', e => {
       if (e.target.closest('.speak-btn')) return;
-      card.classList.toggle('flipped');
+      const nowFlipped = card.classList.toggle('flipped');
+      if (nowFlipped) markLetterSeen(letter);
     });
     card.querySelector('.speak-btn').addEventListener('click', function(e) {
       e.stopPropagation();
@@ -1616,13 +1938,67 @@ function renderWords(cat) {
 }
 
 // ═══════════════════════════════════════════
+// SPACED REPETITION (Leitner-style SRS)
+// ═══════════════════════════════════════════
+const REVIEW_NEW_PER_DAY = 12;
+const SRS_BOX_INTERVALS = [1, 2, 4, 8, 16, 30]; // days until next review, by box
+
+function buildSrsPool() {
+  const pool = [];
+  Object.entries(WORDS).forEach(([cat, items]) => {
+    items.forEach((w, i) => pool.push({ id: 'w:' + cat + ':' + i, r: w.r, t: w.t, e: w.e }));
+  });
+  Object.entries(PHRASES).forEach(([cat, items]) => {
+    items.forEach((p, i) => pool.push({ id: 'p:' + cat + ':' + i, r: p.r, t: p.t, e: p.e }));
+  });
+  return pool;
+}
+const SRS_POOL = buildSrsPool();
+
+function loadSrsState() {
+  try { return JSON.parse(localStorage.getItem('ru_srs') || '{}'); } catch { return {}; }
+}
+function saveSrsState(s) { localStorage.setItem('ru_srs', JSON.stringify(s)); }
+
+function getDueItems(maxNew) {
+  const state = loadSrsState();
+  const today = todayStr();
+  const due = [], fresh = [];
+  SRS_POOL.forEach(item => {
+    const s = state[item.id];
+    if (!s) fresh.push(item);
+    else if (s.due <= today) due.push(item);
+  });
+  return shuffle(due.concat(shuffle(fresh).slice(0, maxNew)));
+}
+
+function updateItemAfterReview(id, wasCorrect) {
+  const state = loadSrsState();
+  const cur = state[id] || { box: 0 };
+  const box = wasCorrect ? Math.min(cur.box + 1, SRS_BOX_INTERVALS.length - 1) : 0;
+  state[id] = { box, due: todayStr(SRS_BOX_INTERVALS[box]) };
+  saveSrsState(state);
+}
+
+function updateReviewOptionLabel() {
+  const opt = document.getElementById('reviewDeckOption');
+  if (!opt) return;
+  const n = getDueItems(REVIEW_NEW_PER_DAY).length;
+  opt.textContent = '🔁 Review (' + n + ' due today)';
+}
+
+// ═══════════════════════════════════════════
 // FLASHCARD QUIZ
 // ═══════════════════════════════════════════
-let deck = [], deckIdx = 0, correct = 0, wrong = 0, revealed = false;
+let deck = [], deckIdx = 0, correct = 0, wrong = 0, revealed = false, currentDeckType = null;
 
 function buildDeck(type) {
   let cards = [];
-  if (type === 'alphabet') {
+  if (type === 'review') {
+    cards = getDueItems(REVIEW_NEW_PER_DAY).map(item => ({
+      front: item.r, back: item.e, hint: item.t, srsId: item.id,
+    }));
+  } else if (type === 'alphabet') {
     cards = ALPHABET.map(a => ({
       front: a.c.split(' ')[0],
       back: a.l,
@@ -1673,8 +2049,17 @@ function shuffle(arr) {
 
 function startQuiz() {
   const type = document.getElementById('deckSelect').value;
+  currentDeckType = type;
   deck = shuffle(buildDeck(type));
   deckIdx = 0; correct = 0; wrong = 0;
+  if (type === 'review' && deck.length === 0) {
+    document.getElementById('quizArea').innerHTML =
+      '<div class="quiz-complete">' +
+        '<h2>All caught up! 🎉</h2>' +
+        '<p style="margin-bottom:0">No reviews due right now — nice work staying on top of it. Check back tomorrow, or pick another deck above.</p>' +
+      '</div>';
+    return;
+  }
   renderCard();
 }
 
@@ -1736,6 +2121,8 @@ function revealCard() {
 }
 
 function markCard(knew) {
+  const card = deck[deckIdx];
+  if (card && card.srsId && knew !== null) updateItemAfterReview(card.srsId, knew === true);
   if (knew === true) correct++;
   else if (knew === false) wrong++;
   deckIdx++;
@@ -1747,11 +2134,19 @@ function renderComplete() {
   const total = correct + wrong;
   const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
   const emoji = pct >= 80 ? 'Great work!' : pct >= 50 ? 'Keep practicing!' : 'Keep at it!';
+  const earned = Math.min(correct, 15);
+  const label = currentDeckType === 'review' ? 'Review session' : 'Flashcard round';
+  if (earned > 0) {
+    bumpFlashcardRounds();
+    awardXP(earned, label);
+  }
+  if (currentDeckType === 'review') updateReviewOptionLabel();
   area.innerHTML = `
     <div class="quiz-complete">
       <h2>Round Complete!</h2>
       <div class="big-score">${pct}%</div>
       <p>${correct} correct out of ${total} cards &mdash; ${emoji}</p>
+      ${earned > 0 ? `<p style="color:var(--gold);font-weight:700;margin-bottom:12px">+${earned} XP earned</p>` : ''}
       <button onclick="startQuiz()">Go Again</button>
     </div>
   `;
@@ -1792,6 +2187,24 @@ function speak(text, btn) {
 function hasRussianVoice() {
   return window.speechSynthesis &&
     window.speechSynthesis.getVoices().some(v => v.lang.startsWith('ru'));
+}
+
+function updateVoiceWarning() {
+  const el = document.getElementById('noVoiceWarn');
+  if (!el) return;
+  if (!window.speechSynthesis) {
+    el.textContent = '⚠️ This browser does not support text-to-speech, so the 🔊 buttons will not work. Try Chrome or Edge.';
+    el.style.display = 'block';
+    return;
+  }
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length === 0) return; // not loaded yet — voiceschanged will re-check
+  if (hasRussianVoice()) {
+    el.style.display = 'none';
+  } else {
+    el.textContent = '⚠️ No Russian voice was found on this device, so the 🔊 buttons may stay silent or sound off. Installing a Russian language/voice pack will fix this.';
+    el.style.display = 'block';
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -2098,6 +2511,7 @@ let ls = {
   hearts:3, score:0, errors:0,
   tapAnswer:[], tapUsed:[],
   matchSelected:null, matchDone:[], matchLeft:0,
+  combo:0, maxCombo:0,
 };
 
 function loadProgress() {
@@ -2108,42 +2522,300 @@ function markLessonDone(id, xp) {
   const p = loadProgress(); p[id] = {completed:true, xp}; saveProgress(p);
 }
 
+// ── XP & Levels ──
+const LEVEL_XP = 60;
+const LEVEL_TITLES = [
+  { ru:'Новичок',     en:'Novice' },
+  { ru:'Начинающий',  en:'Beginner' },
+  { ru:'Ученик',      en:'Student' },
+  { ru:'Практик',     en:'Practitioner' },
+  { ru:'Знаток',      en:'Connoisseur' },
+  { ru:'Мастер',      en:'Master' },
+  { ru:'Эксперт',     en:'Expert' },
+  { ru:'Легенда',     en:'Legend' },
+];
+function levelForXP(xp) { return Math.floor(xp / LEVEL_XP) + 1; }
+function levelTitleFor(level) { return LEVEL_TITLES[Math.min(level - 1, LEVEL_TITLES.length - 1)]; }
+function levelProgress(xp) {
+  const inLevel = xp % LEVEL_XP;
+  return { inLevel, pct: Math.round((inLevel / LEVEL_XP) * 100), needed: LEVEL_XP - inLevel };
+}
+function loadXP() {
+  const raw = localStorage.getItem('ru_xp');
+  if (raw !== null) { const n = parseInt(raw, 10); return isNaN(n) ? 0 : n; }
+  // First run after this update: seed XP from lessons already completed.
+  const progress = loadProgress();
+  let migrated = 0;
+  LESSON_DEFS.forEach(l => { if ((progress[l.id]||{}).completed) migrated += l.xp; });
+  saveXP(migrated);
+  return migrated;
+}
+function saveXP(xp) { localStorage.setItem('ru_xp', String(Math.max(0, xp))); }
+
+// ── Daily streak ──
+function loadStreak() {
+  try { return JSON.parse(localStorage.getItem('ru_streak') || 'null') || {count:0, lastDate:null}; }
+  catch { return {count:0, lastDate:null}; }
+}
+function saveStreak(s) { localStorage.setItem('ru_streak', JSON.stringify(s)); }
+function todayStr(offsetDays) {
+  const d = new Date();
+  if (offsetDays) d.setDate(d.getDate() + offsetDays);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function updateStreak() {
+  const s = loadStreak();
+  const today = todayStr();
+  if (s.lastDate === today) return s;
+  s.count = (s.lastDate === todayStr(-1)) ? (s.count || 0) + 1 : 1;
+  s.lastDate = today;
+  saveStreak(s);
+  return s;
+}
+
+// ═══════════════════════════════════════════
+// SITE-WIDE GAMIFICATION (XP toasts, daily goal, achievements)
+// ═══════════════════════════════════════════
+function loadSet(key) {
+  try { return new Set(JSON.parse(localStorage.getItem(key) || '[]')); } catch { return new Set(); }
+}
+function saveSet(key, set) { localStorage.setItem(key, JSON.stringify([...set])); }
+
+function renderGlobalStatPill() {
+  const badgeEl = document.getElementById('gspLevelBadge');
+  if (!badgeEl) return;
+  const xp = loadXP();
+  const prog = levelProgress(xp);
+  const streak = loadStreak();
+  badgeEl.textContent = levelForXP(xp);
+  document.getElementById('gspXp').textContent = xp + ' XP';
+  document.getElementById('gspNext').textContent = prog.needed + ' to next';
+  document.getElementById('gspXpFill').style.width = prog.pct + '%';
+  const stEl = document.getElementById('gspStreak');
+  stEl.textContent = '🔥 ' + (streak.count || 0);
+  stEl.classList.toggle('active', streak.lastDate === todayStr());
+}
+
+function showToast(text, variant) {
+  const wrap = document.getElementById('xpToastWrap');
+  if (!wrap) return;
+  const t = document.createElement('div');
+  t.className = 'xp-toast' + (variant ? ' ' + variant : '');
+  t.textContent = text;
+  wrap.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => t.remove(), 300);
+  }, 2200);
+}
+
+function awardXP(amount, label) {
+  if (!amount || amount <= 0) return;
+  const before = loadXP();
+  const after = before + amount;
+  saveXP(after);
+  bumpDailyGoal(amount);
+  showToast('+' + amount + ' XP · ' + label);
+  renderGlobalStatPill();
+  renderDailyGoal();
+  if (levelForXP(after) > levelForXP(before)) {
+    const title = levelTitleFor(levelForXP(after));
+    setTimeout(() => showToast('⭐ Level Up — Level ' + levelForXP(after) + ' ' + title.ru, 'level'), 400);
+  }
+  checkAchievements();
+}
+
+// ── Daily goal ──
+const DAILY_GOAL_XP = 20;
+function loadDailyGoal() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('ru_daily_goal') || 'null');
+    if (raw && raw.date === todayStr()) return raw;
+  } catch {}
+  return { date: todayStr(), earned: 0 };
+}
+function saveDailyGoal(g) { localStorage.setItem('ru_daily_goal', JSON.stringify(g)); }
+function bumpDailyGoal(amount) {
+  const g = loadDailyGoal();
+  g.earned += amount;
+  saveDailyGoal(g);
+  return g;
+}
+function renderDailyGoal() {
+  const el = document.getElementById('dailyGoalCard');
+  if (!el) return;
+  const g = loadDailyGoal();
+  const pct = Math.min(100, Math.round((g.earned / DAILY_GOAL_XP) * 100));
+  const done = g.earned >= DAILY_GOAL_XP;
+  el.innerHTML =
+    '<div class="dg-row"><span>🎯 Daily Goal</span>' +
+      '<span class="' + (done ? 'dg-done' : '') + '">' +
+        (done ? 'Complete! ✓' : Math.min(g.earned, DAILY_GOAL_XP) + ' / ' + DAILY_GOAL_XP + ' XP') +
+      '</span></div>' +
+    '<div class="dg-track"><div class="dg-fill" style="width:' + pct + '%"></div></div>';
+}
+
+// ── Per-activity trackers (feed XP + achievements from outside Lessons) ──
+function markLetterSeen(letter) {
+  const seen = loadSet('ru_alphabet_seen');
+  if (seen.has(letter)) return;
+  seen.add(letter);
+  saveSet('ru_alphabet_seen', seen);
+  awardXP(1, letter + ' revealed');
+}
+function markNewsAnswered(id) {
+  const done = loadSet('ru_news_answered');
+  if (done.has(id)) return;
+  done.add(id);
+  saveSet('ru_news_answered', done);
+  awardXP(2, 'News quiz');
+}
+function bumpFlashcardRounds() {
+  const n = parseInt(localStorage.getItem('ru_flashcard_rounds') || '0', 10) + 1;
+  localStorage.setItem('ru_flashcard_rounds', String(n));
+}
+
+// ── Achievements ──
+const ACHIEVEMENTS = [
+  { id:'first_lesson',     icon:'🌱',  title:'First Steps',      desc:'Complete your first lesson',        check: s => s.lessonsCompleted >= 1 },
+  { id:'halfway',          icon:'🏅',  title:'Halfway There',    desc:'Complete 4 lessons',                 check: s => s.lessonsCompleted >= 4 },
+  { id:'course_complete',  icon:'🏆',  title:'Course Complete',  desc:'Complete all lessons',               check: s => s.lessonsCompleted >= LESSON_DEFS.length },
+  { id:'alphabet_master',  icon:'🔤',  title:'Alphabet Explorer',desc:'Reveal every letter of the alphabet',check: s => s.alphabetSeen >= 33 },
+  { id:'streak_3',         icon:'🔥',  title:'On a Roll',        desc:'Reach a 3-day streak',               check: s => s.streak >= 3 },
+  { id:'streak_7',         icon:'🔥',  title:'Dedicated',        desc:'Reach a 7-day streak',               check: s => s.streak >= 7 },
+  { id:'card_shark',       icon:'🗂️',  title:'Card Shark',       desc:'Finish 5 flashcard rounds',          check: s => s.flashcardRounds >= 5 },
+  { id:'news_reader',      icon:'📰',  title:'News Reader',      desc:'Correctly answer 5 news quizzes',    check: s => s.newsAnswered >= 5 },
+];
+
+function computeStats() {
+  const progress = loadProgress();
+  return {
+    lessonsCompleted: LESSON_DEFS.filter(l => (progress[l.id]||{}).completed).length,
+    alphabetSeen: loadSet('ru_alphabet_seen').size,
+    streak: loadStreak().count || 0,
+    flashcardRounds: parseInt(localStorage.getItem('ru_flashcard_rounds') || '0', 10),
+    newsAnswered: loadSet('ru_news_answered').size,
+  };
+}
+
+function checkAchievements() {
+  const stats = computeStats();
+  const unlocked = loadSet('ru_achievements');
+  let changed = false;
+  ACHIEVEMENTS.forEach(a => {
+    if (!unlocked.has(a.id) && a.check(stats)) {
+      unlocked.add(a.id);
+      changed = true;
+      showToast('🏆 Achievement unlocked: ' + a.title, 'achievement');
+    }
+  });
+  if (changed) saveSet('ru_achievements', unlocked);
+  renderAchievements();
+}
+
+function renderAchievements() {
+  const grid = document.getElementById('achievementsGrid');
+  if (!grid) return;
+  const unlocked = loadSet('ru_achievements');
+  grid.innerHTML = ACHIEVEMENTS.map(a =>
+    '<div class="achv-card' + (unlocked.has(a.id) ? ' unlocked' : '') + '">' +
+      '<div class="achv-icon">' + a.icon + '</div>' +
+      '<div class="achv-title">' + a.title + '</div>' +
+      '<div class="achv-desc">' + a.desc + '</div>' +
+    '</div>'
+  ).join('');
+}
+
+// ── Combo ──
+function updateComboBadge() {
+  const el = document.getElementById('lrCombo');
+  if (!el) return;
+  if (ls.combo >= 2) {
+    el.style.display = 'flex';
+    el.querySelector('#lrComboNum').textContent = ls.combo;
+  } else {
+    el.style.display = 'none';
+  }
+}
+function bumpCombo() {
+  ls.combo = (ls.combo || 0) + 1;
+  ls.maxCombo = Math.max(ls.maxCombo || 0, ls.combo);
+  updateComboBadge();
+  const el = document.getElementById('lrCombo');
+  if (el) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+}
+function resetCombo() {
+  ls.combo = 0;
+  updateComboBadge();
+}
+
 // ═══════════════════════════════════════════
 // LESSONS — MAP
 // ═══════════════════════════════════════════
 function buildLessonMap() {
   const map = document.getElementById('lessonMap');
   const progress = loadProgress();
-  map.innerHTML = '';
-  let totalXP = 0, completedCount = 0;
+  map.innerHTML =
+    '<div class="lesson-map-line-bg"></div>' +
+    '<div class="lesson-map-line-fill" id="lessonMapLineFill"></div>';
+  let completedCount = 0;
 
   LESSON_DEFS.forEach((lesson, i) => {
     const state = progress[lesson.id] || {};
     const completed = !!state.completed;
     const available = i === 0 || !!(progress[LESSON_DEFS[i-1].id]||{}).completed;
     const locked = !available && !completed;
-    if (completed) { totalXP += lesson.xp; completedCount++; }
+    if (completed) completedCount++;
 
-    const node = document.createElement('div');
-    node.className = 'lesson-node ' + (completed ? 'completed' : available ? 'available' : 'locked');
-    node.innerHTML =
-      (completed ? '<span class="ln-badge done">&#10003; Done</span>' : available ? '<span class="ln-badge new">Start</span>' : '') +
-      '<div class="ln-icon">' + (locked ? '🔒' : lesson.icon) + '</div>' +
-      '<div class="ln-title">' + lesson.title + '</div>' +
-      '<div class="ln-sub">' + lesson.russian + '</div>' +
-      '<div class="ln-desc">' + lesson.desc + '</div>' +
-      '<div class="ln-meta">' +
-        '<span class="ln-xp">+' + lesson.xp + ' XP</span>' +
-        '<span class="ln-count">' + lesson.exercises.filter(e=>e.type!=='learn').length + ' exercises</span>' +
-      '</div>' +
-      '<div class="ln-progress-bar"><div class="ln-progress-fill" style="width:' + (completed?100:0) + '%"></div></div>';
+    const step = document.createElement('div');
+    step.className = 'path-step ' + (completed ? 'completed' : available ? 'available' : 'locked');
+    step.dataset.side = (i % 2 === 0) ? 'left' : 'right';
+    step.innerHTML =
+      '<div class="path-node-wrap"><div class="path-node">' + (locked ? '🔒' : lesson.icon) + '</div></div>' +
+      '<div class="path-label">' +
+        (completed ? '<span class="ln-badge done">&#10003; Done</span>' : available ? '<span class="ln-badge new">Start</span>' : '') +
+        '<div class="ln-title">' + lesson.title + '</div>' +
+        '<div class="ln-sub">' + lesson.russian + '</div>' +
+        '<div class="ln-desc">' + lesson.desc + '</div>' +
+        '<div class="ln-meta">' +
+          '<span class="ln-xp">+' + lesson.xp + ' XP</span>' +
+          '<span class="ln-count">' + lesson.exercises.filter(e=>e.type!=='learn').length + ' exercises</span>' +
+        '</div>' +
+      '</div>';
 
-    if (!locked) node.addEventListener('click', () => startLesson(lesson.id));
-    map.appendChild(node);
+    if (!locked) step.addEventListener('click', () => startLesson(lesson.id));
+    map.appendChild(step);
   });
 
-  document.getElementById('totalXP').textContent = totalXP + ' XP';
+  const fillEl = document.getElementById('lessonMapLineFill');
+  if (fillEl) fillEl.style.height = Math.round((completedCount / LESSON_DEFS.length) * 100) + '%';
+
   document.getElementById('completedCount').textContent = completedCount + ' / ' + LESSON_DEFS.length;
+  renderLevelAndStreak();
+  renderDailyGoal();
+  renderAchievements();
+}
+
+function renderLevelAndStreak() {
+  const xp = loadXP();
+  const level = levelForXP(xp);
+  const title = levelTitleFor(level);
+  const prog = levelProgress(xp);
+  document.getElementById('levelBadge').textContent = level;
+  document.getElementById('levelTitle').innerHTML =
+    'Level ' + level + ' — ' + title.ru + ' <span style="color:var(--muted);font-weight:400">(' + title.en + ')</span>';
+  document.getElementById('levelProgressFill').style.width = prog.pct + '%';
+  document.getElementById('levelXpLabel').textContent = xp + ' XP total · ' + prog.needed + ' XP to next level';
+
+  const streak = loadStreak();
+  const active = streak.lastDate === todayStr();
+  document.getElementById('streakNum').textContent = streak.count || 0;
+  const chip = document.getElementById('streakChip');
+  if (chip) chip.classList.toggle('inactive', !(streak.count > 0));
+  const label = document.getElementById('streakFlameLabel');
+  if (label) label.textContent = active ? 'Streak today!' : (streak.count > 0 ? 'Day streak' : 'Start a streak');
+  renderGlobalStatPill();
 }
 
 function startLesson(id) {
@@ -2154,6 +2826,7 @@ function startLesson(id) {
     hearts:3, score:0, errors:0,
     tapAnswer:[], tapUsed:[],
     matchSelected:null, matchDone:[], matchLeft:0,
+    combo:0, maxCombo:0,
   };
   document.getElementById('lessonMapView').classList.add('hidden');
   document.getElementById('lessonRunner').classList.add('active');
@@ -2173,6 +2846,7 @@ function updateLrHeader() {
   document.getElementById('lrProgress').style.width = pct + '%';
   document.getElementById('lrHearts').innerHTML =
     [0,1,2].map(i => '<span class="lr-heart ' + (i >= ls.hearts ? 'lost' : '') + '">&#10084;&#65039;</span>').join('');
+  updateComboBadge();
 }
 
 // ═══════════════════════════════════════════
@@ -2268,14 +2942,16 @@ function renderMultipleChoice(ex, area) {
       if (i === s.correctIdx) {
         btn.classList.add('correct-ans');
         if (isRussianQuestion) speak(ex.question);
+        bumpCombo();
         showFeedback(true, 'Correct!', '');
         ls.score++;
       } else {
         btn.classList.add('wrong-ans');
         btns[s.correctIdx].classList.add('correct-ans');
         if (isRussianQuestion) speak(ex.question);
-        showFeedback(false, 'Incorrect', 'Correct answer: ' + correctText);
+        resetCombo();
         ls.errors++; loseHeart();
+        showFeedback(false, 'Incorrect', 'Correct answer: ' + correctText);
       }
     });
   });
@@ -2307,14 +2983,16 @@ function renderFillBlank(ex, area) {
       if (i === s.correctIdx) {
         btn.classList.add('correct-ans');
         speak(correctText);
+        bumpCombo();
         showFeedback(true, 'Correct!', '');
         ls.score++;
       } else {
         btn.classList.add('wrong-ans');
         btns[s.correctIdx].classList.add('correct-ans');
         speak(correctText);
-        showFeedback(false, 'Incorrect', 'The answer was: ' + correctText);
+        resetCombo();
         ls.errors++; loseHeart();
+        showFeedback(false, 'Incorrect', 'The answer was: ' + correctText);
       }
     });
   });
@@ -2371,12 +3049,14 @@ function renderTapToBuild(ex, area) {
     area.querySelectorAll('.tap-tile').forEach(t => { t.style.pointerEvents = 'none'; });
     if (ok) {
       speak(correct.join(' '));
+      bumpCombo();
       showFeedback(true, 'Correct!', '');
       ls.score++;
     } else {
       speak(correct.join(' '));
-      showFeedback(false, 'Not quite!', 'Correct: ' + correct.join(' '));
+      resetCombo();
       ls.errors++; loseHeart();
+      showFeedback(false, 'Not quite!', 'Correct: ' + correct.join(' '));
     }
   });
 }
@@ -2446,6 +3126,7 @@ function renderMatchPairs(ex, area) {
       ls.matchDone.push(key);
       ls.matchLeft--;
       ls.matchSelected = null;
+      bumpCombo();
       if (ls.matchLeft === 0) { ls.score++; setTimeout(() => showFeedback(true, 'All matched!', ''), 250); }
     } else {
       [ls.matchSelected.btn, btn].forEach(b => {
@@ -2453,7 +3134,9 @@ function renderMatchPairs(ex, area) {
         setTimeout(() => b.classList.remove('wrong-flash'), 500);
       });
       ls.matchSelected = null;
+      resetCombo();
       ls.errors++; loseHeart();
+      if (ls.hearts === 0) setTimeout(failLesson, 650);
     }
   });
 }
@@ -2492,14 +3175,16 @@ function renderListen(ex, area) {
       if (i === s.correctIdx) {
         btn.classList.add('correct-ans');
         speak(ex.russian);
+        bumpCombo();
         showFeedback(true, 'Correct! "' + ex.russian + '" = ' + correctText, '');
         ls.score++;
       } else {
         btn.classList.add('wrong-ans');
         btns[s.correctIdx].classList.add('correct-ans');
         speak(ex.russian);
-        showFeedback(false, 'Incorrect', '"' + ex.russian + '" means: ' + correctText);
+        resetCombo();
         ls.errors++; loseHeart();
+        showFeedback(false, 'Incorrect', '"' + ex.russian + '" means: ' + correctText);
       }
     });
   });
@@ -2509,10 +3194,14 @@ function renderListen(ex, area) {
 function showFeedback(correct, title, answer) {
   const bar = document.getElementById('feedbackBar');
   document.getElementById('fbIcon').textContent = correct ? '✅' : '❌';
-  document.getElementById('fbTitle').textContent = title;
+  const fullTitle = (correct && ls.combo >= 3) ? title + '  🔥 ' + ls.combo + ' in a row!' : title;
+  document.getElementById('fbTitle').textContent = fullTitle;
   document.getElementById('fbAnswer').textContent = answer;
+  const outOfHearts = !correct && ls.hearts <= 0;
   const isLast = ls.exIdx + 1 >= ls.exercises.length;
-  document.getElementById('fbNext').textContent = isLast ? 'Finish' : 'Continue';
+  const fbNext = document.getElementById('fbNext');
+  fbNext.textContent = outOfHearts ? 'See results' : (isLast ? 'Finish' : 'Continue');
+  fbNext.onclick = outOfHearts ? failLesson : nextExercise;
   bar.className = 'feedback-bar show ' + (correct ? 'correct' : 'incorrect');
 }
 
@@ -2534,7 +3223,23 @@ function nextExercise() {
 // ── Lesson complete ──
 function renderLessonComplete() {
   const def = LESSON_DEFS.find(l => l.id === ls.lessonId);
+  const wasCompleted = !!(loadProgress()[ls.lessonId] || {}).completed;
   markLessonDone(ls.lessonId, def.xp);
+
+  const comboBonus = Math.floor((ls.maxCombo || 0) / 3) * 5;
+  const earnedXP = (wasCompleted ? 0 : def.xp) + comboBonus;
+  const xpBefore = loadXP();
+  const xpAfter = xpBefore + earnedXP;
+  saveXP(xpAfter);
+  const leveledUp = levelForXP(xpAfter) > levelForXP(xpBefore);
+  const newLevel = levelForXP(xpAfter);
+  const newTitle = levelTitleFor(newLevel);
+
+  const streak = updateStreak();
+  if (earnedXP > 0) bumpDailyGoal(earnedXP);
+  renderGlobalStatPill();
+  checkAchievements();
+
   hideFeedback();
   updateLrHeader();
   const totalEx = ls.exercises.filter(e => e.type !== 'learn').length;
@@ -2543,16 +3248,40 @@ function renderLessonComplete() {
   const nextId = getNextLessonId(ls.lessonId);
   document.getElementById('exerciseArea').innerHTML =
     '<div class="lesson-complete">' +
+      (leveledUp ? '<div class="level-up-banner">⭐ Level Up — Level ' + newLevel + ' &middot; ' + newTitle.ru + ' (' + newTitle.en + ')</div>' : '') +
       '<div class="lc-trophy">' + trophy + '</div>' +
       '<div class="lc-title">Lesson Complete!</div>' +
       '<div class="lc-subtitle">' + def.title + ' &mdash; ' + def.russian + '</div>' +
       '<div class="lc-stats">' +
-        '<div><div class="lc-stat-num gold">+' + def.xp + '</div><div class="lc-stat-label">XP Earned</div></div>' +
+        '<div><div class="lc-stat-num gold">+' + earnedXP + '</div><div class="lc-stat-label">XP Earned</div></div>' +
         '<div><div class="lc-stat-num green">' + accuracy + '%</div><div class="lc-stat-label">Accuracy</div></div>' +
         '<div><div class="lc-stat-num">' + ls.errors + '</div><div class="lc-stat-label">Mistakes</div></div>' +
+        (ls.maxCombo >= 3 ? '<div><div class="lc-stat-num" style="color:var(--gold)">🔥' + ls.maxCombo + '</div><div class="lc-stat-label">Best Combo</div></div>' : '') +
+      '</div>' +
+      '<div style="color:var(--muted);font-size:0.85rem;margin-bottom:22px">🔥 ' + streak.count + '-day streak' +
+        (comboBonus > 0 ? ' &nbsp;&middot;&nbsp; +' + comboBonus + ' combo bonus XP' : '') +
       '</div>' +
       '<button class="lc-btn secondary" onclick="exitLesson()">&#8592; Lessons</button>' +
       (nextId ? '<button class="lc-btn" onclick="startLesson(\'' + nextId + '\')">Next Lesson &#8594;</button>' : '') +
+    '</div>';
+}
+
+function failLesson() {
+  hideFeedback();
+  const def = LESSON_DEFS.find(l => l.id === ls.lessonId);
+  updateLrHeader();
+  document.getElementById('exerciseArea').innerHTML =
+    '<div class="lesson-complete">' +
+      '<div class="lc-trophy">💔</div>' +
+      '<div class="lc-title">Out of Hearts</div>' +
+      '<div class="lc-subtitle">' + def.title + ' &mdash; ' + def.russian + '</div>' +
+      '<div class="lc-stats">' +
+        '<div><div class="lc-stat-num green">' + ls.score + '</div><div class="lc-stat-label">Correct</div></div>' +
+        '<div><div class="lc-stat-num red">' + ls.errors + '</div><div class="lc-stat-label">Mistakes</div></div>' +
+      '</div>' +
+      '<div style="color:var(--muted);font-size:0.85rem;margin-bottom:22px">No XP lost &mdash; just try the lesson again.</div>' +
+      '<button class="lc-btn secondary" onclick="exitLesson()">&#8592; Lessons</button>' +
+      '<button class="lc-btn" onclick="startLesson(\'' + def.id + '\')">Retry Lesson</button>' +
     '</div>';
 }
 
@@ -2576,6 +3305,10 @@ const GRAMMAR_TOPICS = [
   {
     id:'gender', label:'Noun Gender',
     render: renderGrammarGender,
+  },
+  {
+    id:'cases', label:'Cases',
+    render: renderGrammarCases,
   },
   {
     id:'sentences', label:'Sentences',
@@ -2652,40 +3385,366 @@ function renderGrammarPronouns(area) {
     '</div>';
 }
 
+// ── Verb conjugation data ──
+const VERB_CONJUGATIONS = [
+  { inf:'читать',   translit:"chitat'",   en:'to read',        type:1,
+    forms:{ ya:'читаю',    ty:'читаешь',    on:'читает',    my:'читаем',    vy:'читаете',    oni:'читают'    },
+    translits:{ ya:'chitayu', ty:"chitayesh'", on:'chitayet', my:'chitayem', vy:'chitayete', oni:'chitayut' } },
+  { inf:'работать', translit:"rabotat'",  en:'to work',        type:1,
+    forms:{ ya:'работаю',  ty:'работаешь',  on:'работает',  my:'работаем',  vy:'работаете',  oni:'работают'  },
+    translits:{ ya:'rabotayu', ty:"rabotayesh'", on:'rabotayet', my:'rabotayem', vy:'rabotayete', oni:'rabotayut' } },
+  { inf:'знать',    translit:"znat'",     en:'to know',        type:1,
+    forms:{ ya:'знаю',     ty:'знаешь',     on:'знает',     my:'знаем',     vy:'знаете',     oni:'знают'     },
+    translits:{ ya:'znayu', ty:"znayesh'", on:'znayet', my:'znayem', vy:'znayete', oni:'znayut' } },
+  { inf:'понимать', translit:"ponimat'",  en:'to understand',  type:1,
+    forms:{ ya:'понимаю',  ty:'понимаешь',  on:'понимает',  my:'понимаем',  vy:'понимаете',  oni:'понимают'  },
+    translits:{ ya:'ponimayu', ty:"ponimayesh'", on:'ponimayet', my:'ponimayem', vy:'ponimayete', oni:'ponimayut' } },
+  { inf:'говорить', translit:"govorit'",  en:'to speak',       type:2,
+    forms:{ ya:'говорю',   ty:'говоришь',   on:'говорит',   my:'говорим',   vy:'говорите',   oni:'говорят'   },
+    translits:{ ya:'govoryu', ty:"govorish'", on:"govorit'", my:'govorim', vy:'govorite', oni:'govoryat' } },
+  { inf:'любить',   translit:"lyubit'",   en:'to love / like', type:2,
+    forms:{ ya:'люблю',    ty:'любишь',     on:'любит',     my:'любим',     vy:'любите',     oni:'любят'     },
+    translits:{ ya:'lyublyu', ty:"lyubish'", on:"lyubit'", my:'lyubim', vy:'lyubite', oni:'lyubyat' } },
+  { inf:'смотреть', translit:"smotret'",  en:'to watch / look',type:2,
+    forms:{ ya:'смотрю',   ty:'смотришь',   on:'смотрит',   my:'смотрим',   vy:'смотрите',   oni:'смотрят'   },
+    translits:{ ya:'smotryu', ty:"smotrish'", on:"smotrit'", my:'smotrim', vy:'smotrite', oni:'smotryat' } },
+  { inf:'учить',    translit:"uchit'",    en:'to study / teach',type:2,
+    forms:{ ya:'учу',      ty:'учишь',      on:'учит',      my:'учим',      vy:'учите',      oni:'учат'      },
+    translits:{ ya:'uchu', ty:"uchish'", on:"uchit'", my:'uchim', vy:'uchite', oni:'uchat' } },
+  { inf:'хотеть',   translit:"khotet'",   en:'to want',        type:'irr',
+    forms:{ ya:'хочу',     ty:'хочешь',     on:'хочет',     my:'хотим',     vy:'хотите',     oni:'хотят'     },
+    translits:{ ya:'khochu', ty:"khochesh'", on:'khochet', my:'khotim', vy:'khotite', oni:'khotyat' } },
+  { inf:'идти',     translit:'idti',      en:'to go (on foot)',type:'irr',
+    forms:{ ya:'иду',      ty:'идёшь',      on:'идёт',      my:'идём',      vy:'идёте',      oni:'идут'      },
+    translits:{ ya:'idu', ty:"idyosh'", on:'idyot', my:'idyom', vy:'idyote', oni:'idut' } },
+  { inf:'ехать',    translit:"yekhat'",   en:'to go (by vehicle)',type:'irr',
+    forms:{ ya:'еду',      ty:'едешь',      on:'едет',      my:'едем',      vy:'едете',      oni:'едут'      },
+    translits:{ ya:'yedu', ty:'yedesh\'', on:'yedet', my:'yedem', vy:'yedete', oni:'yedut' } },
+  { inf:'мочь',     translit:"moch'",     en:'to be able / can',type:'irr',
+    forms:{ ya:'могу',     ty:'можешь',     on:'может',     my:'можем',     vy:'можете',     oni:'могут'     },
+    translits:{ ya:'mogu', ty:"mozhesh'", on:'mozhet', my:'mozhem', vy:'mozhete', oni:'mogut' } },
+  { inf:'есть',     translit:"yest'",     en:'to eat',         type:'irr',
+    forms:{ ya:'ем',       ty:'ешь',        on:'ест',       my:'едим',      vy:'едите',      oni:'едят'      },
+    translits:{ ya:'yem', ty:"yesh'", on:'yest', my:'yedim', vy:'yedite', oni:'yedyat' } },
+];
+const CONJ_PRONOUN_ROWS = [['Я','ya'],['Ты','ty'],['Он / Она','on'],['Мы','my'],['Вы','vy'],['Они','oni']];
+
 function renderGrammarVerbs(area) {
+  const groups = [
+    { label:'Conjugation I (-ать / -ять)', filter: v => v.type === 1 },
+    { label:'Conjugation II (-ить)',       filter: v => v.type === 2 },
+    { label:'Irregular',                   filter: v => v.type === 'irr' },
+  ];
+  const optionsHtml = groups.map(g => {
+    const verbs = VERB_CONJUGATIONS.filter(g.filter);
+    if (!verbs.length) return '';
+    return '<optgroup label="' + g.label + '">' +
+      verbs.map(v => '<option value="' + v.inf + '">' + v.inf + ' — ' + v.en + '</option>').join('') +
+      '</optgroup>';
+  }).join('');
+
   area.innerHTML =
     '<div class="grammar-block">' +
-      '<h3>Verb Conjugation <span>— verbs change by person</span></h3>' +
-      '<p>Russian verbs conjugate (change form) for each pronoun. There is <span class="hl">no infinitive used in sentences</span> — you always use the conjugated form. ' +
-      'Also, there is <span class="hl">no verb "to be" in present tense</span> — "Я студент" means "I (am) a student".</p>' +
-    '</div>' +
-    '<div class="grammar-block">' +
-      '<h3>говорить <span>(govorit\') — To speak</span></h3>' +
+      '<h3>Verb Conjugation <span>— two patterns, then it\'s pattern-matching</span></h3>' +
+      '<p>Every Russian verb changes its ending for each pronoun — there is <span class="hl">no bare infinitive</span> in a real sentence. ' +
+      'Most verbs fall into one of two patterns, usually predictable from the infinitive ending:</p>' +
       '<table class="conj-table">' +
-        '<thead><tr><th>Pronoun</th><th>Russian</th><th>Pronunciation</th><th>English</th></tr></thead>' +
+        '<thead><tr><th>Pronoun</th><th>Conjugation I <span style="color:var(--muted);font-weight:400">(e.g. читать)</span></th>' +
+          '<th>Conjugation II <span style="color:var(--muted);font-weight:400">(e.g. говорить)</span></th></tr></thead>' +
         '<tbody>' +
-          '<tr><td>Я</td><td class="td-ru">говорю <button class="speak-btn" onclick="speakCell(\'говорю\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govoryu</td><td class="td-en">I speak</td></tr>' +
-          '<tr><td>Ты</td><td class="td-ru">говоришь <button class="speak-btn" onclick="speakCell(\'говоришь\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorish\'</td><td class="td-en">You speak</td></tr>' +
-          '<tr><td>Он/Она</td><td class="td-ru">говорит <button class="speak-btn" onclick="speakCell(\'говорит\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorit\'</td><td class="td-en">He/She speaks</td></tr>' +
-          '<tr><td>Мы</td><td class="td-ru">говорим <button class="speak-btn" onclick="speakCell(\'говорим\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorim</td><td class="td-en">We speak</td></tr>' +
-          '<tr><td>Вы</td><td class="td-ru">говорите <button class="speak-btn" onclick="speakCell(\'говорите\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govorite</td><td class="td-en">You speak (formal)</td></tr>' +
-          '<tr><td>Они</td><td class="td-ru">говорят <button class="speak-btn" onclick="speakCell(\'говорят\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>govoryat</td><td class="td-en">They speak</td></tr>' +
+          '<tr><td>Я</td><td class="td-ru">-ю / -у</td><td class="td-ru">-ю / -у</td></tr>' +
+          '<tr><td>Ты</td><td class="td-ru">-ешь</td><td class="td-ru">-ишь</td></tr>' +
+          '<tr><td>Он / Она</td><td class="td-ru">-ет</td><td class="td-ru">-ит</td></tr>' +
+          '<tr><td>Мы</td><td class="td-ru">-ем</td><td class="td-ru">-им</td></tr>' +
+          '<tr><td>Вы</td><td class="td-ru">-ете</td><td class="td-ru">-ите</td></tr>' +
+          '<tr><td>Они</td><td class="td-ru">-ют / -ут</td><td class="td-ru">-ят / -ат</td></tr>' +
         '</tbody>' +
       '</table>' +
+      '<p>A handful of common, high-frequency verbs (хотеть, идти, мочь, есть...) don\'t fit either pattern cleanly — those are marked <span class="hl">Irregular</span> below. Worth memorizing individually.</p>' +
     '</div>' +
     '<div class="grammar-block">' +
-      '<h3>хотеть <span>(khotet\') — To want</span></h3>' +
+      '<h3>Browse a verb <span>— see all six forms at once</span></h3>' +
+      '<select id="verbPicker" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:0.9rem;margin-bottom:16px;cursor:pointer">' +
+        optionsHtml +
+      '</select>' +
+      '<div id="verbTableWrap"></div>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>Practice the endings <span>— multiple choice drill</span></h3>' +
+      '<p>You\'ll see a pronoun and a verb — pick the form with the correct ending. The wrong options are ' +
+        '<span class="hl">other persons of the same verb</span>, so you\'re practicing the ending itself, not the vocabulary.</p>' +
+      '<div id="conjQuizArea"><button class="ex-check-btn" style="max-width:280px" id="startConjBtn">Start Practice (10 questions)</button></div>' +
+    '</div>';
+
+  function renderVerbTable(inf) {
+    const v = VERB_CONJUGATIONS.find(x => x.inf === inf) || VERB_CONJUGATIONS[0];
+    const wrap = document.getElementById('verbTableWrap');
+    if (!wrap) return;
+    wrap.innerHTML =
+      '<h4 style="color:var(--gold);font-size:1.05rem;margin-bottom:10px">' + v.inf +
+        ' <span style="color:var(--muted);font-weight:400;font-size:0.85rem">(' + v.translit + ') — ' + v.en + '</span></h4>' +
+      '<table class="conj-table"><thead><tr><th>Pronoun</th><th>Russian</th><th>Pronunciation</th></tr></thead><tbody>' +
+        CONJ_PRONOUN_ROWS.map(([label, key]) =>
+          '<tr><td>' + label + '</td>' +
+          '<td class="td-ru">' + v.forms[key] +
+            ' <button class="speak-btn" style="font-size:0.75rem;padding:2px 5px" onclick="speakCell(\'' + v.forms[key] + '\',this)">🔊</button></td>' +
+          '<td>' + v.translits[key] + '</td></tr>'
+        ).join('') +
+      '</tbody></table>';
+  }
+
+  const picker = area.querySelector('#verbPicker');
+  if (picker) {
+    picker.addEventListener('change', () => renderVerbTable(picker.value));
+    renderVerbTable(picker.value);
+  }
+  const startBtn = area.querySelector('#startConjBtn');
+  if (startBtn) startBtn.addEventListener('click', startConjQuiz);
+}
+
+// ── Verb conjugation practice drill ──
+let conjQuiz = null;
+
+function buildConjQuestions(n) {
+  const persons = ['ya','ty','on','my','vy','oni'];
+  const personLabel = { ya:'Я', ty:'Ты', on:'Он / Она', my:'Мы', vy:'Вы', oni:'Они' };
+  const qs = [];
+  for (let i = 0; i < n; i++) {
+    const verb = VERB_CONJUGATIONS[Math.floor(Math.random() * VERB_CONJUGATIONS.length)];
+    const person = persons[Math.floor(Math.random() * persons.length)];
+    const correct = verb.forms[person];
+    const distractorPersons = shuffleArr(persons.filter(p => p !== person)).slice(0, 3);
+    const options = shuffleArr([correct, ...distractorPersons.map(p => verb.forms[p])]);
+    qs.push({ verb, personLabel: personLabel[person], correct, options });
+  }
+  return qs;
+}
+
+function startConjQuiz() {
+  conjQuiz = { questions: buildConjQuestions(10), idx: 0, correct: 0 };
+  renderConjQuestion();
+}
+
+function renderConjQuestion() {
+  const area = document.getElementById('conjQuizArea');
+  if (!area) return;
+  if (conjQuiz.idx >= conjQuiz.questions.length) { renderConjQuizComplete(); return; }
+  const q = conjQuiz.questions[conjQuiz.idx];
+  area.innerHTML =
+    '<div class="progress-label" style="margin-bottom:10px">Question ' + (conjQuiz.idx + 1) + ' / ' + conjQuiz.questions.length +
+      ' &nbsp;·&nbsp; ' + conjQuiz.correct + ' correct</div>' +
+    '<div class="ex-question" style="font-size:1.4rem">' + q.personLabel +
+      ' + <em style="color:var(--accent2);font-style:italic">' + q.verb.inf + '</em></div>' +
+    '<div class="ex-question-sub">' + q.verb.en + '</div>' +
+    '<div class="mc-options">' + q.options.map(opt => '<button class="mc-btn">' + opt + '</button>').join('') + '</div>';
+
+  const btns = area.querySelectorAll('.mc-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.disabled = true);
+      speak(q.correct);
+      if (btn.textContent === q.correct) {
+        btn.classList.add('correct-ans');
+        conjQuiz.correct++;
+      } else {
+        btn.classList.add('wrong-ans');
+        btns.forEach(b => { if (b.textContent === q.correct) b.classList.add('correct-ans'); });
+      }
+      setTimeout(() => { conjQuiz.idx++; renderConjQuestion(); }, 1100);
+    });
+  });
+}
+
+function renderConjQuizComplete() {
+  const area = document.getElementById('conjQuizArea');
+  if (!area) return;
+  const total = conjQuiz.questions.length;
+  const earned = Math.min(conjQuiz.correct, 10);
+  if (earned > 0) awardXP(earned, 'Conjugation practice');
+  area.innerHTML =
+    '<div class="quiz-complete" style="margin:0">' +
+      '<h2>Drill Complete!</h2>' +
+      '<div class="big-score">' + conjQuiz.correct + ' / ' + total + '</div>' +
+      (earned > 0 ? '<p style="color:var(--gold);font-weight:700;margin-bottom:12px">+' + earned + ' XP earned</p>' : '') +
+      '<button onclick="startConjQuiz()">Try Again</button>' +
+    '</div>';
+}
+
+// ── Case declension data ──
+const CASE_NOUNS = [
+  { word:'стол',   translit:'stol',    en:'table',   group:'Masculine (inanimate)',
+    forms:{ nom:'стол',   gen:'стола',   dat:'столу',   acc:'стол',    inst:'столом',   prep:'столе'   },
+    translits:{ nom:'stol', gen:'stola', dat:'stolu', acc:'stol', inst:'stolom', prep:'stole' } },
+  { word:'брат',   translit:'brat',    en:'brother', group:'Masculine (animate)',
+    forms:{ nom:'брат',   gen:'брата',   dat:'брату',   acc:'брата',   inst:'братом',   prep:'брате'   },
+    translits:{ nom:'brat', gen:'brata', dat:'bratu', acc:'brata', inst:'bratom', prep:'brate' } },
+  { word:'книга',  translit:'kniga',   en:'book',    group:'Feminine',
+    forms:{ nom:'книга',  gen:'книги',   dat:'книге',   acc:'книгу',   inst:'книгой',   prep:'книге'   },
+    translits:{ nom:'kniga', gen:'knigi', dat:'knige', acc:'knigu', inst:'knigoy', prep:'knige' } },
+  { word:'сестра', translit:'sestra',  en:'sister',  group:'Feminine',
+    forms:{ nom:'сестра', gen:'сестры',  dat:'сестре',  acc:'сестру',  inst:'сестрой',  prep:'сестре'  },
+    translits:{ nom:'sestra', gen:'sestry', dat:'sestre', acc:'sestru', inst:'sestroy', prep:'sestre' } },
+  { word:'ночь',   translit:"noch'",   en:'night',   group:'Feminine (soft)',
+    forms:{ nom:'ночь',   gen:'ночи',    dat:'ночи',    acc:'ночь',    inst:'ночью',    prep:'ночи'    },
+    translits:{ nom:"noch'", gen:'nochi', dat:'nochi', acc:"noch'", inst:"noch'yu", prep:'nochi' } },
+  { word:'окно',   translit:'okno',    en:'window',  group:'Neuter',
+    forms:{ nom:'окно',   gen:'окна',    dat:'окну',    acc:'окно',    inst:'окном',    prep:'окне'    },
+    translits:{ nom:'okno', gen:'okna', dat:'oknu', acc:'okno', inst:'oknom', prep:'okne' } },
+  { word:'море',   translit:'more',    en:'sea',     group:'Neuter (soft)',
+    forms:{ nom:'море',   gen:'моря',    dat:'морю',    acc:'море',    inst:'морем',    prep:'море'    },
+    translits:{ nom:'more', gen:'morya', dat:'moryu', acc:'more', inst:'morem', prep:'more' } },
+];
+const CASE_ROWS = [
+  ['Именительный (Nominative)',   'nom'],
+  ['Родительный (Genitive)',      'gen'],
+  ['Дательный (Dative)',          'dat'],
+  ['Винительный (Accusative)',    'acc'],
+  ['Творительный (Instrumental)', 'inst'],
+  ['Предложный (Prepositional)',  'prep'],
+];
+const CASE_INFO = {
+  nom:  { fn:'The subject — who or what is doing the action.',        preps:'none' },
+  gen:  { fn:'Possession ("of / whose"), negation, quantities.',      preps:'у, из, без, после' },
+  dat:  { fn:'The indirect object — "to / for" someone.',             preps:'к, по' },
+  acc:  { fn:'The direct object receiving the action.',               preps:'в, на (motion)' },
+  inst: { fn:'"By means of / with" — the tool or companion.',         preps:'с, над' },
+  prep: { fn:'Used only after certain prepositions — "about/in/on".', preps:'в, на, о' },
+};
+
+function renderGrammarCases(area) {
+  const groups = {};
+  CASE_NOUNS.forEach(n => { (groups[n.group] = groups[n.group] || []).push(n); });
+  const optionsHtml = Object.entries(groups).map(([label, nouns]) =>
+    '<optgroup label="' + label + '">' +
+      nouns.map(n => '<option value="' + n.word + '">' + n.word + ' — ' + n.en + '</option>').join('') +
+    '</optgroup>'
+  ).join('');
+
+  area.innerHTML =
+    '<div class="grammar-block">' +
+      '<h3>The Six Cases <span>— the real reason Russian feels hard (and the payoff once it clicks)</span></h3>' +
+      '<p>Russian doesn\'t rely much on word order to show meaning — instead a noun\'s <span class="hl">ending changes</span> depending on its role in the sentence. ' +
+      'That role is called its <span class="hl">case</span>. There are six, and every noun, pronoun, and adjective takes one in every sentence.</p>' +
       '<table class="conj-table">' +
-        '<thead><tr><th>Pronoun</th><th>Russian</th><th>Pronunciation</th><th>English</th></tr></thead>' +
+        '<thead><tr><th>Case</th><th>Used for</th><th>Common prepositions</th></tr></thead>' +
         '<tbody>' +
-          '<tr><td>Я</td><td class="td-ru">хочу <button class="speak-btn" onclick="speakCell(\'хочу\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khochu</td><td class="td-en">I want</td></tr>' +
-          '<tr><td>Ты</td><td class="td-ru">хочешь <button class="speak-btn" onclick="speakCell(\'хочешь\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khochesh\'</td><td class="td-en">You want</td></tr>' +
-          '<tr><td>Он/Она</td><td class="td-ru">хочет <button class="speak-btn" onclick="speakCell(\'хочет\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khochet</td><td class="td-en">He/She wants</td></tr>' +
-          '<tr><td>Мы</td><td class="td-ru">хотим <button class="speak-btn" onclick="speakCell(\'хотим\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khotim</td><td class="td-en">We want</td></tr>' +
-          '<tr><td>Вы</td><td class="td-ru">хотите <button class="speak-btn" onclick="speakCell(\'хотите\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khotite</td><td class="td-en">You want (formal)</td></tr>' +
-          '<tr><td>Они</td><td class="td-ru">хотят <button class="speak-btn" onclick="speakCell(\'хотят\',this)" style="font-size:0.75rem;padding:2px 5px">🔊</button></td><td>khotyat</td><td class="td-en">They want</td></tr>' +
+          CASE_ROWS.map(([label, key]) =>
+            '<tr><td class="td-ru">' + label + '</td><td class="td-en">' + CASE_INFO[key].fn + '</td><td>' + CASE_INFO[key].preps + '</td></tr>'
+          ).join('') +
         '</tbody>' +
       '</table>' +
+      '<p style="margin-top:4px"><span class="hl">Accusative has a twist:</span> for masculine <em style="color:var(--accent2)">animate</em> nouns (people, animals) the accusative looks like the ' +
+      '<em style="color:var(--accent2)">genitive</em> (я вижу бр<strong>ата</strong> — I see a brother). For everything else — inanimate masculine, all feminine, all neuter — it looks like the ' +
+      '<em style="color:var(--accent2)">nominative</em> (я вижу стол — I see a table).</p>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>Browse a noun <span>— see it decline through all six cases</span></h3>' +
+      '<select id="caseNounPicker" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:0.9rem;margin-bottom:16px;cursor:pointer">' +
+        optionsHtml +
+      '</select>' +
+      '<div id="caseNounTableWrap"></div>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>Practice the case endings <span>— multiple choice drill</span></h3>' +
+      '<p>You\'ll see a noun and a case name — pick the correctly declined form. Like the verb drill, the wrong options are ' +
+        '<span class="hl">other cases of the same noun</span>, so you\'re learning to recognize the ending itself, not guessing vocabulary.</p>' +
+      '<div id="caseQuizArea"><button class="ex-check-btn" style="max-width:280px" id="startCaseQuizBtn">Start Practice (10 questions)</button></div>' +
+    '</div>';
+
+  function renderNounTable(word) {
+    const n = CASE_NOUNS.find(x => x.word === word) || CASE_NOUNS[0];
+    const wrap = document.getElementById('caseNounTableWrap');
+    if (!wrap) return;
+    wrap.innerHTML =
+      '<h4 style="color:var(--gold);font-size:1.05rem;margin-bottom:10px">' + n.word +
+        ' <span style="color:var(--muted);font-weight:400;font-size:0.85rem">(' + n.translit + ') — ' + n.en + '</span></h4>' +
+      '<table class="conj-table"><thead><tr><th>Case</th><th>Russian</th><th>Pronunciation</th></tr></thead><tbody>' +
+        CASE_ROWS.map(([label, key]) =>
+          '<tr><td>' + label + '</td>' +
+          '<td class="td-ru">' + n.forms[key] +
+            ' <button class="speak-btn" style="font-size:0.75rem;padding:2px 5px" onclick="speakCell(\'' + n.forms[key] + '\',this)">🔊</button></td>' +
+          '<td>' + n.translits[key] + '</td></tr>'
+        ).join('') +
+      '</tbody></table>';
+  }
+
+  const picker = area.querySelector('#caseNounPicker');
+  if (picker) {
+    picker.addEventListener('change', () => renderNounTable(picker.value));
+    renderNounTable(picker.value);
+  }
+  const startBtn = area.querySelector('#startCaseQuizBtn');
+  if (startBtn) startBtn.addEventListener('click', startCaseQuiz);
+}
+
+// ── Case practice drill ──
+let caseQuiz = null;
+
+function buildCaseQuestions(n) {
+  const keys = CASE_ROWS.map(r => r[1]);
+  const labelByKey = {};
+  CASE_ROWS.forEach(([label, key]) => { labelByKey[key] = label; });
+  const qs = [];
+  for (let i = 0; i < n; i++) {
+    const noun = CASE_NOUNS[Math.floor(Math.random() * CASE_NOUNS.length)];
+    const key = keys[Math.floor(Math.random() * keys.length)];
+    const correct = noun.forms[key];
+    // exclude keys whose form coincidentally matches (e.g. inanimate acc = nom) to avoid duplicate-looking options
+    const distractorPool = keys.filter(k => k !== key && noun.forms[k] !== correct);
+    const distractorKeys = shuffleArr(distractorPool).slice(0, 3);
+    const options = shuffleArr([correct, ...distractorKeys.map(k => noun.forms[k])]);
+    qs.push({ noun, caseLabel: labelByKey[key], correct, options });
+  }
+  return qs;
+}
+
+function startCaseQuiz() {
+  caseQuiz = { questions: buildCaseQuestions(10), idx: 0, correct: 0 };
+  renderCaseQuestion();
+}
+
+function renderCaseQuestion() {
+  const area = document.getElementById('caseQuizArea');
+  if (!area) return;
+  if (caseQuiz.idx >= caseQuiz.questions.length) { renderCaseQuizComplete(); return; }
+  const q = caseQuiz.questions[caseQuiz.idx];
+  area.innerHTML =
+    '<div class="progress-label" style="margin-bottom:10px">Question ' + (caseQuiz.idx + 1) + ' / ' + caseQuiz.questions.length +
+      ' &nbsp;·&nbsp; ' + caseQuiz.correct + ' correct</div>' +
+    '<div class="ex-question" style="font-size:1.4rem">' + q.noun.word +
+      ' <span style="color:var(--accent2);font-style:italic;font-size:0.7em">(' + q.noun.en + ')</span></div>' +
+    '<div class="ex-question-sub">' + q.caseLabel + '</div>' +
+    '<div class="mc-options">' + q.options.map(opt => '<button class="mc-btn">' + opt + '</button>').join('') + '</div>';
+
+  const btns = area.querySelectorAll('.mc-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.disabled = true);
+      speak(q.correct);
+      if (btn.textContent === q.correct) {
+        btn.classList.add('correct-ans');
+        caseQuiz.correct++;
+      } else {
+        btn.classList.add('wrong-ans');
+        btns.forEach(b => { if (b.textContent === q.correct) b.classList.add('correct-ans'); });
+      }
+      setTimeout(() => { caseQuiz.idx++; renderCaseQuestion(); }, 1100);
+    });
+  });
+}
+
+function renderCaseQuizComplete() {
+  const area = document.getElementById('caseQuizArea');
+  if (!area) return;
+  const total = caseQuiz.questions.length;
+  const earned = Math.min(caseQuiz.correct, 10);
+  if (earned > 0) awardXP(earned, 'Case practice');
+  area.innerHTML =
+    '<div class="quiz-complete" style="margin:0">' +
+      '<h2>Drill Complete!</h2>' +
+      '<div class="big-score">' + caseQuiz.correct + ' / ' + total + '</div>' +
+      (earned > 0 ? '<p style="color:var(--gold);font-weight:700;margin-bottom:12px">+' + earned + ' XP earned</p>' : '') +
+      '<button onclick="startCaseQuiz()">Try Again</button>' +
     '</div>';
 }
 
@@ -2783,20 +3842,34 @@ function renderGrammarNegation(area) {
 // ═══════════════════════════════════════════
 // NEWS
 // ═══════════════════════════════════════════
+// Daily appended last so existing i===0 "All" assumptions elsewhere still hold
+const NEWS_CAT_TABS = [
+  { label:'All',       cat:null,        icon:'📰', color:'#8a8aa0' },
+  { label:'Ukraine',   cat:'Ukraine',   icon:'🇺🇦', color:'#4a90d9' },
+  { label:'Russia',    cat:'Russia',    icon:'🇷🇺', color:'#e06c60' },
+  { label:'Diplomacy', cat:'Diplomacy', icon:'🤝', color:'#9b59b6' },
+  { label:'Regional',  cat:'Regional',  icon:'🗺️', color:'#f0ad4e' },
+  { label:'Daily',     cat:'DAILY',     icon:'📅', color:'#f4d03f' },
+];
+
 function buildNews() {
   // Category filter tabs
   const tabs = document.getElementById('newsCatTabs');
-  ['All', 'Ukraine', 'Russia', 'Diplomacy', 'Regional'].forEach((cat, i) => {
+  NEWS_CAT_TABS.forEach((t, i) => {
+    const count = t.cat === 'DAILY' ? null : (t.cat ? NEWS_HEADLINES.filter(h => h.cat === t.cat).length : NEWS_HEADLINES.length);
     const btn = document.createElement('button');
     btn.className = 'cat-btn' + (i === 0 ? ' active' : '');
-    btn.textContent = cat;
+    btn.style.setProperty('--cat-color', t.color);
+    btn.innerHTML = '<span class="nc-icon">' + t.icon + '</span>' + t.label +
+      (count !== null ? '<span class="nc-count">' + count + '</span>' : '');
     btn.addEventListener('click', () => {
       tabs.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       _activeMapLoc = null;
       _syncMapPins();
       _syncMapLegend();
-      renderNews(cat === 'All' ? null : cat, null);
+      if (t.cat === 'DAILY') renderDailyNews();
+      else renderNews(t.cat, null);
     });
     tabs.appendChild(btn);
   });
@@ -2806,6 +3879,45 @@ function buildNews() {
   _buildMapLegend();
 
   renderNews(null, null);
+}
+
+// ── Daily headline (deterministic rotation, no network needed) ──
+function dailyHeadlineIndex() {
+  const d = new Date();
+  const startOfYear = new Date(d.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((d - startOfYear) / 86400000);
+  return dayOfYear % NEWS_HEADLINES.length;
+}
+function loadDailyNewsState() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('ru_daily_news_seen') || 'null');
+    if (raw && raw.date === todayStr()) return raw;
+  } catch {}
+  return { date: todayStr(), reviewed: false };
+}
+function saveDailyNewsState(s) { localStorage.setItem('ru_daily_news_seen', JSON.stringify(s)); }
+
+function renderDailyNews() {
+  const grid = document.getElementById('newsGrid');
+  grid.innerHTML = '';
+  const nh = NEWS_HEADLINES[dailyHeadlineIndex()];
+  const state = loadDailyNewsState();
+
+  const banner = document.createElement('div');
+  banner.className = 'daily-news-banner';
+  banner.innerHTML = '<span>📅 Today\'s Headline</span>' +
+    (state.reviewed
+      ? '<span class="dn-reviewed">&#10003; Reviewed today</span>'
+      : '<span class="dn-hint">Come back tomorrow for a new one</span>');
+  grid.appendChild(banner);
+
+  const card = buildHeadlineCard(nh, true, () => {
+    const s = loadDailyNewsState();
+    s.reviewed = true;
+    saveDailyNewsState(s);
+    banner.innerHTML = '<span>📅 Today\'s Headline</span><span class="dn-reviewed">&#10003; Reviewed today</span>';
+  });
+  grid.appendChild(card);
 }
 
 function _buildMapPins() {
@@ -2962,20 +4074,26 @@ function renderNews(cat, locId) {
     }
   }
 
-  // Headline cards
-  items.forEach(nh => {
-    const card = document.createElement('div');
-    card.className = 'headline-card';
-    card.innerHTML =
-      '<div class="hc-header">' +
-        '<span class="hc-cat">' + nh.flag + '&nbsp;' + nh.cat + '</span>' +
-        '<span class="hc-year">' + nh.year + '</span>' +
+  // Headline cards — collapsed by default (vocab + quiz expand on demand)
+  items.forEach(nh => grid.appendChild(buildHeadlineCard(nh, false, null)));
+}
+
+function buildHeadlineCard(nh, expanded, onAnswered) {
+  const card = document.createElement('div');
+  card.className = 'headline-card';
+  card.innerHTML =
+    '<div class="hc-header">' +
+      '<span class="hc-cat">' + nh.flag + '&nbsp;' + nh.cat + '</span>' +
+      '<span class="hc-year">' + nh.year + '</span>' +
+    '</div>' +
+    '<div class="hc-body">' +
+      '<div class="hc-headline-row">' +
+        '<div class="hc-headline">' + nh.headline + '</div>' +
+        '<button class="speak-btn hc-speak" title="Hear headline" style="flex-shrink:0;margin-top:4px">🔊</button>' +
       '</div>' +
-      '<div class="hc-body">' +
-        '<div class="hc-headline-row">' +
-          '<div class="hc-headline">' + nh.headline + '</div>' +
-          '<button class="speak-btn hc-speak" title="Hear headline" style="flex-shrink:0;margin-top:4px">🔊</button>' +
-        '</div>' +
+      '<div class="hc-translation-preview">' + nh.translation + '</div>' +
+      '<button class="hc-toggle-btn" type="button">📖 Vocabulary &amp; quiz <span class="hc-toggle-arrow">' + (expanded ? '▴' : '▾') + '</span></button>' +
+      '<div class="hc-expand"' + (expanded ? '' : ' hidden') + '>' +
         '<div class="hc-keywords">' +
           nh.keywords.map(k =>
             '<span class="hc-kw">' +
@@ -2992,28 +4110,36 @@ function renderNews(cat, locId) {
             '<button class="hc-mc-btn" data-idx="' + idx + '">' + a + '</button>'
           ).join('') +
         '</div>' +
-        '<div class="hc-context">' +
-          '<div class="hc-translation">' + nh.translation + '</div>' +
-          nh.context +
-        '</div>' +
-      '</div>';
+        '<div class="hc-context">' + nh.context + '</div>' +
+      '</div>' +
+    '</div>';
 
-    card.querySelector('.hc-speak').addEventListener('click', function() { speak(nh.headline, this); });
-    card.querySelectorAll('.kw-speak').forEach(btn => {
-      btn.addEventListener('click', function() { speak(this.dataset.ru, this); });
-    });
-    const mcBtns = card.querySelectorAll('.hc-mc-btn');
-    mcBtns.forEach((btn, idx) => {
-      btn.addEventListener('click', () => {
-        mcBtns.forEach(b => b.disabled = true);
-        btn.classList.add(idx === nh.mc.correct ? 'hc-correct' : 'hc-wrong');
-        if (idx !== nh.mc.correct) mcBtns[nh.mc.correct].classList.add('hc-correct');
-        card.querySelector('.hc-context').classList.add('show');
-      });
-    });
-
-    grid.appendChild(card);
+  card.querySelector('.hc-speak').addEventListener('click', function() { speak(nh.headline, this); });
+  card.querySelectorAll('.kw-speak').forEach(btn => {
+    btn.addEventListener('click', function() { speak(this.dataset.ru, this); });
   });
+
+  const toggleBtn = card.querySelector('.hc-toggle-btn');
+  const expandEl = card.querySelector('.hc-expand');
+  toggleBtn.addEventListener('click', () => {
+    const willShow = expandEl.hasAttribute('hidden');
+    if (willShow) expandEl.removeAttribute('hidden'); else expandEl.setAttribute('hidden', '');
+    toggleBtn.querySelector('.hc-toggle-arrow').textContent = willShow ? '▴' : '▾';
+  });
+
+  const mcBtns = card.querySelectorAll('.hc-mc-btn');
+  mcBtns.forEach((btn, idx) => {
+    btn.addEventListener('click', () => {
+      mcBtns.forEach(b => b.disabled = true);
+      btn.classList.add(idx === nh.mc.correct ? 'hc-correct' : 'hc-wrong');
+      if (idx !== nh.mc.correct) mcBtns[nh.mc.correct].classList.add('hc-correct');
+      card.querySelector('.hc-context').classList.add('show');
+      if (idx === nh.mc.correct) markNewsAnswered(nh.id);
+      if (onAnswered) onAnswered();
+    });
+  });
+
+  return card;
 }
 
 // ═══════════════════════════════════════════
@@ -3025,6 +4151,10 @@ buildWords();
 buildGrammar();
 buildLessonMap();
 buildNews();
+updateReviewOptionLabel();
+
+updateVoiceWarning();
+if (window.speechSynthesis) window.speechSynthesis.addEventListener('voiceschanged', updateVoiceWarning);
 </script>
 </body>
 </html>
