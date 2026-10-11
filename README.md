@@ -8,7 +8,7 @@ An interactive, single-file Russian language learning web app. No installation, 
 A branching "skill tree" dashboard — a trunk node splits into **Practice** (Lessons, Flashcards, News) and **Learn & Reference** (Alphabet, Phrases, Vocabulary, Grammar, Tips) branches, each leading straight to that section.
 
 ### 📚 Lessons
-Eight progressive lessons that unlock in sequence, laid out as a winding progression path (not a flat grid) with hearts, combo streaks, and an "Out of Hearts" retry state. Each lesson introduces vocabulary with learn cards, then tests it through five exercise types:
+17 progressive lessons that unlock in sequence, laid out as a winding progression path (not a flat grid) with hearts, combo streaks, and an "Out of Hearts" retry state. The course opens with four dedicated alphabet lessons (familiar letters, "false friend" letters that look like English but sound different, then the remaining letters and the two silent signs) before moving into vocabulary and grammar. Each lesson introduces its content with learn cards, then tests it through five exercise types:
 
 - **Multiple choice** — translate a word or phrase from four options
 - **Fill in the blank** — complete a Russian sentence by selecting the missing word

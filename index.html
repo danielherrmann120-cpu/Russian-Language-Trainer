@@ -964,6 +964,11 @@
               <div class="home-tile-title">News</div>
               <div class="home-tile-desc">Real Russian headlines with quizzes and a map</div>
             </div>
+            <div class="home-tile" onclick="showSection('missed')">
+              <div class="home-tile-icon">❌</div>
+              <div class="home-tile-title">Missed Questions</div>
+              <div class="home-tile-desc">Your current weak spots, pulled from everything you practice</div>
+            </div>
           </div>
         </div>
 
@@ -1038,6 +1043,7 @@
     <div class="quiz-controls">
       <select id="deckSelect">
         <option value="review" id="reviewDeckOption">🔁 Review (Due Today)</option>
+        <option value="missed" id="missedDeckOption">❌ Missed Questions</option>
         <option value="alphabet">Alphabet</option>
         <option value="phrases">Phrases</option>
         <option value="numbers">Numbers</option>
@@ -1057,6 +1063,17 @@
     <div class="flashcard-wrap" id="quizArea">
       <p style="color:var(--muted)">Select a deck and press <strong style="color:var(--text)">Start</strong> to begin.</p>
     </div>
+  </section>
+
+  <!-- ════════════ MISSED QUESTIONS ════════════ -->
+  <section id="missed" class="section">
+    <h2 class="section-title"><span>Ошибки</span> — Missed Questions</h2>
+    <p class="section-subtitle">Anything you've gotten wrong most recently in Flashcards, Review, or the Grammar drills lands here — get it right again and it clears itself.</p>
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+      <button class="ex-check-btn" style="max-width:220px;margin-top:0" id="practiceMissedBtn" onclick="practiceMissedNow()" disabled>Practice These</button>
+      <span style="color:var(--muted);font-size:0.85rem"><span id="missedCount">0</span> currently missed</span>
+    </div>
+    <div class="phrase-grid" id="missedListArea"></div>
   </section>
 
   <!-- ════════════ TIPS ════════════ -->
@@ -1828,7 +1845,8 @@ function showSection(id) {
   document.getElementById(id).classList.add('active');
   const btn = document.querySelector('#nav button[data-section="' + id + '"]');
   if (btn) btn.classList.add('active');
-  if (id === 'quiz') updateReviewOptionLabel();
+  if (id === 'quiz') { updateReviewOptionLabel(); updateMissedOptionLabel(); }
+  if (id === 'missed') renderMissedList();
 }
 
 // ═══════════════════════════════════════════
@@ -1943,17 +1961,77 @@ function renderWords(cat) {
 const REVIEW_NEW_PER_DAY = 12;
 const SRS_BOX_INTERVALS = [1, 2, 4, 8, 16, 30]; // days until next review, by box
 
-function buildSrsPool() {
+// Pool is assembled by initSrsPool() at page init, once VERB_CONJUGATIONS / CASE_NOUNS
+// (declared later, in the Grammar section) exist — see the bottom of this script.
+let SRS_POOL = [];
+
+function buildWordsSrsPool() {
   const pool = [];
   Object.entries(WORDS).forEach(([cat, items]) => {
-    items.forEach((w, i) => pool.push({ id: 'w:' + cat + ':' + i, r: w.r, t: w.t, e: w.e }));
+    items.forEach((w, i) => pool.push({ id: 'w:' + cat + ':' + i, front: w.r, back: w.e, hint: w.t }));
   });
   Object.entries(PHRASES).forEach(([cat, items]) => {
-    items.forEach((p, i) => pool.push({ id: 'p:' + cat + ':' + i, r: p.r, t: p.t, e: p.e }));
+    items.forEach((p, i) => pool.push({ id: 'p:' + cat + ':' + i, front: p.r, back: p.e, hint: p.t }));
   });
   return pool;
 }
-const SRS_POOL = buildSrsPool();
+
+// Verb-ending and case-ending items are reviewed "backwards" from vocab: the front is the
+// prompt (pronoun+verb, or noun+case) and the back is the ending you're meant to recall —
+// since recalling the correct ending, not the meaning, is the actual point of these drills.
+function buildVerbSrsPool() {
+  const persons = ['ya', 'ty', 'on', 'my', 'vy', 'oni'];
+  const personLabel = { ya:'Я', ty:'Ты', on:'Он / Она', my:'Мы', vy:'Вы', oni:'Они' };
+  const pool = [];
+  VERB_CONJUGATIONS.forEach(v => {
+    persons.forEach(p => pool.push({
+      id: 'v:' + v.inf + ':' + p,
+      front: personLabel[p] + ' + ' + v.inf,
+      back: v.forms[p],
+      hint: v.en + ' · ' + v.translits[p],
+    }));
+  });
+  return pool;
+}
+function buildCaseSrsPool() {
+  const pool = [];
+  CASE_NOUNS.forEach(n => {
+    CASE_ROWS.forEach(([label, key]) => pool.push({
+      id: 'c:' + n.word + ':' + key,
+      front: n.word + ' — ' + label.replace(/\s*\(.*\)/, ''),
+      back: n.forms[key],
+      hint: n.en + ' · ' + n.translits[key],
+    }));
+  });
+  return pool;
+}
+// Each gradeable lesson exercise gets a stable id ('l:' + lessonId + ':' + exIdx, plus a
+// pair index for match exercises) so a mistake made in the Lessons runner is tracked the
+// same way as everything else — and shows up in Review / Missed Questions.
+function buildLessonSrsPool() {
+  const pool = [];
+  LESSON_DEFS.forEach(lesson => {
+    lesson.exercises.forEach((ex, exIdx) => {
+      const base = 'l:' + lesson.id + ':' + exIdx;
+      if (ex.type === 'mc') {
+        pool.push({ id: base, front: ex.question, back: ex.answers[ex.correct], hint: ex.questionSub || '' });
+      } else if (ex.type === 'fill') {
+        pool.push({ id: base, front: ex.sentence, back: ex.answers[ex.correct], hint: ex.translation || '' });
+      } else if (ex.type === 'tap') {
+        pool.push({ id: base, front: ex.english, back: ex.correctTokens.join(' '), hint: '' });
+      } else if (ex.type === 'listen') {
+        pool.push({ id: base, front: '🔊 ' + ex.russian, back: ex.options[ex.correct], hint: '' });
+      } else if (ex.type === 'match') {
+        ex.pairs.forEach((p, pIdx) => pool.push({ id: base + ':' + pIdx, front: p.r, back: p.e, hint: '' }));
+      }
+    });
+  });
+  return pool;
+}
+
+function initSrsPool() {
+  SRS_POOL = buildWordsSrsPool().concat(buildVerbSrsPool(), buildCaseSrsPool(), buildLessonSrsPool());
+}
 
 function loadSrsState() {
   try { return JSON.parse(localStorage.getItem('ru_srs') || '{}'); } catch { return {}; }
@@ -1974,10 +2052,72 @@ function getDueItems(maxNew) {
 
 function updateItemAfterReview(id, wasCorrect) {
   const state = loadSrsState();
-  const cur = state[id] || { box: 0 };
+  const cur = state[id] || { box: 0, misses: 0 };
   const box = wasCorrect ? Math.min(cur.box + 1, SRS_BOX_INTERVALS.length - 1) : 0;
-  state[id] = { box, due: todayStr(SRS_BOX_INTERVALS[box]) };
+  state[id] = {
+    box,
+    due: todayStr(SRS_BOX_INTERVALS[box]),
+    misses: wasCorrect ? (cur.misses || 0) : (cur.misses || 0) + 1,
+    lastWrong: !wasCorrect,
+  };
   saveSrsState(state);
+}
+
+// "Missed" = most recent attempt was wrong — self-clears once you get it right again,
+// so this stays a live list of current weak spots rather than a permanent record.
+function getMissedItems() {
+  const state = loadSrsState();
+  return SRS_POOL
+    .filter(item => state[item.id] && state[item.id].lastWrong)
+    .map(item => Object.assign({ misses: state[item.id].misses || 0 }, item))
+    .sort((a, b) => b.misses - a.misses);
+}
+
+function updateMissedOptionLabel() {
+  const opt = document.getElementById('missedDeckOption');
+  if (!opt) return;
+  opt.textContent = '❌ Missed Questions (' + getMissedItems().length + ')';
+}
+
+function renderMissedList() {
+  const area = document.getElementById('missedListArea');
+  if (!area) return;
+  const items = getMissedItems();
+  const countEl = document.getElementById('missedCount');
+  if (countEl) countEl.textContent = items.length;
+  const practiceBtn = document.getElementById('practiceMissedBtn');
+  if (practiceBtn) practiceBtn.disabled = items.length === 0;
+
+  if (items.length === 0) {
+    area.innerHTML =
+      '<p style="color:var(--muted);grid-column:1/-1">Nothing missed right now — anything you get wrong in Flashcards, Review, or the Grammar drills will show up here.</p>';
+    return;
+  }
+
+  area.innerHTML = items.map(item => {
+    const ruText = /[Ѐ-ӿ]/.test(item.back) ? item.back : item.front;
+    return (
+      '<div class="phrase-card">' +
+        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">' +
+          '<div class="russian">' + item.front + '</div>' +
+          '<button class="speak-btn missed-speak" title="Listen" style="flex-shrink:0;margin-top:2px" data-ru="' + ruText.replace(/"/g, '&quot;') + '">🔊</button>' +
+        '</div>' +
+        '<div class="translit">' + (item.hint || '') + '</div>' +
+        '<div class="english">' + item.back + '</div>' +
+        '<div class="notes">Missed ' + item.misses + '&times;</div>' +
+      '</div>'
+    );
+  }).join('');
+  area.querySelectorAll('.missed-speak').forEach(btn => {
+    btn.addEventListener('click', function() { speak(this.dataset.ru, this); });
+  });
+}
+
+function practiceMissedNow() {
+  showSection('quiz');
+  const sel = document.getElementById('deckSelect');
+  if (sel) sel.value = 'missed';
+  startQuiz();
 }
 
 function updateReviewOptionLabel() {
@@ -1996,7 +2136,11 @@ function buildDeck(type) {
   let cards = [];
   if (type === 'review') {
     cards = getDueItems(REVIEW_NEW_PER_DAY).map(item => ({
-      front: item.r, back: item.e, hint: item.t, srsId: item.id,
+      front: item.front, back: item.back, hint: item.hint, srsId: item.id,
+    }));
+  } else if (type === 'missed') {
+    cards = getMissedItems().map(item => ({
+      front: item.front, back: item.back, hint: item.hint, srsId: item.id,
     }));
   } else if (type === 'alphabet') {
     cards = ALPHABET.map(a => ({
@@ -2057,6 +2201,14 @@ function startQuiz() {
       '<div class="quiz-complete">' +
         '<h2>All caught up! 🎉</h2>' +
         '<p style="margin-bottom:0">No reviews due right now — nice work staying on top of it. Check back tomorrow, or pick another deck above.</p>' +
+      '</div>';
+    return;
+  }
+  if (type === 'missed' && deck.length === 0) {
+    document.getElementById('quizArea').innerHTML =
+      '<div class="quiz-complete">' +
+        '<h2>Nothing missed right now 🎉</h2>' +
+        '<p style="margin-bottom:0">Nothing you\'ve recently gotten wrong is sitting here — keep it that way, or pick another deck above.</p>' +
       '</div>';
     return;
   }
@@ -2135,12 +2287,15 @@ function renderComplete() {
   const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
   const emoji = pct >= 80 ? 'Great work!' : pct >= 50 ? 'Keep practicing!' : 'Keep at it!';
   const earned = Math.min(correct, 15);
-  const label = currentDeckType === 'review' ? 'Review session' : 'Flashcard round';
+  const label = currentDeckType === 'review' ? 'Review session'
+    : currentDeckType === 'missed' ? 'Missed-question practice'
+    : 'Flashcard round';
   if (earned > 0) {
     bumpFlashcardRounds();
     awardXP(earned, label);
   }
-  if (currentDeckType === 'review') updateReviewOptionLabel();
+  updateReviewOptionLabel();
+  updateMissedOptionLabel();
   area.innerHTML = `
     <div class="quiz-complete">
       <h2>Round Complete!</h2>
@@ -2211,6 +2366,95 @@ function updateVoiceWarning() {
 // LESSONS — DATA
 // ═══════════════════════════════════════════
 const LESSON_DEFS = [
+  {
+    id:'a1', title:'The Alphabet: Familiar Letters', russian:'Знакомые буквы', icon:'🔤',
+    desc:'А, Е, З, К, М, О, Т — letters that already look and sound familiar',
+    xp:15,
+    exercises:[
+      {type:'learn',r:'А а',t:'A',e:"Like 'a' in father"},
+      {type:'learn',r:'Е е',t:'YE',e:"Like 'ye' in yes"},
+      {type:'learn',r:'З з',t:'Z',e:"Like 'z' in zebra"},
+      {type:'learn',r:'К к',t:'K',e:"Like 'k' in king"},
+      {type:'learn',r:'М м',t:'M',e:"Like 'm' in map"},
+      {type:'learn',r:'О о',t:'O',e:"Like 'o' in bore (stressed)"},
+      {type:'learn',r:'Т т',t:'T',e:"Like 't' in top"},
+      {type:'mc',label:'What sound does this make?',question:'К',answers:["Like 'k' in king","Like 'a' in father","Like 'z' in zebra","Like 'm' in map"],correct:0},
+      {type:'mc',label:'What sound does this make?',question:'О',answers:["Like 'o' in bore (stressed)","Like 't' in top","Like 'ye' in yes","Like 'a' in father"],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'z' in zebra",answers:['З','Е','Т','М'],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'm' in map",answers:['М','А','О','К'],correct:0},
+      {type:'match',pairs:[{r:'А',e:'A'},{r:'Е',e:'YE'},{r:'З',e:'Z'},{r:'К',e:'K'},{r:'М',e:'M'},{r:'О',e:'O'},{r:'Т',e:'T'}]},
+      {type:'listen',russian:'А',options:["Like 'a' in father","Like 't' in top","Like 'o' in bore (stressed)","Like 'k' in king"],correct:0},
+      {type:'listen',russian:'Т',options:["Like 't' in top","Like 'a' in father","Like 'z' in zebra","Like 'm' in map"],correct:0},
+    ]
+  },
+  {
+    id:'a2', title:'The Alphabet: False Friends', russian:'Обманчивые буквы', icon:'🔀',
+    desc:'В, Н, Р, С, У, Х — six letters that look familiar but will trick you',
+    xp:20,
+    exercises:[
+      {type:'learn',r:'В в',t:'V',e:"Like 'v' in voice",note:"Looks like English B — but sounds like V!"},
+      {type:'learn',r:'Н н',t:'N',e:"Like 'n' in note",note:"Looks like English H — but sounds like N!"},
+      {type:'learn',r:'Р р',t:'R',e:"Rolled/trilled R",note:"Looks like English P — but it's a rolled R!"},
+      {type:'learn',r:'С с',t:'S',e:"Like 's' in sun",note:"Looks like English C — but sounds like S!"},
+      {type:'learn',r:'У у',t:'OO',e:"Like 'oo' in boot",note:"Looks like English Y — but sounds like OO!"},
+      {type:'learn',r:'Х х',t:'KH',e:"Like 'ch' in loch",note:"Looks like English X — but it's a throaty KH!"},
+      {type:'mc',label:'What sound does this make?',question:'В',answers:["Like 'v' in voice","Like 'n' in note","Like 's' in sun","Rolled/trilled R"],correct:0},
+      {type:'mc',label:'What sound does this make?',question:'С',answers:["Like 's' in sun","Like 'v' in voice","Like 'oo' in boot","Like 'ch' in loch"],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'n' in note",answers:['Н','В','Р','У'],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'ch' in loch",answers:['Х','С','Р','Н'],correct:0},
+      {type:'match',pairs:[{r:'В',e:'V'},{r:'Н',e:'N'},{r:'Р',e:'R'},{r:'С',e:'S'},{r:'У',e:'OO'},{r:'Х',e:'KH'}]},
+      {type:'listen',russian:'Р',options:["Rolled/trilled R","Like 'v' in voice","Like 's' in sun","Like 'n' in note"],correct:0},
+      {type:'listen',russian:'У',options:["Like 'oo' in boot","Like 'ch' in loch","Like 'n' in note","Rolled/trilled R"],correct:0},
+    ]
+  },
+  {
+    id:'a3', title:'The Alphabet: New Shapes I', russian:'Новые буквы I', icon:'🧩',
+    desc:'Б, Г, Д, Ё, Ж, И, Й, Л, П, Ф — new shapes, new sounds',
+    xp:25,
+    exercises:[
+      {type:'learn',r:'Б б',t:'B',e:"Like 'b' in boy"},
+      {type:'learn',r:'Г г',t:'G',e:"Like 'g' in go"},
+      {type:'learn',r:'Д д',t:'D',e:"Like 'd' in dog"},
+      {type:'learn',r:'Ё ё',t:'YO',e:"Like 'yo' in yogurt"},
+      {type:'learn',r:'Ж ж',t:'ZH',e:"Like 's' in measure"},
+      {type:'learn',r:'И и',t:'EE',e:"Like 'ee' in see"},
+      {type:'learn',r:'Й й',t:'Y',e:"Like 'y' in boy (short)"},
+      {type:'learn',r:'Л л',t:'L',e:"Like 'l' in lamp"},
+      {type:'learn',r:'П п',t:'P',e:"Like 'p' in pot"},
+      {type:'learn',r:'Ф ф',t:'F',e:"Like 'f' in fox"},
+      {type:'mc',label:'What sound does this make?',question:'Б',answers:["Like 'b' in boy","Like 'g' in go","Like 'd' in dog","Like 'f' in fox"],correct:0},
+      {type:'mc',label:'What sound does this make?',question:'Ж',answers:["Like 's' in measure","Like 'ee' in see","Like 'l' in lamp","Like 'p' in pot"],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'g' in go",answers:['Г','Д','П','Ф'],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'ee' in see",answers:['И','Й','Ё','Л'],correct:0},
+      {type:'match',pairs:[{r:'Б',e:'B'},{r:'Г',e:'G'},{r:'Д',e:'D'},{r:'Ё',e:'YO'},{r:'Ж',e:'ZH'},{r:'И',e:'EE'},{r:'Й',e:'Y'},{r:'Л',e:'L'},{r:'П',e:'P'},{r:'Ф',e:'F'}]},
+      {type:'listen',russian:'Д',options:["Like 'd' in dog","Like 'b' in boy","Like 'p' in pot","Like 'f' in fox"],correct:0},
+      {type:'listen',russian:'Й',options:["Like 'y' in boy (short)","Like 'ee' in see","Like 'yo' in yogurt","Like 'l' in lamp"],correct:0},
+    ]
+  },
+  {
+    id:'a4', title:'The Alphabet: New Shapes II', russian:'Новые буквы II', icon:'✨',
+    desc:'Ц, Ч, Ш, Щ, Ъ, Ы, Ь, Э, Ю, Я — the rest of the alphabet, plus the two silent signs',
+    xp:25,
+    exercises:[
+      {type:'learn',r:'Ц ц',t:'TS',e:"Like 'ts' in cats"},
+      {type:'learn',r:'Ч ч',t:'CH',e:"Like 'ch' in cheese"},
+      {type:'learn',r:'Ш ш',t:'SH',e:"Like 'sh' in shop"},
+      {type:'learn',r:'Щ щ',t:'SHCH',e:"Soft 'shch', like 'sh' + 'ch'"},
+      {type:'learn',r:'Ъ ъ',t:'(hard sign)',e:'Hardens preceding consonant; no sound',note:"Rare in modern Russian — you'll see it occasionally but never pronounce it on its own"},
+      {type:'learn',r:'Ы ы',t:'Y',e:"No English equiv — 'i' from throat"},
+      {type:'learn',r:'Ь ь',t:'(soft sign)',e:'Softens preceding consonant; no sound',note:'Very common — always changes how the consonant before it sounds'},
+      {type:'learn',r:'Э э',t:'E',e:"Like 'e' in met"},
+      {type:'learn',r:'Ю ю',t:'YU',e:"Like 'yu' in yule"},
+      {type:'learn',r:'Я я',t:'YA',e:"Like 'ya' in yard"},
+      {type:'mc',label:'What sound does this make?',question:'Ш',answers:["Like 'sh' in shop","Like 'ch' in cheese","Like 'ts' in cats","Like 'e' in met"],correct:0},
+      {type:'mc',label:'What sound does this make?',question:'Я',answers:["Like 'ya' in yard","Like 'yu' in yule","No English equiv — 'i' from throat","Like 'ts' in cats"],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'ch' in cheese",answers:['Ч','Ц','Ш','Щ'],correct:0},
+      {type:'mc',label:'Which letter makes this sound?',question:"Like 'yu' in yule",answers:['Ю','Я','Э','Ы'],correct:0},
+      {type:'match',pairs:[{r:'Ц',e:'TS'},{r:'Ч',e:'CH'},{r:'Ш',e:'SH'},{r:'Щ',e:'SHCH'},{r:'Ъ',e:'hard sign'},{r:'Ы',e:'Y'},{r:'Ь',e:'soft sign'},{r:'Э',e:'E'},{r:'Ю',e:'YU'},{r:'Я',e:'YA'}]},
+      {type:'listen',russian:'Щ',options:["Soft 'shch', like 'sh' + 'ch'","Like 'sh' in shop","Like 'ch' in cheese","Like 'ts' in cats"],correct:0},
+      {type:'listen',russian:'Э',options:["Like 'e' in met","Like 'ya' in yard","Like 'yu' in yule","No English equiv — 'i' from throat"],correct:0},
+    ]
+  },
   {
     id:'l1', title:'Essential Words', russian:'Основные слова', icon:'🌱',
     desc:'Yes, no, hello, thanks — your very first Russian words',
@@ -2679,7 +2923,7 @@ function bumpFlashcardRounds() {
 // ── Achievements ──
 const ACHIEVEMENTS = [
   { id:'first_lesson',     icon:'🌱',  title:'First Steps',      desc:'Complete your first lesson',        check: s => s.lessonsCompleted >= 1 },
-  { id:'halfway',          icon:'🏅',  title:'Halfway There',    desc:'Complete 4 lessons',                 check: s => s.lessonsCompleted >= 4 },
+  { id:'halfway',          icon:'🏅',  title:'Halfway There',    desc:'Complete 8 lessons',                 check: s => s.lessonsCompleted >= 8 },
   { id:'course_complete',  icon:'🏆',  title:'Course Complete',  desc:'Complete all lessons',               check: s => s.lessonsCompleted >= LESSON_DEFS.length },
   { id:'alphabet_master',  icon:'🔤',  title:'Alphabet Explorer',desc:'Reveal every letter of the alphabet',check: s => s.alphabetSeen >= 33 },
   { id:'streak_3',         icon:'🔥',  title:'On a Roll',        desc:'Reach a 3-day streak',               check: s => s.streak >= 3 },
@@ -2764,7 +3008,10 @@ function buildLessonMap() {
   LESSON_DEFS.forEach((lesson, i) => {
     const state = progress[lesson.id] || {};
     const completed = !!state.completed;
-    const available = i === 0 || !!(progress[LESSON_DEFS[i-1].id]||{}).completed;
+    // Grandfather in anyone whose saved progress is already past this point — guards against
+    // reordering LESSON_DEFS (e.g. inserting new lessons earlier) walling off old progress.
+    const anyFromHereOnCompleted = LESSON_DEFS.slice(i).some(l => !!(progress[l.id]||{}).completed);
+    const available = i === 0 || !!(progress[LESSON_DEFS[i-1].id]||{}).completed || anyFromHereOnCompleted;
     const locked = !available && !completed;
     if (completed) completedCount++;
 
@@ -2939,10 +3186,12 @@ function renderMultipleChoice(ex, area) {
   btns.forEach((btn, i) => {
     btn.addEventListener('click', () => {
       btns.forEach(b => b.disabled = true);
+      const srsId = 'l:' + ls.lessonId + ':' + ls.exIdx;
       if (i === s.correctIdx) {
         btn.classList.add('correct-ans');
         if (isRussianQuestion) speak(ex.question);
         bumpCombo();
+        updateItemAfterReview(srsId, true);
         showFeedback(true, 'Correct!', '');
         ls.score++;
       } else {
@@ -2951,6 +3200,7 @@ function renderMultipleChoice(ex, area) {
         if (isRussianQuestion) speak(ex.question);
         resetCombo();
         ls.errors++; loseHeart();
+        updateItemAfterReview(srsId, false);
         showFeedback(false, 'Incorrect', 'Correct answer: ' + correctText);
       }
     });
@@ -2980,10 +3230,12 @@ function renderFillBlank(ex, area) {
       btns.forEach(b => b.disabled = true);
       const slot = area.querySelector('#filledSlot');
       if (slot) slot.textContent = correctText;
+      const srsId = 'l:' + ls.lessonId + ':' + ls.exIdx;
       if (i === s.correctIdx) {
         btn.classList.add('correct-ans');
         speak(correctText);
         bumpCombo();
+        updateItemAfterReview(srsId, true);
         showFeedback(true, 'Correct!', '');
         ls.score++;
       } else {
@@ -2992,6 +3244,7 @@ function renderFillBlank(ex, area) {
         speak(correctText);
         resetCombo();
         ls.errors++; loseHeart();
+        updateItemAfterReview(srsId, false);
         showFeedback(false, 'Incorrect', 'The answer was: ' + correctText);
       }
     });
@@ -3047,15 +3300,18 @@ function renderTapToBuild(ex, area) {
       correct.every((w, i) => w.toLowerCase() === (user[i] || '').toLowerCase());
     area.querySelector('#tapCheckBtn').disabled = true;
     area.querySelectorAll('.tap-tile').forEach(t => { t.style.pointerEvents = 'none'; });
+    const srsId = 'l:' + ls.lessonId + ':' + ls.exIdx;
     if (ok) {
       speak(correct.join(' '));
       bumpCombo();
+      updateItemAfterReview(srsId, true);
       showFeedback(true, 'Correct!', '');
       ls.score++;
     } else {
       speak(correct.join(' '));
       resetCombo();
       ls.errors++; loseHeart();
+      updateItemAfterReview(srsId, false);
       showFeedback(false, 'Not quite!', 'Correct: ' + correct.join(' '));
     }
   });
@@ -3118,6 +3374,7 @@ function renderMatchPairs(ex, area) {
       return;
     }
     const isMatch = ls.matchSelected.key === key;
+    const srsBase = 'l:' + ls.lessonId + ':' + ls.exIdx + ':';
     if (isMatch) {
       speak(key);
       [ls.matchSelected.btn, btn].forEach(b => {
@@ -3127,8 +3384,13 @@ function renderMatchPairs(ex, area) {
       ls.matchLeft--;
       ls.matchSelected = null;
       bumpCombo();
+      const pairIdx = ex.pairs.findIndex(p => p.r === key);
+      if (pairIdx >= 0) updateItemAfterReview(srsBase + pairIdx, true);
+      updateReviewOptionLabel();
+      updateMissedOptionLabel();
       if (ls.matchLeft === 0) { ls.score++; setTimeout(() => showFeedback(true, 'All matched!', ''), 250); }
     } else {
+      const missedKey = ls.matchSelected.key;
       [ls.matchSelected.btn, btn].forEach(b => {
         b.classList.remove('selected'); b.classList.add('wrong-flash');
         setTimeout(() => b.classList.remove('wrong-flash'), 500);
@@ -3136,6 +3398,12 @@ function renderMatchPairs(ex, area) {
       ls.matchSelected = null;
       resetCombo();
       ls.errors++; loseHeart();
+      const idxA = ex.pairs.findIndex(p => p.r === missedKey);
+      const idxB = ex.pairs.findIndex(p => p.r === key);
+      if (idxA >= 0) updateItemAfterReview(srsBase + idxA, false);
+      if (idxB >= 0 && idxB !== idxA) updateItemAfterReview(srsBase + idxB, false);
+      updateReviewOptionLabel();
+      updateMissedOptionLabel();
       if (ls.hearts === 0) setTimeout(failLesson, 650);
     }
   });
@@ -3172,10 +3440,12 @@ function renderListen(ex, area) {
     btn.addEventListener('click', () => {
       btns.forEach(b => b.disabled = true);
       playBtn.disabled = true;
+      const srsId = 'l:' + ls.lessonId + ':' + ls.exIdx;
       if (i === s.correctIdx) {
         btn.classList.add('correct-ans');
         speak(ex.russian);
         bumpCombo();
+        updateItemAfterReview(srsId, true);
         showFeedback(true, 'Correct! "' + ex.russian + '" = ' + correctText, '');
         ls.score++;
       } else {
@@ -3184,6 +3454,7 @@ function renderListen(ex, area) {
         speak(ex.russian);
         resetCombo();
         ls.errors++; loseHeart();
+        updateItemAfterReview(srsId, false);
         showFeedback(false, 'Incorrect', '"' + ex.russian + '" means: ' + correctText);
       }
     });
@@ -3203,6 +3474,8 @@ function showFeedback(correct, title, answer) {
   fbNext.textContent = outOfHearts ? 'See results' : (isLast ? 'Finish' : 'Continue');
   fbNext.onclick = outOfHearts ? failLesson : nextExercise;
   bar.className = 'feedback-bar show ' + (correct ? 'correct' : 'incorrect');
+  updateReviewOptionLabel();
+  updateMissedOptionLabel();
 }
 
 function hideFeedback() {
@@ -3515,7 +3788,7 @@ function buildConjQuestions(n) {
     const correct = verb.forms[person];
     const distractorPersons = shuffleArr(persons.filter(p => p !== person)).slice(0, 3);
     const options = shuffleArr([correct, ...distractorPersons.map(p => verb.forms[p])]);
-    qs.push({ verb, personLabel: personLabel[person], correct, options });
+    qs.push({ verb, person, personLabel: personLabel[person], correct, options });
   }
   return qs;
 }
@@ -3543,12 +3816,15 @@ function renderConjQuestion() {
     btn.addEventListener('click', () => {
       btns.forEach(b => b.disabled = true);
       speak(q.correct);
+      const srsId = 'v:' + q.verb.inf + ':' + q.person;
       if (btn.textContent === q.correct) {
         btn.classList.add('correct-ans');
         conjQuiz.correct++;
+        updateItemAfterReview(srsId, true);
       } else {
         btn.classList.add('wrong-ans');
         btns.forEach(b => { if (b.textContent === q.correct) b.classList.add('correct-ans'); });
+        updateItemAfterReview(srsId, false);
       }
       setTimeout(() => { conjQuiz.idx++; renderConjQuestion(); }, 1100);
     });
@@ -3561,6 +3837,8 @@ function renderConjQuizComplete() {
   const total = conjQuiz.questions.length;
   const earned = Math.min(conjQuiz.correct, 10);
   if (earned > 0) awardXP(earned, 'Conjugation practice');
+  updateReviewOptionLabel();
+  updateMissedOptionLabel();
   area.innerHTML =
     '<div class="quiz-complete" style="margin:0">' +
       '<h2>Drill Complete!</h2>' +
@@ -3693,7 +3971,7 @@ function buildCaseQuestions(n) {
     const distractorPool = keys.filter(k => k !== key && noun.forms[k] !== correct);
     const distractorKeys = shuffleArr(distractorPool).slice(0, 3);
     const options = shuffleArr([correct, ...distractorKeys.map(k => noun.forms[k])]);
-    qs.push({ noun, caseLabel: labelByKey[key], correct, options });
+    qs.push({ noun, caseKey: key, caseLabel: labelByKey[key], correct, options });
   }
   return qs;
 }
@@ -3721,12 +3999,15 @@ function renderCaseQuestion() {
     btn.addEventListener('click', () => {
       btns.forEach(b => b.disabled = true);
       speak(q.correct);
+      const srsId = 'c:' + q.noun.word + ':' + q.caseKey;
       if (btn.textContent === q.correct) {
         btn.classList.add('correct-ans');
         caseQuiz.correct++;
+        updateItemAfterReview(srsId, true);
       } else {
         btn.classList.add('wrong-ans');
         btns.forEach(b => { if (b.textContent === q.correct) b.classList.add('correct-ans'); });
+        updateItemAfterReview(srsId, false);
       }
       setTimeout(() => { caseQuiz.idx++; renderCaseQuestion(); }, 1100);
     });
@@ -3739,6 +4020,8 @@ function renderCaseQuizComplete() {
   const total = caseQuiz.questions.length;
   const earned = Math.min(caseQuiz.correct, 10);
   if (earned > 0) awardXP(earned, 'Case practice');
+  updateReviewOptionLabel();
+  updateMissedOptionLabel();
   area.innerHTML =
     '<div class="quiz-complete" style="margin:0">' +
       '<h2>Drill Complete!</h2>' +
@@ -4151,7 +4434,9 @@ buildWords();
 buildGrammar();
 buildLessonMap();
 buildNews();
+initSrsPool();
 updateReviewOptionLabel();
+updateMissedOptionLabel();
 
 updateVoiceWarning();
 if (window.speechSynthesis) window.speechSynthesis.addEventListener('voiceschanged', updateVoiceWarning);
