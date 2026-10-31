@@ -3302,11 +3302,16 @@ function levenshtein(a, b) {
 }
 // Exact match required for short answers; one-character typo tolerated for longer ones
 // (keyboard slips), so a genuinely wrong ending/word still gets marked wrong.
-function checkTypedAnswer(input, correct) {
+// strict=true (for grammar-ending drills) requires an exact match: a one-letter typo
+// tolerance is exactly the size of most wrong-but-plausible endings/forms in those drills
+// (e.g. typing the bare dictionary-form hint instead of the declined form), so forgiving
+// it there would let a wrong answer pass. Vocabulary-recall contexts keep the lenient check.
+function checkTypedAnswer(input, correct, strict) {
   const a = normalizeAnswer(input);
   const b = normalizeAnswer(correct);
   if (!a) return false;
   if (a === b) return true;
+  if (strict) return false;
   const tolerance = b.length >= 4 ? 1 : 0;
   return levenshtein(a, b) <= tolerance;
 }
@@ -4054,7 +4059,7 @@ function renderConjQuestion() {
     input.disabled = true;
     btn.disabled = true;
     speak(q.correct);
-    if (checkTypedAnswer(input.value, q.correct)) {
+    if (checkTypedAnswer(input.value, q.correct, true)) {
       input.classList.add('type-correct');
       conjQuiz.correct++;
       updateItemAfterReview(srsId, true);
@@ -4271,7 +4276,7 @@ function renderCaseQuestion() {
     input.disabled = true;
     btn.disabled = true;
     speak(q.correct);
-    if (checkTypedAnswer(input.value, q.correct)) {
+    if (checkTypedAnswer(input.value, q.correct, true)) {
       input.classList.add('type-correct');
       caseQuiz.correct++;
       updateItemAfterReview(srsId, true);
@@ -4321,10 +4326,11 @@ function renderCaseContextQuestion() {
   if (caseContextQuiz.idx >= caseContextQuiz.order.length) { renderCaseContextQuizComplete(); return; }
   const sIdx = caseContextQuiz.order[caseContextQuiz.idx];
   const q = CASE_CONTEXT_SENTENCES[sIdx];
+  const sentenceHtml = q.sentence.replace('_______', '<span class="fill-blank-slot" id="caseContextSlot">_______</span>');
   area.innerHTML =
     '<div class="progress-label" style="margin-bottom:10px">Sentence ' + (caseContextQuiz.idx + 1) + ' / ' + caseContextQuiz.order.length +
       ' &nbsp;·&nbsp; ' + caseContextQuiz.correct + ' correct</div>' +
-    '<div class="fill-sentence">' + q.sentence + '</div>' +
+    '<div class="fill-sentence">' + sentenceHtml + '</div>' +
     '<div class="fill-translation">' + q.translation + '</div>' +
     '<input type="text" id="caseContextInput" class="type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the correct form...">' +
     '<button class="ex-check-btn" id="caseContextCheckBtn" disabled>Check Answer</button>';
@@ -4338,7 +4344,9 @@ function renderCaseContextQuestion() {
     input.disabled = true;
     btn.disabled = true;
     speak(q.answer);
-    if (checkTypedAnswer(input.value, q.answer)) {
+    const slot = area.querySelector('#caseContextSlot');
+    if (slot) slot.textContent = q.answer;
+    if (checkTypedAnswer(input.value, q.answer, true)) {
       input.classList.add('type-correct');
       caseContextQuiz.correct++;
       updateItemAfterReview(srsId, true);
@@ -4346,8 +4354,7 @@ function renderCaseContextQuestion() {
       input.classList.add('type-wrong');
       updateItemAfterReview(srsId, false);
     }
-    area.insertAdjacentHTML('beforeend',
-      '<div class="type-answer-reveal">Correct answer: <strong>' + q.answer + '</strong> &nbsp;·&nbsp; ' + q.explain + '</div>');
+    area.insertAdjacentHTML('beforeend', '<div class="type-answer-reveal">' + q.explain + '</div>');
     setTimeout(() => { caseContextQuiz.idx++; renderCaseContextQuestion(); }, 2200);
   };
 
