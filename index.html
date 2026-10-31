@@ -724,6 +724,18 @@
   .dg-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--green)); border-radius: 4px; transition: width 0.4s ease; }
   .dg-row .dg-done { color: var(--green); font-weight: 700; }
 
+  .weekly-goals-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 20px;
+  }
+  .wg-title { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .wg-row { margin-bottom: 10px; }
+  .wg-row:last-child { margin-bottom: 0; }
+  .wg-row-label { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 5px; }
+  .wg-row-label .wg-done { color: var(--green); font-weight: 700; }
+  .wg-track { height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .wg-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--green)); border-radius: 4px; transition: width 0.4s ease; }
+
   /* ── Achievements ── */
   .achievements-title { font-size: 1rem; color: var(--gold); margin: 28px 0 12px; }
   .achievements-grid {
@@ -1225,6 +1237,7 @@
         </div>
       </div>
       <div class="daily-goal-card" id="dailyGoalCard"></div>
+      <div class="weekly-goals-card" id="weeklyGoalsCard"></div>
       <div class="lesson-map" id="lessonMap"></div>
       <h3 class="achievements-title">Achievements</h3>
       <div class="achievements-grid" id="achievementsGrid"></div>
@@ -2921,9 +2934,11 @@ function awardXP(amount, label) {
   const after = before + amount;
   saveXP(after);
   bumpDailyGoal(amount);
+  bumpWeeklyStats(amount, false);
   showToast('+' + amount + ' XP · ' + label);
   renderGlobalStatPill();
   renderDailyGoal();
+  renderWeeklyGoals();
   if (levelForXP(after) > levelForXP(before)) {
     const title = levelTitleFor(levelForXP(after));
     setTimeout(() => showToast('⭐ Level Up — Level ' + levelForXP(after) + ' ' + title.ru, 'level'), 400);
@@ -2959,6 +2974,80 @@ function renderDailyGoal() {
         (done ? 'Complete! ✓' : Math.min(g.earned, DAILY_GOAL_XP) + ' / ' + DAILY_GOAL_XP + ' XP') +
       '</span></div>' +
     '<div class="dg-track"><div class="dg-fill" style="width:' + pct + '%"></div></div>';
+}
+
+// ── Weekly goals ──
+const WEEKLY_BONUS_XP = 10;
+const WEEKLY_GOALS = [
+  { key:'xp',      icon:'🎯', label:'Earn 100 XP this week',        target:100, get: w => w.xp },
+  { key:'lessons', icon:'📚', label:'Complete 3 lessons this week', target:3,   get: w => w.lessons },
+  { key:'days',    icon:'🔥', label:'Practice on 4 different days', target:4,   get: w => w.activeDays.length },
+];
+
+function weekStartStr() {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun..6=Sat
+  d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day)); // shift back to this week's Monday
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function loadWeeklyStats() {
+  let w;
+  try { w = JSON.parse(localStorage.getItem('ru_weekly') || 'null'); } catch { w = null; }
+  if (!w || w.weekStart !== weekStartStr()) {
+    w = { weekStart: weekStartStr(), xp: 0, lessons: 0, activeDays: [], claimed: {} };
+  }
+  if (!w.claimed) w.claimed = {};
+  if (!w.activeDays) w.activeDays = [];
+  return w;
+}
+function saveWeeklyStats(w) { localStorage.setItem('ru_weekly', JSON.stringify(w)); }
+
+function bumpWeeklyStats(xpAmount, isLessonCompletion) {
+  const w = loadWeeklyStats();
+  w.xp += xpAmount;
+  if (isLessonCompletion) w.lessons += 1;
+  const today = todayStr();
+  if (!w.activeDays.includes(today)) w.activeDays.push(today);
+  saveWeeklyStats(w);
+  checkWeeklyGoals();
+}
+
+function checkWeeklyGoals() {
+  const w = loadWeeklyStats();
+  const newlyClaimed = [];
+  WEEKLY_GOALS.forEach(g => {
+    if (!w.claimed[g.key] && g.get(w) >= g.target) {
+      w.claimed[g.key] = true;
+      newlyClaimed.push(g);
+    }
+  });
+  if (newlyClaimed.length) {
+    saveWeeklyStats(w); // persist claimed flags first so the awardXP below can't re-trigger them
+    newlyClaimed.forEach(g => awardXP(WEEKLY_BONUS_XP, 'Weekly goal: ' + g.label));
+  }
+  renderWeeklyGoals();
+}
+
+function renderWeeklyGoals() {
+  const el = document.getElementById('weeklyGoalsCard');
+  if (!el) return;
+  const w = loadWeeklyStats();
+  el.innerHTML =
+    '<div class="wg-title">📅 Weekly Goals</div>' +
+    WEEKLY_GOALS.map(g => {
+      const val = g.get(w);
+      const done = val >= g.target;
+      const pct = Math.min(100, Math.round((val / g.target) * 100));
+      return (
+        '<div class="wg-row">' +
+          '<div class="wg-row-label"><span>' + g.icon + ' ' + g.label + '</span>' +
+            '<span class="' + (done ? 'wg-done' : '') + '">' +
+              (done ? '✓ Done' : Math.min(val, g.target) + ' / ' + g.target) +
+            '</span></div>' +
+          '<div class="wg-track"><div class="wg-fill" style="width:' + pct + '%"></div></div>' +
+        '</div>'
+      );
+    }).join('');
 }
 
 // ── Per-activity trackers (feed XP + achievements from outside Lessons) ──
@@ -3102,6 +3191,7 @@ function buildLessonMap() {
   document.getElementById('completedCount').textContent = completedCount + ' / ' + LESSON_DEFS.length;
   renderLevelAndStreak();
   renderDailyGoal();
+  renderWeeklyGoals();
   renderAchievements();
 }
 
@@ -3650,6 +3740,7 @@ function renderLessonComplete() {
 
   const streak = updateStreak();
   if (earnedXP > 0) bumpDailyGoal(earnedXP);
+  bumpWeeklyStats(earnedXP, true);
   renderGlobalStatPill();
   checkAchievements();
 
