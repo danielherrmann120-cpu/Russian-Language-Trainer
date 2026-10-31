@@ -2021,6 +2021,11 @@ function buildCaseSrsPool() {
   });
   return pool;
 }
+function buildCaseContextSrsPool() {
+  return CASE_CONTEXT_SENTENCES.map((q, i) => ({
+    id: 'cc:' + i, front: q.sentence, back: q.answer, hint: q.translation,
+  }));
+}
 // Each gradeable lesson exercise gets a stable id ('l:' + lessonId + ':' + exIdx, plus a
 // pair index for match exercises) so a mistake made in the Lessons runner is tracked the
 // same way as everything else — and shows up in Review / Missed Questions.
@@ -2048,7 +2053,7 @@ function buildLessonSrsPool() {
 }
 
 function initSrsPool() {
-  SRS_POOL = buildWordsSrsPool().concat(buildVerbSrsPool(), buildCaseSrsPool(), buildLessonSrsPool());
+  SRS_POOL = buildWordsSrsPool().concat(buildVerbSrsPool(), buildCaseSrsPool(), buildCaseContextSrsPool(), buildLessonSrsPool());
 }
 
 function loadSrsState() {
@@ -4125,6 +4130,29 @@ const CASE_INFO = {
   prep: { fn:'Used only after certain prepositions — "about/in/on".', preps:'в, на, о' },
 };
 
+// Real sentences where the grammar — not a quiz label — determines the required case.
+// Reuses the same 7 nouns taught in the "Browse a noun" table above.
+const CASE_CONTEXT_SENTENCES = [
+  { sentence:'_______ (книга) лежит на столе.', noun:'книга', en:'book', caseKey:'nom', answer:'книга',
+    translation:'The book is lying on the table.', explain:'The subject of a sentence is always nominative.' },
+  { sentence:'У меня нет _______ (стол).', noun:'стол', en:'table', caseKey:'gen', answer:'стола',
+    translation:"I don't have a table.", explain:'нет + genitive = "there is no..."' },
+  { sentence:'Это книга _______ (сестра).', noun:'сестра', en:'sister', caseKey:'gen', answer:'сестры',
+    translation:"This is sister's book.", explain:'Genitive shows possession — "of ___".' },
+  { sentence:'Я иду к _______ (брат).', noun:'брат', en:'brother', caseKey:'dat', answer:'брату',
+    translation:"I'm going to (see) brother.", explain:'к + dative = movement toward a person.' },
+  { sentence:'Я смотрю в _______ (окно).', noun:'окно', en:'window', caseKey:'acc', answer:'окно',
+    translation:"I'm looking out the window.", explain:'в + accusative = motion/direction into — inanimate nouns look identical to nominative.' },
+  { sentence:'Я вижу _______ (брат).', noun:'брат', en:'brother', caseKey:'acc', answer:'брата',
+    translation:'I see (my) brother.', explain:'Animate accusative looks like genitive, not nominative.' },
+  { sentence:'Я иду с _______ (сестра).', noun:'сестра', en:'sister', caseKey:'inst', answer:'сестрой',
+    translation:"I'm going with (my) sister.", explain:'с + instrumental = "with" (accompaniment).' },
+  { sentence:'Цветы стоят на _______ (окно).', noun:'окно', en:'window', caseKey:'prep', answer:'окне',
+    translation:'The flowers are standing on the windowsill.', explain:'на + prepositional = location "on".' },
+  { sentence:'Я думаю о _______ (сестра).', noun:'сестра', en:'sister', caseKey:'prep', answer:'сестре',
+    translation:"I'm thinking about (my) sister.", explain:'о + prepositional = "about" (a topic).' },
+];
+
 function renderGrammarCases(area) {
   const groups = {};
   CASE_NOUNS.forEach(n => { (groups[n.group] = groups[n.group] || []).push(n); });
@@ -4163,6 +4191,12 @@ function renderGrammarCases(area) {
       '<p>You\'ll see a noun and a case name — type the correctly declined form yourself. Like the verb drill, ' +
         'small typos are forgiven, but a wrong ending is still wrong, so this tests real recall rather than recognition.</p>' +
       '<div id="caseQuizArea"><button class="ex-check-btn" style="max-width:280px" id="startCaseQuizBtn">Start Practice (10 questions)</button></div>' +
+    '</div>' +
+    '<div class="grammar-block">' +
+      '<h3>Practice case usage <span>— in context, not isolation</span></h3>' +
+      '<p>Knowing that <span class="hl">стола</span> is genitive is one thing — knowing that <em style="color:var(--accent2)">this sentence</em> needs genitive is the real skill. ' +
+      'You\'ll see a real sentence with a word missing (shown in its dictionary form) — type that word in the form the sentence actually demands.</p>' +
+      '<div id="caseContextQuizArea"><button class="ex-check-btn" style="max-width:280px" id="startCaseContextQuizBtn">Start Practice (' + CASE_CONTEXT_SENTENCES.length + ' sentences)</button></div>' +
     '</div>';
 
   function renderNounTable(word) {
@@ -4189,6 +4223,8 @@ function renderGrammarCases(area) {
   }
   const startBtn = area.querySelector('#startCaseQuizBtn');
   if (startBtn) startBtn.addEventListener('click', startCaseQuiz);
+  const startContextBtn = area.querySelector('#startCaseContextQuizBtn');
+  if (startContextBtn) startContextBtn.addEventListener('click', startCaseContextQuiz);
 }
 
 // ── Case practice drill ──
@@ -4267,6 +4303,74 @@ function renderCaseQuizComplete() {
       '<div class="big-score">' + caseQuiz.correct + ' / ' + total + '</div>' +
       (earned > 0 ? '<p style="color:var(--gold);font-weight:700;margin-bottom:12px">+' + earned + ' XP earned</p>' : '') +
       '<button onclick="startCaseQuiz()">Try Again</button>' +
+    '</div>';
+}
+
+// ── Case-in-context practice drill ──
+let caseContextQuiz = null;
+
+function startCaseContextQuiz() {
+  const order = shuffleArr(CASE_CONTEXT_SENTENCES.map((_, i) => i));
+  caseContextQuiz = { order, idx: 0, correct: 0 };
+  renderCaseContextQuestion();
+}
+
+function renderCaseContextQuestion() {
+  const area = document.getElementById('caseContextQuizArea');
+  if (!area) return;
+  if (caseContextQuiz.idx >= caseContextQuiz.order.length) { renderCaseContextQuizComplete(); return; }
+  const sIdx = caseContextQuiz.order[caseContextQuiz.idx];
+  const q = CASE_CONTEXT_SENTENCES[sIdx];
+  area.innerHTML =
+    '<div class="progress-label" style="margin-bottom:10px">Sentence ' + (caseContextQuiz.idx + 1) + ' / ' + caseContextQuiz.order.length +
+      ' &nbsp;·&nbsp; ' + caseContextQuiz.correct + ' correct</div>' +
+    '<div class="fill-sentence">' + q.sentence + '</div>' +
+    '<div class="fill-translation">' + q.translation + '</div>' +
+    '<input type="text" id="caseContextInput" class="type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the correct form...">' +
+    '<button class="ex-check-btn" id="caseContextCheckBtn" disabled>Check Answer</button>';
+
+  const input = area.querySelector('#caseContextInput');
+  const btn = area.querySelector('#caseContextCheckBtn');
+  const srsId = 'cc:' + sIdx;
+
+  const submit = () => {
+    if (btn.disabled) return;
+    input.disabled = true;
+    btn.disabled = true;
+    speak(q.answer);
+    if (checkTypedAnswer(input.value, q.answer)) {
+      input.classList.add('type-correct');
+      caseContextQuiz.correct++;
+      updateItemAfterReview(srsId, true);
+    } else {
+      input.classList.add('type-wrong');
+      updateItemAfterReview(srsId, false);
+    }
+    area.insertAdjacentHTML('beforeend',
+      '<div class="type-answer-reveal">Correct answer: <strong>' + q.answer + '</strong> &nbsp;·&nbsp; ' + q.explain + '</div>');
+    setTimeout(() => { caseContextQuiz.idx++; renderCaseContextQuestion(); }, 2200);
+  };
+
+  input.addEventListener('input', () => { btn.disabled = !input.value.trim(); });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  btn.addEventListener('click', submit);
+  input.focus();
+}
+
+function renderCaseContextQuizComplete() {
+  const area = document.getElementById('caseContextQuizArea');
+  if (!area) return;
+  const total = caseContextQuiz.order.length;
+  const earned = Math.min(caseContextQuiz.correct, 10);
+  if (earned > 0) awardXP(earned, 'Case usage practice');
+  updateReviewOptionLabel();
+  updateMissedOptionLabel();
+  area.innerHTML =
+    '<div class="quiz-complete" style="margin:0">' +
+      '<h2>Drill Complete!</h2>' +
+      '<div class="big-score">' + caseContextQuiz.correct + ' / ' + total + '</div>' +
+      (earned > 0 ? '<p style="color:var(--gold);font-weight:700;margin-bottom:12px">+' + earned + ' XP earned</p>' : '') +
+      '<button onclick="startCaseContextQuiz()">Try Again</button>' +
     '</div>';
 }
 
