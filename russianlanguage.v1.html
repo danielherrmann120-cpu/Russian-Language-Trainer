@@ -243,6 +243,11 @@
     color: var(--text);
     font-weight: 400;
   }
+  .type-mode-toggle {
+    display: inline-flex; align-items: center; gap: 7px;
+    color: var(--muted); font-size: 0.85rem; cursor: pointer; user-select: none;
+  }
+  .type-mode-toggle input { accent-color: var(--accent2); cursor: pointer; }
 
   .flashcard-wrap {
     display: flex;
@@ -563,6 +568,17 @@
   }
   .ex-check-btn:hover:not(:disabled) { opacity: 0.88; }
   .ex-check-btn:disabled { opacity: 0.3; cursor: default; }
+
+  .type-input {
+    width: 100%; background: var(--surface2); border: 2px solid var(--border); color: var(--text);
+    padding: 14px 16px; border-radius: 12px; font-size: 1.1rem; margin-bottom: 14px;
+    font-family: inherit; transition: border-color 0.2s;
+  }
+  .type-input:focus { outline: none; border-color: var(--accent2); }
+  .type-input.type-correct { border-color: var(--green); color: var(--green); }
+  .type-input.type-wrong { border-color: var(--red); color: var(--red); }
+  .type-answer-reveal { font-size: 0.85rem; color: var(--muted); margin: -8px 0 14px; }
+  .type-answer-reveal strong { color: var(--gold); }
 
   .feedback-bar {
     position: fixed; bottom: 0; left: 0; right: 0;
@@ -1059,6 +1075,7 @@
       </select>
       <button onclick="startQuiz()">Start / Restart</button>
       <button class="secondary" onclick="shuffleDeck()">Shuffle</button>
+      <label class="type-mode-toggle"><input type="checkbox" id="typeModeToggle">✍️ Type the answer instead of flipping</label>
     </div>
     <div class="flashcard-wrap" id="quizArea">
       <p style="color:var(--muted)">Select a deck and press <strong style="color:var(--text)">Start</strong> to begin.</p>
@@ -2007,6 +2024,8 @@ function buildLessonSrsPool() {
         pool.push({ id: base, front: ex.english, back: ex.correctTokens.join(' '), hint: '' });
       } else if (ex.type === 'listen') {
         pool.push({ id: base, front: '🔊 ' + ex.russian, back: ex.options[ex.correct], hint: '' });
+      } else if (ex.type === 'type') {
+        pool.push({ id: base, front: ex.english, back: ex.answer, hint: ex.hint || '' });
       } else if (ex.type === 'match') {
         ex.pairs.forEach((p, pIdx) => pool.push({ id: base + ':' + pIdx, front: p.r, back: p.e, hint: '' }));
       }
@@ -2208,6 +2227,11 @@ function shuffleDeck() {
   renderCard();
 }
 
+function isTypeMode() {
+  const t = document.getElementById('typeModeToggle');
+  return !!(t && t.checked);
+}
+
 function renderCard() {
   const area = document.getElementById('quizArea');
   if (deckIdx >= deck.length) {
@@ -2218,7 +2242,7 @@ function renderCard() {
   const card = deck[deckIdx];
   const pct = Math.round((deckIdx / deck.length) * 100);
 
-  area.innerHTML = `
+  const header = `
     <div class="score-display">
       <div class="score-item"><div class="score-num green">${correct}</div><div class="score-label">Known</div></div>
       <div class="score-item"><div class="score-num red">${wrong}</div><div class="score-label">Missed</div></div>
@@ -2226,6 +2250,44 @@ function renderCard() {
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
     <div class="progress-label">${deckIdx + 1} / ${deck.length}</div>
+  `;
+
+  if (isTypeMode()) {
+    area.innerHTML = header + `
+      <div class="flashcard-front" style="position:static;width:100%;max-width:500px;border-radius:16px;margin:0 auto 20px">
+        <div class="fc-main">${card.front}</div>
+        <div class="fc-hint">Type the answer</div>
+      </div>
+      <div style="width:100%;max-width:500px;margin:0 auto">
+        <input type="text" id="fcTypeInput" class="type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type your answer...">
+        <button class="ex-check-btn" id="fcTypeCheckBtn" disabled>Check Answer</button>
+      </div>
+    `;
+    const input = area.querySelector('#fcTypeInput');
+    const btn = area.querySelector('#fcTypeCheckBtn');
+    const submit = () => {
+      if (btn.disabled) return;
+      input.disabled = true;
+      btn.disabled = true;
+      const ok = checkTypedAnswer(input.value, card.back);
+      speak(card.back);
+      if (ok) input.classList.add('type-correct');
+      else {
+        input.classList.add('type-wrong');
+        area.insertAdjacentHTML('beforeend',
+          '<div class="type-answer-reveal" style="text-align:center">Correct answer: <strong>' + card.back + '</strong>' +
+          (card.hint ? ' <em>(' + card.hint + ')</em>' : '') + '</div>');
+      }
+      setTimeout(() => markCard(ok), 1400);
+    };
+    input.addEventListener('input', () => { btn.disabled = !input.value.trim(); });
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+    btn.addEventListener('click', submit);
+    input.focus();
+    return;
+  }
+
+  area.innerHTML = header + `
     <div class="flashcard" id="fc" onclick="revealCard()">
       <div class="flashcard-inner">
         <div class="flashcard-front">
@@ -2460,6 +2522,7 @@ const LESSON_DEFS = [
       {type:'mc',label:'How do you say:',question:'Hello (informal)',answers:['Привет','Здравствуйте','Пока','Спасибо'],correct:0},
       {type:'listen',russian:'Спасибо',options:['Thank you','Please','Hello','Goodbye'],correct:0},
       {type:'tap',english:'Yes, thank you!',correctTokens:['Да','спасибо'],allTokens:['Да','спасибо','нет','Привет','Пока']},
+      {type:'type',english:'Thank you',answer:'Спасибо',hint:'Spasibo'},
     ]
   },
   {
@@ -2482,6 +2545,7 @@ const LESSON_DEFS = [
       {type:'listen',russian:'До свидания',options:['Goodbye (formal)','Hello','Good night','See you'],correct:0},
       {type:'tap',english:'My name is Anna',correctTokens:['Меня','зовут','Анна'],allTokens:['Меня','зовут','Анна','Привет','Как','дела']},
       {type:'mc',question:'Спокойной ночи',questionSub:'spokoynoy nochi',answers:['Good night','Good morning','Good afternoon','Goodbye'],correct:0},
+      {type:'type',english:'Bye (informal)',answer:'Пока',hint:'Poka'},
     ]
   },
   {
@@ -2503,6 +2567,7 @@ const LESSON_DEFS = [
       {type:'listen',russian:'Три',options:['Three','Two','Five','One'],correct:0},
       {type:'tap',english:'One two three',correctTokens:['Один','два','три'],allTokens:['Один','два','три','четыре','пять']},
       {type:'match',pairs:[{r:'Один',e:'One'},{r:'Два',e:'Two'},{r:'Три',e:'Three'},{r:'Четыре',e:'Four'},{r:'Пять',e:'Five'}]},
+      {type:'type',english:'Four',answer:'Четыре',hint:'Chetyre'},
     ]
   },
   {
@@ -2523,6 +2588,7 @@ const LESSON_DEFS = [
       {type:'listen',russian:'Девять',options:['Nine','Eight','Ten','Seven'],correct:0},
       {type:'tap',english:'Seven eight nine ten',correctTokens:['Семь','восемь','девять','десять'],allTokens:['Семь','восемь','девять','десять','шесть','пять']},
       {type:'match',pairs:[{r:'Шесть',e:'Six'},{r:'Семь',e:'Seven'},{r:'Восемь',e:'Eight'},{r:'Девять',e:'Nine'},{r:'Десять',e:'Ten'}]},
+      {type:'type',english:'Ten',answer:'Десять',hint:"Desyat'"},
     ]
   },
   {
@@ -2545,6 +2611,7 @@ const LESSON_DEFS = [
       {type:'listen',russian:'Зелёный',options:['Green','Blue','Red','Yellow'],correct:0},
       {type:'tap',english:'Red blue green',correctTokens:['Красный','синий','зелёный'],allTokens:['Красный','синий','зелёный','жёлтый','белый','чёрный']},
       {type:'match',pairs:[{r:'Красный',e:'Red'},{r:'Синий',e:'Blue'},{r:'Зелёный',e:'Green'},{r:'Жёлтый',e:'Yellow'},{r:'Белый',e:'White'},{r:'Чёрный',e:'Black'}]},
+      {type:'type',english:'Red',answer:'Красный',hint:'Krasny'},
     ]
   },
   {
@@ -2566,6 +2633,7 @@ const LESSON_DEFS = [
       {type:'listen',russian:'Бабушка',options:['Grandmother','Grandfather','Mother','Sister'],correct:0},
       {type:'tap',english:'My mom and dad',correctTokens:['Моя','мама','и','папа'],allTokens:['Моя','мама','и','папа','брат','сестра'],note:'моя = my, и = and'},
       {type:'match',pairs:[{r:'Мама',e:'Mom'},{r:'Папа',e:'Dad'},{r:'Брат',e:'Brother'},{r:'Сестра',e:'Sister'},{r:'Бабушка',e:'Grandmother'},{r:'Дедушка',e:'Grandfather'}]},
+      {type:'type',english:'Brother',answer:'Брат',hint:'Brat'},
     ]
   },
   {
@@ -2588,6 +2656,7 @@ const LESSON_DEFS = [
       {type:'listen',russian:'Рыба',options:['Fish','Meat','Bread','Water'],correct:0},
       {type:'tap',english:'Water tea and coffee',correctTokens:['Вода','чай','и','кофе'],allTokens:['Вода','чай','и','кофе','хлеб','мясо']},
       {type:'match',pairs:[{r:'Вода',e:'Water'},{r:'Чай',e:'Tea'},{r:'Кофе',e:'Coffee'},{r:'Хлеб',e:'Bread'},{r:'Мясо',e:'Meat'},{r:'Рыба',e:'Fish'}]},
+      {type:'type',english:'Water',answer:'Вода',hint:'Voda'},
     ]
   },
   {
@@ -2610,6 +2679,7 @@ const LESSON_DEFS = [
       {type:'listen',russian:'Почему?',options:['Why?','When?','Where?','What?'],correct:0},
       {type:'tap',english:'Where is the bread?',correctTokens:['Где','хлеб?'],allTokens:['Где','хлеб?','Что','Когда','вода?','кофе?']},
       {type:'match',pairs:[{r:'Что?',e:'What?'},{r:'Кто?',e:'Who?'},{r:'Где?',e:'Where?'},{r:'Когда?',e:'When?'},{r:'Почему?',e:'Why?'},{r:'Как?',e:'How?'}]},
+      {type:'type',english:'Where?',answer:'Где?',hint:'Gde?'},
     ]
   },
   {
@@ -2633,6 +2703,7 @@ const LESSON_DEFS = [
       {type:'fill',sentence:'_______ говорите по-русски?',translation:'Do _____ speak Russian?',note:'говорите = (you) speak',answers:['Вы','Мы','Они','Я'],correct:0},
       {type:'tap',english:'I speak Russian',correctTokens:['Я','говорю','по-русски'],allTokens:['Я','говорю','по-русски','Мы','Они','Ты'],note:'говорю = I speak'},
       {type:'match',pairs:[{r:'Я',e:'I'},{r:'Ты',e:'You (informal)'},{r:'Он',e:'He'},{r:'Она',e:'She'},{r:'Мы',e:'We'},{r:'Они',e:'They'}]},
+      {type:'type',english:'We',answer:'Мы',hint:'My'},
     ]
   },
   {
@@ -2657,6 +2728,7 @@ const LESSON_DEFS = [
       {type:'fill',sentence:'Кофе _______.',translation:'The coffee is _____.',answers:['горячий','холодный','новый','большой'],correct:0},
       {type:'tap',english:'Big new house',correctTokens:['Большой','новый','дом'],allTokens:['Большой','новый','дом','маленький','старый','город'],note:'дом = house'},
       {type:'match',pairs:[{r:'Большой',e:'Big'},{r:'Маленький',e:'Small'},{r:'Хороший',e:'Good'},{r:'Плохой',e:'Bad'},{r:'Новый',e:'New'},{r:'Старый',e:'Old'}]},
+      {type:'type',english:'New',answer:'Новый',hint:'Novy'},
     ]
   },
   {
@@ -2680,6 +2752,7 @@ const LESSON_DEFS = [
       {type:'fill',sentence:'Один _______ до Москвы.',translation:'One _____ to Moscow.',note:'до Москвы = to Moscow',answers:['билет','паспорт','автобус','ресторан'],correct:0},
       {type:'tap',english:'Where is the train station?',correctTokens:['Где','вокзал?'],allTokens:['Где','вокзал?','Что','аэропорт?','магазин?','Когда'],},
       {type:'match',pairs:[{r:'Магазин',e:'Shop'},{r:'Больница',e:'Hospital'},{r:'Аэропорт',e:'Airport'},{r:'Вокзал',e:'Train station'},{r:'Автобус',e:'Bus'},{r:'Билет',e:'Ticket'}]},
+      {type:'type',english:'Ticket',answer:'Билет',hint:'Bilet'},
     ]
   },
   {
@@ -2702,6 +2775,7 @@ const LESSON_DEFS = [
       {type:'fill',sentence:'_______ взять кофе?',translation:'_____ I get a coffee?',answers:['Можно','Где','Что','Когда'],correct:0},
       {type:'tap',english:'I don\'t understand',correctTokens:['Я','не','понимаю'],allTokens:['Я','не','понимаю','знаю','хочу','Мы'],note:'не = not'},
       {type:'match',pairs:[{r:'Я не знаю',e:"I don't know"},{r:'Я понимаю',e:'I understand'},{r:'Мне нравится',e:'I like it'},{r:'Я хочу',e:'I want'},{r:'Можно?',e:'May I?'},{r:'Не за что',e:"Don't mention it"}]},
+      {type:'type',english:'I understand',answer:'Я понимаю',hint:'Ya ponimayu'},
     ]
   },
   {
@@ -2729,6 +2803,7 @@ const LESSON_DEFS = [
       {type:'fill',sentence:'_______ закрыта для посторонних.',translation:'The _____ is closed to outsiders.',note:'закрыта = closed, посторонних = outsiders',answers:['Граница','Армия','Разведка','Угроза'],correct:0},
       {type:'tap',english:'The intelligence officer at the embassy',correctTokens:['Разведчик','в','посольстве'],allTokens:['Разведчик','в','посольстве','агент','армия','офицер'],note:'в посольстве = at the embassy'},
       {type:'match',pairs:[{r:'Армия',e:'Army'},{r:'Офицер',e:'Officer'},{r:'Граница',e:'Border'},{r:'Разведка',e:'Intelligence'},{r:'Агент',e:'Agent'},{r:'Посольство',e:'Embassy'}]},
+      {type:'type',english:'Security',answer:'Безопасность',hint:"Bezopasnost'"},
     ]
   },
 ];
@@ -3105,6 +3180,43 @@ function shuffleArr(arr) {
 }
 
 // ═══════════════════════════════════════════
+// TYPED-ANSWER CHECKING (shared by Lessons, Grammar drills, Flashcards)
+// ═══════════════════════════════════════════
+function normalizeAnswer(s) {
+  return s.trim().toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[.,!?;:]+$/g, '')
+    .replace(/\s+/g, ' ');
+}
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  const dp = new Array(n + 1);
+  for (let j = 0; j <= n; j++) dp[j] = j;
+  for (let i = 1; i <= m; i++) {
+    let prev = dp[0];
+    dp[0] = i;
+    for (let j = 1; j <= n; j++) {
+      const temp = dp[j];
+      dp[j] = a[i - 1] === b[j - 1] ? prev : 1 + Math.min(prev, dp[j], dp[j - 1]);
+      prev = temp;
+    }
+  }
+  return dp[n];
+}
+// Exact match required for short answers; one-character typo tolerated for longer ones
+// (keyboard slips), so a genuinely wrong ending/word still gets marked wrong.
+function checkTypedAnswer(input, correct) {
+  const a = normalizeAnswer(input);
+  const b = normalizeAnswer(correct);
+  if (!a) return false;
+  if (a === b) return true;
+  const tolerance = b.length >= 4 ? 1 : 0;
+  return levenshtein(a, b) <= tolerance;
+}
+
+// ═══════════════════════════════════════════
 // LESSONS — EXERCISE RENDERER
 // ═══════════════════════════════════════════
 function renderExercise() {
@@ -3119,6 +3231,7 @@ function renderExercise() {
   else if (ex.type === 'tap')    renderTapToBuild(ex, area);
   else if (ex.type === 'match')  renderMatchPairs(ex, area);
   else if (ex.type === 'listen') renderListen(ex, area);
+  else if (ex.type === 'type')   renderTypeAnswer(ex, area);
 }
 
 // ── Learn card ──
@@ -3447,6 +3560,47 @@ function renderListen(ex, area) {
   });
 }
 
+// ── Type the answer (production, not recognition) ──
+function renderTypeAnswer(ex, area) {
+  area.innerHTML =
+    '<div class="ex-label">Type the Russian word</div>' +
+    '<div class="tap-english">' + ex.english +
+      (ex.hint ? '<div style="font-size:0.75rem;color:var(--muted);margin-top:4px">' + ex.hint + '</div>' : '') +
+    '</div>' +
+    '<input type="text" id="typeInput" class="type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type in Russian...">' +
+    '<button class="ex-check-btn" id="typeCheckBtn" disabled>Check Answer</button>';
+
+  const input = area.querySelector('#typeInput');
+  const btn = area.querySelector('#typeCheckBtn');
+  const srsId = 'l:' + ls.lessonId + ':' + ls.exIdx;
+
+  const submit = () => {
+    if (btn.disabled) return;
+    input.disabled = true;
+    btn.disabled = true;
+    const ok = checkTypedAnswer(input.value, ex.answer);
+    speak(ex.answer);
+    if (ok) {
+      input.classList.add('type-correct');
+      bumpCombo();
+      updateItemAfterReview(srsId, true);
+      showFeedback(true, 'Correct!', '');
+      ls.score++;
+    } else {
+      input.classList.add('type-wrong');
+      resetCombo();
+      ls.errors++; loseHeart();
+      updateItemAfterReview(srsId, false);
+      showFeedback(false, 'Not quite', 'Correct answer: ' + ex.answer);
+    }
+  };
+
+  input.addEventListener('input', () => { btn.disabled = !input.value.trim(); });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  btn.addEventListener('click', submit);
+  input.focus();
+}
+
 // ── Feedback ──
 function showFeedback(correct, title, answer) {
   const bar = document.getElementById('feedbackBar');
@@ -3729,9 +3883,9 @@ function renderGrammarVerbs(area) {
       '<div id="verbTableWrap"></div>' +
     '</div>' +
     '<div class="grammar-block">' +
-      '<h3>Practice the endings <span>— multiple choice drill</span></h3>' +
-      '<p>You\'ll see a pronoun and a verb — pick the form with the correct ending. The wrong options are ' +
-        '<span class="hl">other persons of the same verb</span>, so you\'re practicing the ending itself, not the vocabulary.</p>' +
+      '<h3>Practice the endings <span>— type the answer</span></h3>' +
+      '<p>You\'ll see a pronoun and a verb — type the correctly conjugated form yourself, no options to lean on. ' +
+        'Small typos are forgiven, but a wrong ending is still wrong, so this tests real recall of the ending, not just recognition.</p>' +
       '<div id="conjQuizArea"><button class="ex-check-btn" style="max-width:280px" id="startConjBtn">Start Practice (10 questions)</button></div>' +
     '</div>';
 
@@ -3771,10 +3925,7 @@ function buildConjQuestions(n) {
   for (let i = 0; i < n; i++) {
     const verb = VERB_CONJUGATIONS[Math.floor(Math.random() * VERB_CONJUGATIONS.length)];
     const person = persons[Math.floor(Math.random() * persons.length)];
-    const correct = verb.forms[person];
-    const distractorPersons = shuffleArr(persons.filter(p => p !== person)).slice(0, 3);
-    const options = shuffleArr([correct, ...distractorPersons.map(p => verb.forms[p])]);
-    qs.push({ verb, person, personLabel: personLabel[person], correct, options });
+    qs.push({ verb, person, personLabel: personLabel[person], correct: verb.forms[person] });
   }
   return qs;
 }
@@ -3795,26 +3946,34 @@ function renderConjQuestion() {
     '<div class="ex-question" style="font-size:1.4rem">' + q.personLabel +
       ' + <em style="color:var(--accent2);font-style:italic">' + q.verb.inf + '</em></div>' +
     '<div class="ex-question-sub">' + q.verb.en + '</div>' +
-    '<div class="mc-options">' + q.options.map(opt => '<button class="mc-btn">' + opt + '</button>').join('') + '</div>';
+    '<input type="text" id="conjTypeInput" class="type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the conjugated form...">' +
+    '<button class="ex-check-btn" id="conjCheckBtn" disabled>Check Answer</button>';
 
-  const btns = area.querySelectorAll('.mc-btn');
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => b.disabled = true);
-      speak(q.correct);
-      const srsId = 'v:' + q.verb.inf + ':' + q.person;
-      if (btn.textContent === q.correct) {
-        btn.classList.add('correct-ans');
-        conjQuiz.correct++;
-        updateItemAfterReview(srsId, true);
-      } else {
-        btn.classList.add('wrong-ans');
-        btns.forEach(b => { if (b.textContent === q.correct) b.classList.add('correct-ans'); });
-        updateItemAfterReview(srsId, false);
-      }
-      setTimeout(() => { conjQuiz.idx++; renderConjQuestion(); }, 1100);
-    });
-  });
+  const input = area.querySelector('#conjTypeInput');
+  const btn = area.querySelector('#conjCheckBtn');
+  const srsId = 'v:' + q.verb.inf + ':' + q.person;
+
+  const submit = () => {
+    if (btn.disabled) return;
+    input.disabled = true;
+    btn.disabled = true;
+    speak(q.correct);
+    if (checkTypedAnswer(input.value, q.correct)) {
+      input.classList.add('type-correct');
+      conjQuiz.correct++;
+      updateItemAfterReview(srsId, true);
+    } else {
+      input.classList.add('type-wrong');
+      area.insertAdjacentHTML('beforeend', '<div class="type-answer-reveal">Correct answer: <strong>' + q.correct + '</strong></div>');
+      updateItemAfterReview(srsId, false);
+    }
+    setTimeout(() => { conjQuiz.idx++; renderConjQuestion(); }, 1400);
+  };
+
+  input.addEventListener('input', () => { btn.disabled = !input.value.trim(); });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  btn.addEventListener('click', submit);
+  input.focus();
 }
 
 function renderConjQuizComplete() {
@@ -3909,9 +4068,9 @@ function renderGrammarCases(area) {
       '<div id="caseNounTableWrap"></div>' +
     '</div>' +
     '<div class="grammar-block">' +
-      '<h3>Practice the case endings <span>— multiple choice drill</span></h3>' +
-      '<p>You\'ll see a noun and a case name — pick the correctly declined form. Like the verb drill, the wrong options are ' +
-        '<span class="hl">other cases of the same noun</span>, so you\'re learning to recognize the ending itself, not guessing vocabulary.</p>' +
+      '<h3>Practice the case endings <span>— type the answer</span></h3>' +
+      '<p>You\'ll see a noun and a case name — type the correctly declined form yourself. Like the verb drill, ' +
+        'small typos are forgiven, but a wrong ending is still wrong, so this tests real recall rather than recognition.</p>' +
       '<div id="caseQuizArea"><button class="ex-check-btn" style="max-width:280px" id="startCaseQuizBtn">Start Practice (10 questions)</button></div>' +
     '</div>';
 
@@ -3952,12 +4111,7 @@ function buildCaseQuestions(n) {
   for (let i = 0; i < n; i++) {
     const noun = CASE_NOUNS[Math.floor(Math.random() * CASE_NOUNS.length)];
     const key = keys[Math.floor(Math.random() * keys.length)];
-    const correct = noun.forms[key];
-    // exclude keys whose form coincidentally matches (e.g. inanimate acc = nom) to avoid duplicate-looking options
-    const distractorPool = keys.filter(k => k !== key && noun.forms[k] !== correct);
-    const distractorKeys = shuffleArr(distractorPool).slice(0, 3);
-    const options = shuffleArr([correct, ...distractorKeys.map(k => noun.forms[k])]);
-    qs.push({ noun, caseKey: key, caseLabel: labelByKey[key], correct, options });
+    qs.push({ noun, caseKey: key, caseLabel: labelByKey[key], correct: noun.forms[key] });
   }
   return qs;
 }
@@ -3978,26 +4132,34 @@ function renderCaseQuestion() {
     '<div class="ex-question" style="font-size:1.4rem">' + q.noun.word +
       ' <span style="color:var(--accent2);font-style:italic;font-size:0.7em">(' + q.noun.en + ')</span></div>' +
     '<div class="ex-question-sub">' + q.caseLabel + '</div>' +
-    '<div class="mc-options">' + q.options.map(opt => '<button class="mc-btn">' + opt + '</button>').join('') + '</div>';
+    '<input type="text" id="caseTypeInput" class="type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type the declined form...">' +
+    '<button class="ex-check-btn" id="caseCheckBtn" disabled>Check Answer</button>';
 
-  const btns = area.querySelectorAll('.mc-btn');
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => b.disabled = true);
-      speak(q.correct);
-      const srsId = 'c:' + q.noun.word + ':' + q.caseKey;
-      if (btn.textContent === q.correct) {
-        btn.classList.add('correct-ans');
-        caseQuiz.correct++;
-        updateItemAfterReview(srsId, true);
-      } else {
-        btn.classList.add('wrong-ans');
-        btns.forEach(b => { if (b.textContent === q.correct) b.classList.add('correct-ans'); });
-        updateItemAfterReview(srsId, false);
-      }
-      setTimeout(() => { caseQuiz.idx++; renderCaseQuestion(); }, 1100);
-    });
-  });
+  const input = area.querySelector('#caseTypeInput');
+  const btn = area.querySelector('#caseCheckBtn');
+  const srsId = 'c:' + q.noun.word + ':' + q.caseKey;
+
+  const submit = () => {
+    if (btn.disabled) return;
+    input.disabled = true;
+    btn.disabled = true;
+    speak(q.correct);
+    if (checkTypedAnswer(input.value, q.correct)) {
+      input.classList.add('type-correct');
+      caseQuiz.correct++;
+      updateItemAfterReview(srsId, true);
+    } else {
+      input.classList.add('type-wrong');
+      area.insertAdjacentHTML('beforeend', '<div class="type-answer-reveal">Correct answer: <strong>' + q.correct + '</strong></div>');
+      updateItemAfterReview(srsId, false);
+    }
+    setTimeout(() => { caseQuiz.idx++; renderCaseQuestion(); }, 1400);
+  };
+
+  input.addEventListener('input', () => { btn.disabled = !input.value.trim(); });
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  btn.addEventListener('click', submit);
+  input.focus();
 }
 
 function renderCaseQuizComplete() {
@@ -4423,6 +4585,14 @@ buildNews();
 initSrsPool();
 updateReviewOptionLabel();
 updateMissedOptionLabel();
+
+const typeModeToggle = document.getElementById('typeModeToggle');
+if (typeModeToggle) {
+  typeModeToggle.checked = localStorage.getItem('ru_type_mode') === '1';
+  typeModeToggle.addEventListener('change', () => {
+    localStorage.setItem('ru_type_mode', typeModeToggle.checked ? '1' : '0');
+  });
+}
 
 updateVoiceWarning();
 if (window.speechSynthesis) window.speechSynthesis.addEventListener('voiceschanged', updateVoiceWarning);
